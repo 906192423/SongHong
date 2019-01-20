@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.grails:grails-encoder:3.0.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.grails/grails-encoder/3.0.0/930de3f9e05305188bf953f977ad0b6728798fca/grails-encoder-3.0.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.grails/grails-encoder/3.0.0/ef40e2991fa9badc440d5e90aac29042cde3128b/grails-encoder-3.0.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
