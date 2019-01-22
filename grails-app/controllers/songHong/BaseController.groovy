@@ -1,5 +1,8 @@
 package songHong
 
 class BaseController {
-    def index() {}
+    def dataService
+    def dbService={
+        return dataService.mongoDb()
+    }
 }

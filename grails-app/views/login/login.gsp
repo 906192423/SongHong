@@ -27,7 +27,7 @@
 	</form>
 	<a href="#" class="login-fgetpwd" style="color: #FFFFFF">忘记密码？</a>
 	<div class="sas">
-		<a href="#">还没注册账号！</a>
+		<a href="/login/register">还没注册账号！</a>
 	</div>
 	
 </div>

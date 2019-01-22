@@ -3,5 +3,7 @@ package songHong
 import grails.transaction.Transactional
 
 @Transactional
-class UserService extends BaseService{
+class UserService {
+    def doLogin={user->
+    }
 }
