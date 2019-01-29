@@ -17,8 +17,9 @@ class User {
                 remark : "",//简介
                 superUser : true,//是否是超級管理員
                 trueName : "",//真实姓名
-                level:"",//管理等级
-                ct  : new Date().format("yyyy-MM-dd HH:mm:ss.SSS")//创建时间
+                level:"0",//管理等级
+                ct  : new Date().format("yyyy-MM-dd HH:mm:ss.SSS"),//创建时间
+                sex:"",//性别
         ]
         if (initObj) item.putAll(initObj)
         return item
