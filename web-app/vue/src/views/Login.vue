@@ -17,6 +17,7 @@
 
 <script>
   import { requestLogin } from '../api/api';
+  import axios from 'axios';
   //import NProgress from 'nprogress'
   export default {
     data() {
@@ -51,7 +52,12 @@
             this.logining = true;
             //NProgress.start();
             var loginParams = { username: this.ruleForm2.account, password: this.ruleForm2.checkPass };
+            $.post('localhost:8080/login/doLogin',{loginParams})
+                    .then(d=>{
+                      console.log("12121212")
+                    })
             requestLogin(loginParams).then(data => {
+              console.log(data.toString())
               this.logining = false;
               //NProgress.done();
               let { msg, code, user } = data;
