@@ -52,9 +52,11 @@
             this.logining = true;
             //NProgress.start();
             var loginParams = { username: this.ruleForm2.account, password: this.ruleForm2.checkPass };
-            $.post('localhost:8080/login/doLogin',{loginParams})
+            $.post('/api/login/doLogin',{name: this.ruleForm2.account, password: this.ruleForm2.checkPass})
                     .then(d=>{
                       console.log("12121212")
+                      console.log(d)
+                      console.log(d.flag)
                     })
             requestLogin(loginParams).then(data => {
               console.log(data.toString())

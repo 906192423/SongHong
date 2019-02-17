@@ -12,6 +12,8 @@ import Vuex from 'vuex'
 //import 'nprogress/nprogress.css'
 import routes from './routes'
 import Mock from './mock'
+import axios from 'axios';
+Vue.prototype.$axios=axios;
 Mock.bootstrap();
 import 'font-awesome/css/font-awesome.min.css'
 
