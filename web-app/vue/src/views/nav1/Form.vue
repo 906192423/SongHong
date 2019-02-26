@@ -1,7 +1,7 @@
 <template>
 	<el-form ref="form" :model="form" label-width="80px" @submit.prevent="onSubmit" style="margin:20px;width:60%;min-width:600px;">
-		<el-form-item label="活动名称">
-			<el-input v-model="form.name"></el-input>
+		<el-form-item label="客户名称">
+			<el-input v-model="form.name" style="width: 50%;"></el-input>
 		</el-form-item>
 		<el-form-item label="活动区域">
 			<el-select v-model="form.region" placeholder="请选择活动区域">
@@ -63,7 +63,13 @@
 		},
 		methods: {
 			onSubmit() {
-				console.log('submit!');
+				$.getJSON('api/order/creat',this.form).then(data=>{
+					if(data.flag){
+
+					}else {
+
+					}
+				})
 			}
 		}
 	}
