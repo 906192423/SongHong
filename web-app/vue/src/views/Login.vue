@@ -51,26 +51,24 @@
             //_this.$router.replace('/table');
             this.logining = true;
             //NProgress.start();
-            var loginParams = { username: this.ruleForm2.account, password: this.ruleForm2.checkPass };
-            $.post('/api/login/doLogin',{name: this.ruleForm2.account, password: this.ruleForm2.checkPass})
-                    .then(d=>{
-                      console.log("12121212")
-                      console.log(d)
-                      console.log(d.flag)
-                    })
-            requestLogin(loginParams).then(data => {
-              console.log(data.toString())
+            var loginParams = { name: this.ruleForm2.account, password: this.ruleForm2.checkPass };
+            $.post('api/login/doLogin',loginParams).then(data => {
+              console.log(data)
+              var js=JSON.parse(data)
               this.logining = false;
-              //NProgress.done();
-              let { msg, code, user } = data;
-              if (code !== 200) {
+              let { remark, flag, user } = js;
+              if (!flag) {
                 this.$message({
-                  message: msg,
+                  message: remark,
                   type: 'error'
                 });
               } else {
-                sessionStorage.setItem('user', JSON.stringify(user));
-                this.$router.push({ path: '/table' });
+                requestLogin({username:this.ruleForm2.account,password: this.ruleForm2.checkPass})
+                        .then(data=>{
+                          console.log(data)
+                          sessionStorage.setItem('user', JSON.stringify(data.user));
+                          this.$router.push({ path: '/table' });
+                        })
               }
             });
           } else {

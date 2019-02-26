@@ -23,9 +23,9 @@
 			</el-table-column>
 			<el-table-column prop="name" label="姓名" width="120" sortable>
 			</el-table-column>
-			<el-table-column prop="sex" label="性别" width="100" :formatter="formatSex" sortable>
+			<el-table-column prop="phone" label="电话" width="140" sortable>
 			</el-table-column>
-			<el-table-column prop="age" label="年龄" width="100" sortable>
+			<el-table-column prop="sex" label="性别" width="100" :formatter="formatSex" sortable>
 			</el-table-column>
 			<el-table-column prop="birth" label="生日" width="120" sortable>
 			</el-table-column>
@@ -155,6 +155,12 @@
 				}
 
 			}
+		},
+		created: function () {
+			//页面加载时取到客户表
+			$.getJSON('/api/customer/getCustomers',{page:1},d=>{
+				this.users=d
+			})
 		},
 		methods: {
 			//性别显示转换

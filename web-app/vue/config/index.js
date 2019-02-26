@@ -24,6 +24,16 @@ module.exports = {
   },
   dev: {
     env: require('./dev.env'),
+    // proxyTable: [
+    //   {
+    //     context: [
+    //       '**',
+    //       '!/js/consoleDist/**'
+    //     ],
+    //     target: 'http://' + ip+ ':8080',
+    //     secure: false,
+    //   }
+    // ],
     proxyTable: {
       // proxy all requests starting with /api to jsonplaceholder
       '/api': {
