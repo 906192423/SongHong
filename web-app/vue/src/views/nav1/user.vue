@@ -1,77 +1,83 @@
 <template>
-	<section>
-		<!--工具条-->
-		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
-			<el-form :inline="true" :model="filters">
-				<el-form-item>
-					<el-input v-model="filters.name" placeholder="姓名"></el-input>
-				</el-form-item>
-				<el-form-item>
-					<el-button type="primary" v-on:click="getUser">查询</el-button>
-				</el-form-item>
-			</el-form>
-		</el-col>
-
-		<!--列表-->
-		<template>
-			<el-table :data="users" highlight-current-row v-loading="loading" style="width: 100%;">
-				<el-table-column type="index" width="60">
-				</el-table-column>
-				<el-table-column prop="name" label="姓名" width="120" sortable>
-				</el-table-column>
-				<el-table-column prop="sex" label="性别" width="100" :formatter="formatSex" sortable>
-				</el-table-column>
-				<el-table-column prop="age" label="年龄" width="100" sortable>
-				</el-table-column>
-				<el-table-column prop="birth" label="生日" width="120" sortable>
-				</el-table-column>
-				<el-table-column prop="addr" label="地址" min-width="180" sortable>
-				</el-table-column>
-			</el-table>
-		</template>
-
-	</section>
+	<el-form ref="form" :model="form" label-width="80px" @submit.prevent="onSubmit" style="margin:20px;width:60%;min-width:600px;" v-loading="loading">
+		<el-form-item label="客户名称">
+			<el-input v-model="form.name" style="width: 50%;"></el-input>
+		</el-form-item>
+		<el-form-item label="客户电话">
+			<el-input v-model="form.phone" style="width: 50%;"></el-input>
+		</el-form-item>
+		<el-form-item label="客户邮箱">
+			<el-input v-model="form.email" style="width: 50%;"></el-input>
+		</el-form-item>
+		<el-form-item label="客户qq">
+			<el-input v-model="form.qq" style="width: 50%;"></el-input>
+		</el-form-item>
+		<el-form-item label="客户地址">
+			<el-input v-model="form.addr" style="width: 50%;"></el-input>
+		</el-form-item>
+		<el-form-item label="客户生日">
+			<el-col :span="11">
+				<el-date-picker type="date" placeholder="选择日期" v-model="form.birth" style="width: 100%;"></el-date-picker>
+			</el-col>
+		</el-form-item>
+		<el-form-item label="性别">
+			<el-select v-model="form.sex" placeholder="请选择性别">
+				<el-option label="男" value="1"></el-option>
+				<el-option label="女" value="0"></el-option>
+			</el-select>
+		</el-form-item>
+		<el-form-item label="备注">
+			<el-input type="textarea" v-model="form.remark"></el-input>
+		</el-form-item>
+		<el-form-item>
+			<el-button type="primary" @click="onSubmit">立即创建</el-button>
+			<el-button @click="cancel">取消</el-button>
+		</el-form-item>
+	</el-form>
 </template>
+
 <script>
-	import { getUserList } from '../../api/api';
-	//import NProgress from 'nprogress'
+	import util from '../../common/js/util'
 	export default {
 		data() {
 			return {
-				filters: {
-					name: ''
+				form: {
+					name: '',
+					email : "",
+					idCardNumber : "",
+					phone : "",
+					qq : " ",
+					remark : "",
+					sex:"",
+					birth:"",
+					addr:"",
 				},
-				loading: false,
-				users: [
-				]
+				loading:false,
 			}
 		},
 		methods: {
-			//性别显示转换
-			formatSex: function (row, column) {
-				return row.sex == 1 ? '男' : row.sex == 0 ? '女' : '未知';
+			onSubmit() {
+				this.loading=true
+				this.form.birth = (!this.form.birth || this.form.birth == '') ? '' : util.formatDate.format(new Date(this.form.birth), 'yyyy-MM-dd');
+				$.getJSON('api/customer/creat',this.form).then(data=>{
+					if(data.flag){
+						this.$message({
+							message:data.remark,
+							type: 'success'
+						});
+					}else {
+						this.$message({
+							message: data.remark,
+							type: 'error'
+						});
+					}
+					this.loading=false
+				})
 			},
-			//获取用户列表
-			getUser: function () {
-				let para = {
-					name: this.filters.name
-				};
-				this.loading = true;
-				//NProgress.start();
-				getUserList(para).then((res) => {
-					this.users = res.data.users;
-					this.loading = false;
-					//NProgress.done();
-				});
+			cancel(){
+				this.$router.push({ path: '/table' });
 			}
-		},
-		mounted() {
-			this.getUser();
 		}
-	};
+	}
 
 </script>
-
-<style scoped>
-
-</style>
