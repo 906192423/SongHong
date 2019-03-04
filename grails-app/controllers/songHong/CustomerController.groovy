@@ -1,11 +1,5 @@
 package songHong
-
 import com.alibaba.fastjson.JSONObject
-import grails.transaction.Transactional
-
-import java.lang.reflect.Array
-
-@Transactional(readOnly = true)
 class CustomerController extends BaseController{
     def creat={
         def cus=Customer.newOne([
@@ -26,15 +20,26 @@ class CustomerController extends BaseController{
     def getCustomers={
         def page=params.page
         println("请求客户数据")
-        def users=dataService.mongoDb.searchCustomer([sort:[_id:-1]],page,20)
-        println(users)
+        def form=[sort:[_id:-1]]
+        if(params.name){
+            def nu=params.name
+            try{
+                nu=Integer.parseInt(params.name)
+                form+=[phone: [$regex:/^${nu.toString()}/]]
+                println("电话查找")
+            }catch(Exception e){
+                println("名字查找："+nu)
+                form+=[name: [$regex:/^${nu}/]]
+            }
+        }
+        def users=dataService.mongoDb.searchCustomer(form,page,20)
         render(JSONObject.toJSONString([users:users.contentlist,num:users.allNum]))
     }
     def edit={
         println("修改用户数据")
         def cu=dataService.mongoDb.findOneCustomer([_id:params._id])
         if(!cu){
-            render(js(false,"词用户不存在！"))
+            render(js(false,"此用户不存在！"))
             return
         }
         if(cu._creatId==params._id||session.user.superUser){

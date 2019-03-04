@@ -9,6 +9,9 @@ class LoginController extends BaseController{
         render(JSONObject.toJSONString(a))
     }
     def login={//登陆界面
+        println("登陆界面")
+        redirect(uri:"/dist/index.html")
+        return
     }
     def doLogin={//进行登陆验证
         println(params)
