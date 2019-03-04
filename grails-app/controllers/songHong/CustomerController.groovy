@@ -35,6 +35,30 @@ class CustomerController extends BaseController{
         def users=dataService.mongoDb.searchCustomer(form,page,20)
         render(JSONObject.toJSONString([users:users.contentlist,num:users.allNum]))
     }
+    def getUsers={
+        println("创建订单查找客户数据"+params)
+        def form=[sort:[_id:-1]]
+        if(params.name){
+            def nu=params.name
+            try{
+                nu=Integer.parseInt(params.name)
+                form+=[phone: [$regex:/^${nu.toString()}/]]
+                println("电话查找")
+            }catch(Exception e){
+                println("名字查找："+nu)
+                form+=[name: [$regex:/^${nu}/]]
+            }
+        }
+        def u=dataService.mongoDb.searchCustomer(form,1,40)
+        def users=[]
+        u.contentlist.each{
+            users.add([
+                    value:it._id,
+                    label:"姓名:${it.name}   ----电话:${it.phone}".toString()
+            ])
+        }
+        render(JSONObject.toJSONString([users:users,flag:true]))
+    }
     def edit={
         println("修改用户数据")
         def cu=dataService.mongoDb.findOneCustomer([_id:params._id])

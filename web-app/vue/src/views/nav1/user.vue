@@ -12,9 +12,6 @@
 		<el-form-item label="客户qq">
 			<el-input v-model="form.qq" style="width: 50%;"></el-input>
 		</el-form-item>
-		<el-form-item label="客户地址">
-			<el-input v-model="form.addr" style="width: 50%;"></el-input>
-		</el-form-item>
 		<el-form-item label="客户生日">
 			<el-col :span="11">
 				<el-date-picker type="date" placeholder="选择日期" v-model="form.birth" style="width: 100%;"></el-date-picker>
@@ -25,6 +22,9 @@
 				<el-option label="男" value="1"></el-option>
 				<el-option label="女" value="0"></el-option>
 			</el-select>
+		</el-form-item>
+		<el-form-item label="地址">
+			<el-input type="textarea" v-model="form.addr"></el-input>
 		</el-form-item>
 		<el-form-item label="备注">
 			<el-input type="textarea" v-model="form.remark"></el-input>
@@ -82,29 +82,30 @@
 						this.form.birth = (!this.form.birth || this.form.birth == '') ? '' : util.formatDate.format(new Date(this.form.birth), 'yyyy-MM-dd');
 						$.getJSON('api/customer/creat',this.form).then(data=>{
 							if(data.flag){
-								this.$message({
-									message:data.remark,
+								this.$notify({
+									title: '成功',
+									message: data.remark,
 									type: 'success'
 								});
+								this.form= {
+									name: '',
+									email : "",
+									idCardNumber : "",
+									phone : "",
+									qq : " ",
+									remark : "",
+									sex:"",
+									birth:"",
+									addr:"",
+								}
+								this.$refs['form'].resetFields();
+								this.loading=false
 							}else {
 								this.$message({
 									message: data.remark,
 									type: 'error'
 								});
 							}
-							this.form= {
-								name: '',
-								email : "",
-								idCardNumber : "",
-								phone : "",
-								qq : " ",
-								remark : "",
-								sex:"",
-								birth:"",
-								addr:"",
-							}
-							this.$refs['form'].resetFields();
-							this.loading=false
 						})
 					} else {
 						this.$message({
