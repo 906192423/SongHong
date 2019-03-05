@@ -8,7 +8,11 @@ class BaseController {
         println("路径映射 "+params.apicon+"   "+params.apiAction)
         redirect(controller:params.apicon,action:params.apiAction,params:params)
     }
-    def js(boolean flag,String remark){
-        JSONObject.toJSONString([flag:flag,remark:remark])
+    protected js(boolean flag,String remark,map=null){
+        def item=[flag:flag,remark:remark]
+        if(map!=null){
+            item.putAll(map)
+        }
+        JSONObject.toJSONString(item)
     }
 }

@@ -1,7 +1,6 @@
 package songHong
 
 class Product {
-
     static constraints = {
     }
     static newOne = { initObj = null ->

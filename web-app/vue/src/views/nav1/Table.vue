@@ -4,7 +4,7 @@
 		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
 			<el-form :inline="true" :model="filters">
 				<el-form-item>
-					<el-input v-model="filters.name" placeholder="姓名"></el-input>
+					<el-input v-model="filters.name" placeholder="输入姓名或者电话来查找"></el-input>
 				</el-form-item>
 				<el-form-item>
 					<el-button type="primary" v-on:click="getUsers">查询</el-button>
@@ -82,15 +82,11 @@
 				<el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
 			</div>
 		</el-dialog>
-
-		<!--新增界面-->
 	</section>
 </template>
 
 <script>
 	import util from '../../common/js/util'
-	//import NProgress from 'nprogress'
-	import { getUserListPage, removeUser, batchRemoveUser, editUser, addUser } from '../../api/api';
 	export default {
 		data() {
 			return {
@@ -102,7 +98,6 @@
 				page: 1,
 				listLoading: false,
 				sels: [],//列表选中列
-
 				editFormVisible: false,//编辑界面是否显示
 				editLoading: false,
 				editFormRules: {
