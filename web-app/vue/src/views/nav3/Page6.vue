@@ -3,7 +3,7 @@
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
         <el-form :inline="true" :model="name">
             <el-form-item>
-                <el-input v-model="name" placeholder="输入商品名或者商品编号来查找"></el-input>
+                <el-input style="width: 280px" v-model="name" placeholder="输入商品名或者商品编号来查找"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" v-on:click="getProduct">查询</el-button>

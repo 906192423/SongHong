@@ -51,10 +51,10 @@ class ProductController extends BaseController{
             def nu=params.name
             try{
                 nu=Integer.parseInt(params.name)
-                form+=[phone: [$regex:/^${nu.toString()}/]]
-                println("商品名查找")
+                form+=[code: [$regex:/^${nu.toString()}/]]
+                println("商品码查找")
             }catch(Exception e){
-                println("商品编号查找："+nu)
+                println("商品名查找："+nu)
                 form+=[name: [$regex:/^${nu}/]]
             }
         }
@@ -65,7 +65,6 @@ class ProductController extends BaseController{
         }
         def d=dataService.mongoDb.searchProduct(form,page,10)
         def goods=d.contentlist
-        println(goods)
         render(JSONObject.toJSONString([list:goods,flag:true,num:d.allNum]))
     }
 }

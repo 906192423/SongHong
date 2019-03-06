@@ -1,7 +1,7 @@
 <template>
 	<el-form :model="ruleForm" :rules="rules" v-loading="formLoading" ref="ruleForm" label-width="100px" class="demo-ruleForm">
 		<el-form-item label="请选择客户" prop="name">
-			<el-select
+			<el-select style="width: 300px"
 					v-model="ruleForm._Uid"
 					multiple
 					filterable
@@ -18,6 +18,57 @@
 				</el-option>
 			</el-select>
 		</el-form-item>
+        <el-form-item label="请选择商品">
+            <el-select
+                    v-model="value10"
+                    multiple
+                    filterable
+                    default-first-option
+                    placeholder="请选择商品">
+                <el-option
+                        v-for="item in options5"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item">
+                </el-option>
+            </el-select>
+            <el-input
+                    style="width: 150px"
+                    placeholder="输入内容查找商品"
+                    v-model="name"
+                    clearable>
+            </el-input>
+            <el-button type="primary" v-on:click="getGoods">搜索</el-button>
+        </el-form-item>
+        <el-form-item label="商品表">
+        <el-table
+                :data="value10"
+                stripe
+                style="width:800px">
+            <el-table-column
+                    prop="value"
+                    label="商品名"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="label"
+                    label="商品价格"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    fixed="right"
+                    label="操作"
+                    width="250">
+                <template slot-scope="scope">
+                    <el-input-number v-model="scope.row.num" :precision="3" :step="0.1" :min="1" :max="1000" @change="addCli(scope.row)"></el-input-number>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    prop="amount"
+                    label="总额">
+            </el-table-column>
+        </el-table>
+        </el-form-item>
 		<el-form-item label="支付方式" prop="payWay">
 			<el-select v-model="ruleForm.payWay" placeholder="请选择支付方式">
 				<el-option label="微信支付" value="微信支付"></el-option>
@@ -62,6 +113,7 @@
 	export default {
 		data() {
 			return {
+                name:"",
 				ruleForm: {
 					modeTransport : "",//运输方式
 					_Uid: "",//客户id
@@ -99,9 +151,28 @@
 				users: [],
 				list: [],
 				loading: false,
+                options5: [{
+                    value: 'HTML',
+                    label: 'HTML'
+                }, {
+                    value: 'CSS',
+                    label: 'CSS'
+                }, {
+                    value: 'JavaScript',
+                    label: 'JavaScript'
+                }],
+                value10: []
 			};
 		},
 		methods: {
+            addCli(row){
+                console.log("----------------------")
+                console.log(row)
+            },
+            getGoods(){
+                $.getJSON('api/product/getGoods',{name:this.name}).then(data=>{
+                })
+            },
 			submitForm(formName) {
 				this.$refs[formName].validate((valid) => {
 					if (valid) {
