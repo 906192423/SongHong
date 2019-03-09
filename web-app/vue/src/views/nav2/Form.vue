@@ -116,6 +116,7 @@
 </template>
 
 <script>
+	import util from '../../common/js/util'
 	export default {
 		data() {
 			return {
@@ -218,6 +219,7 @@
                             a.remark=it.remark
                             form.detail[it._id]=a
                         })
+						form.leadTime = (!this.ruleForm.leadTime || this.ruleForm.leadTime == '') ? '' : util.formatDate.format(new Date(this.ruleForm.leadTime), 'yyyy-MM-dd');
 						$.getJSON('api/order/creat',form).then(data=>{
 							if(data.flag){
 								this.$notify({

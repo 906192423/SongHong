@@ -1,5 +1,6 @@
 package songHong
 
+import com.alibaba.fastjson.JSONObject
 import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
@@ -13,6 +14,7 @@ class OrderController extends BaseController{
         }
         def order=Order.newOne([
                 _creatId:session.user._id,
+                creatName:session.user.name,
                 detail:[],/*[
                         _pid:[
                                 num:0,
@@ -31,5 +33,19 @@ class OrderController extends BaseController{
         ])
         dataService.mongoDb.saveOrder(order)
         render(js(true,"创建成功"))
+    }
+    def getOrder={
+        println("查看订单数据"+params)
+        def form=[sort:[_id:-1]]
+        def page=Integer.valueOf(params.page)
+        def u=dataService.mongoDb.searchOrder(form,page,20)
+        render(js(true,"查询成功",[list:u.contentlist,num:u.allNum]))
+    }
+    def delete={
+        def _id=params._id
+        println(1111111122)
+        println params
+        dataService.mongoDb.delOrder([_id:_id])
+        render(js(true,"删除成功！"))
     }
 }
