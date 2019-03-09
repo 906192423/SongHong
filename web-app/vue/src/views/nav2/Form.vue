@@ -1,9 +1,8 @@
 <template>
 	<el-form :model="ruleForm" :rules="rules" v-loading="formLoading" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-		<el-form-item label="请选择客户" prop="name">
+		<el-form-item label="请选择客户" prop="_Uid">
 			<el-select style="width: 300px"
 					v-model="ruleForm._Uid"
-					multiple
 					filterable
 					remote
 					reserve-keyword
@@ -23,13 +22,15 @@
                     v-model="value10"
                     multiple
                     filterable
-                    default-first-option
+                    :loading="gloading"
+                    @change="change()"
                     placeholder="请选择商品">
                 <el-option
                         v-for="item in options5"
-                        :key="item.value"
+                        :key="item.label"
                         :label="item.label"
-                        :value="item">
+                        :value="item.value"
+                        :disabled="item.disabled">
                 </el-option>
             </el-select>
             <el-input
@@ -42,35 +43,43 @@
         </el-form-item>
         <el-form-item label="商品表">
         <el-table
-                :data="value10"
+                :data="goodsTable"
                 stripe
-                style="width:800px">
+                style="width:900px">
             <el-table-column
-                    prop="value"
+                    prop="name"
                     label="商品名"
                     width="180">
             </el-table-column>
             <el-table-column
-                    prop="label"
+                    prop="code"
+                    label="商品编号"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="price"
                     label="商品价格"
                     width="180">
             </el-table-column>
             <el-table-column
-                    fixed="right"
-                    label="操作"
+                    label="数量"
                     width="250">
                 <template slot-scope="scope">
-                    <el-input-number v-model="scope.row.num" :precision="3" :step="0.1" :min="1" :max="1000" @change="addCli(scope.row)"></el-input-number>
+                    <el-input-number v-model="scope.row.num" placeholder="请输入数量"  @change="addCli(scope.row)"></el-input-number>
                 </template>
             </el-table-column>
             <el-table-column
+                    fixed="right"
                     prop="amount"
                     label="总额">
             </el-table-column>
         </el-table>
         </el-form-item>
+        <el-form-item label="总金额" style="width:500px" prop="amount">
+            <el-input v-model="ruleForm.amount"></el-input>
+        </el-form-item>
 		<el-form-item label="支付方式" prop="payWay">
-			<el-select v-model="ruleForm.payWay" placeholder="请选择支付方式">
+			<el-select v-model="ruleForm.payWay" placeholder="请选择支付方式" multiple>
 				<el-option label="微信支付" value="微信支付"></el-option>
 				<el-option label="支付宝支付" value="支付宝支付"></el-option>
 				<el-option label="刷卡支付" value="刷卡支付"></el-option>
@@ -93,9 +102,6 @@
 		<el-form-item label="运输方式" style="width:500px" prop="modeTransport">
 			<el-input v-model="ruleForm.modeTransport"></el-input>
 		</el-form-item>
-		<el-form-item label="总金额" style="width:500px" prop="amount">
-			<el-input v-model="ruleForm.amount"></el-input>
-		</el-form-item>
 		<el-form-item label="交货地址" prop="addr" style="width:500px">
 			<el-input type="textarea" v-model="ruleForm.addr"></el-input>
 		</el-form-item>
@@ -114,6 +120,7 @@
 		data() {
 			return {
                 name:"",
+                gloading:false,
 				ruleForm: {
 					modeTransport : "",//运输方式
 					_Uid: "",//客户id
@@ -125,9 +132,8 @@
 				},
 				formLoading:false,
 				rules: {
-					name: [
-						{ required: true, message: '请输入活动名称', trigger: 'blur' },
-						{ min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+                    _Uid: [
+						{ required: true, message: '请输入用户', trigger: 'blur' },
 					],
 					region: [
 						{ required: true, message: '请选择活动区域', trigger: 'change' }
@@ -161,23 +167,58 @@
                     value: 'JavaScript',
                     label: 'JavaScript'
                 }],
-                value10: []
+                value10: [],
+                goodsTable:[],
 			};
 		},
 		methods: {
             addCli(row){
-                console.log("----------------------")
-                console.log(row)
+                console.log("num:"+row.num+"price: "+row.price)
+                row.amount= parseFloat((row.price*row.num).toFixed(3))
+                console.log((row.price*row.num).toFixed(3))
+                let total=0.0
+                this.goodsTable.forEach(it=>{
+                    total=parseFloat(it.amount+total)
+                })
+                this.ruleForm.amount=total
+            },
+            change(){
+                this.goodsTable=[]
+                this.value10.forEach(it=>{
+                    let g=JSON.parse(it)
+                    g.amount=g.price
+                    this.goodsTable.push(g)
+                })
             },
             getGoods(){
+                this.gloading=true
                 $.getJSON('api/product/getGoods',{name:this.name}).then(data=>{
+                    this.options5=[]
+                    data.list.forEach(item=>{
+                        let disabled
+                        if(item.state==0)
+                            disabled=false
+                        else
+                            disabled=true
+                        this.options5.push({value:JSON.stringify(item),label:item.name,disabled:disabled})
+                    })
+                    this.gloading=false
                 })
             },
 			submitForm(formName) {
 				this.$refs[formName].validate((valid) => {
 					if (valid) {
 						this.loading=true
-						$.getJSON('api/order/creat',this.ruleForm).then(data=>{
+                        let form=JSON.parse(JSON.stringify(this.ruleForm))
+                        form.detail=[]
+                        this.goodsTable.forEach(it=>{
+                            let a=[]
+                            a.num=it.num
+                            a.price=it.price
+                            a.remark=it.remark
+                            form.detail[it._id]=a
+                        })
+						$.getJSON('api/order/creat',form).then(data=>{
 							if(data.flag){
 								this.$notify({
 									title: '成功',
@@ -211,7 +252,6 @@
 					$.getJSON('api/customer/getUsers',{name:query}).then(data=>{
 						if(data.flag){
 							this.users=data.users
-							console.log(data.users)
 						}else {
 							this.$message({
 								message: data.remark,
@@ -224,6 +264,9 @@
 				}
 				this.loading=false
 			}
-		}
+		},
+        mounted() {
+            this.getGoods()
+        }
 	}
 </script>

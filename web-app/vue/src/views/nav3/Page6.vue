@@ -20,7 +20,7 @@
         <el-table-column
                 label="商品名"
                 width="180">
-            <template scope="scope">
+            <template slot-scope="scope">
                 <el-popover trigger="hover" placement="top">
                     <!--<p>姓名: {{ scope.row.name }}</p>-->
                     <!--<p>住址: {{ scope.row.address }}</p>-->
@@ -33,21 +33,21 @@
         <el-table-column
                 label="商品编号"
                 width="180">
-            <template scope="scope">
+            <template slot-scope="scope">
             <el-tag type="success">{{scope.row.code}}</el-tag>
             </template>
         </el-table-column>
         <el-table-column
                 label="商品价格"
                 width="180">
-            <template scope="scope">
+            <template slot-scope="scope">
                 <el-tag type="success">{{scope.row.price}}</el-tag>
             </template>
         </el-table-column>
         <el-table-column
                 label="备注"
                 width="180">
-            <template scope="scope">
+            <template slot-scope="scope">
                 <el-popover trigger="hover" placement="top">
                     <p>{{ scope.row.remark}}</p>
                     <div slot="reference" class="name-wrapper">
@@ -59,7 +59,7 @@
         <el-table-column
                 label="状态"
                 width="180">
-            <template scope="scope">
+            <template slot-scope="scope">
                 <el-tag v-if="scope.row.state==0" type="success">可生产</el-tag>
                 <el-tag v-if="scope.row.state==-1" type="danger">无法生产</el-tag>
             </template>
@@ -67,13 +67,13 @@
         <el-table-column
                 label="创建日期"
                 width="250">
-            <template scope="scope">
+            <template slot-scope="scope">
                 <i class="el-icon-time"></i>
                 <span style="margin-left: 10px">{{ scope.row.ct}}</span>
             </template>
         </el-table-column>
         <el-table-column label="操作" width="150">
-            <template scope="scope">
+            <template slot-scope="scope">
                 <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                 <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
             </template>
@@ -159,6 +159,9 @@
                     price: [
                         { required: true, message: '请输入价格', trigger: 'blur' }
                     ],
+                    img:"",
+                    remark:"",
+                    state:"",
                 },
                 //添加商品界面数据
                 addForm: {
@@ -221,7 +224,6 @@
                 })
             },
             handleDel(index, row) {
-                console.log(index, row);
                 this.$confirm('确认提交吗？', '提示', {}).then(() => {
                         $.getJSON('api/product/delete',{_id:row._id}).then(data=>{
                             if(data.flag){
@@ -246,7 +248,6 @@
                     this.tableData=data.list
                     this.total=data.num
                     this.listLoading=false
-                    console.log(total)
                 })
                 this.listLoading=false
             },

@@ -15,6 +15,7 @@ class ProductController extends BaseController{
         ])
         try{
             p.state=Integer.valueOf(params.state)
+            p.price=Double.valueOf(params.price)
             dataService.mongoDb.saveProduct(p)
             render(js(true,"创建商品成功"))
         }catch(Exception e){
