@@ -1,10 +1,10 @@
 package songHong
 
-import com.alibaba.fastjson.JSONObject
 import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
 class OrderController extends BaseController{
+    def orderService
     def creat={
         println(params)
         def cu=dataService.mongoDb.findOneCustomer([_id:params._Uid])
@@ -15,6 +15,7 @@ class OrderController extends BaseController{
         def order=Order.newOne([
                 _creatId:session.user._id,
                 creatName:session.user.name,
+                code:orderService.getCode(),
                 detail:[],/*[
                         _pid:[
                                 num:0,
@@ -23,8 +24,8 @@ class OrderController extends BaseController{
                         ],
                 ]*/
                 modeTransport : params.modeTransport,//运输方式
-                userName : "",//客户姓名
-                _Uid: params._Uid,//客户id
+                userName :cu.name,//客户姓名
+                _Uid:cu._id,//客户id
                 leadTime:params.leadTime,//交货时间
                 remark :params.remark,//备注
                 amount :params.amount,//合计金额
@@ -43,9 +44,39 @@ class OrderController extends BaseController{
     }
     def delete={
         def _id=params._id
-        println(1111111122)
-        println params
-        dataService.mongoDb.delOrder([_id:_id])
-        render(js(true,"删除成功！"))
+        def cu=dataService.mongoDb.findOneOrder([_id:_id])
+        if(!cu){
+            render(js(false,"此订单不存在！"))
+            return
+        }
+        if(cu._creatId==params._id||session.user.superUser){
+            dataService.mongoDb.delOrder([_id:_id])
+            render(js(true,"删除成功！"))
+            return
+        }
+        render(js(false,"只有创建者或超级管理员能删除！"))
+    }
+    def edit={
+        println("修改订单数据")
+        def cu=dataService.mongoDb.findOneOrder([_id:params._id])
+        if(!cu){
+            render(js(false,"此订单不存在！"))
+            return
+        }
+        if(cu._creatId==params._id||session.user.superUser){
+            def ord=[
+                    modeTransport:params.modeTransport,
+                    leadTime:params.leadTime,
+                    remark:params.remark,
+                    amount:params.amount,
+                    qq :params.qq,
+                    remark :params.remark,
+                    addr:params.addr,
+            ]
+            dataService.mongoDb.updateOrder([_id:params._id],ord)
+            render(js(true,"修改成功"))
+            return
+        }
+        render(js(false,"你不具有此权限，只有创建者或超级管理员可以删除"))
     }
 }

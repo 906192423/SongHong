@@ -67,7 +67,7 @@ class CustomerController extends BaseController{
             return
         }
         if(cu._creatId==params._id||session.user.superUser){
-            def cus=Customer.newOne([
+            def cus=[
                     name:params.name,
                     email:params.email,
                     idCardNumber:params.idCardNumber,
@@ -77,7 +77,7 @@ class CustomerController extends BaseController{
                     sex:params.sex,
                     birth:params.birth,
                     addr:params.addr,
-            ])
+            ]
             dataService.mongoDb.updateCustomer([_id:params._id],cus)
             render(js(true,"修改成功"))
             return
