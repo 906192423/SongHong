@@ -11,6 +11,7 @@ import end from './views/nav2/end.vue'
 import Page6 from './views/nav3/Page6.vue'
 import echarts from './views/charts/echarts.vue'
 import comein from './views/nav4/comein.vue'
+import repetory from './views/nav4/repetory.vue'
 let routes = [
     {
         path: '/login',
@@ -61,19 +62,20 @@ let routes = [
     {
         path: '/',
         component: Home,
-        name: 'Charts',
-        iconCls: 'fa fa-bar-chart',
+        name: '库存管理',
+        iconCls: 'fa fa-id-card-o',
         children: [
-            { path: '/echarts', component: echarts, name: 'echarts' }
+            { path: '/comein', component: comein, name: '进货' },
+            { path: '/repetory', component:repetory, name: '库存' }
         ]
     },
     {
         path: '/',
         component: Home,
-        name: '导航4',
-        iconCls: 'fa fa-id-card-o',
+        name: 'Charts',
+        iconCls: 'fa fa-bar-chart',
         children: [
-            { path: '/comein', component: comein, name: '进货' }
+            { path: '/echarts', component: echarts, name: 'echarts' }
         ]
     },
     {

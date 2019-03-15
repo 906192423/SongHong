@@ -10,13 +10,16 @@ class Order {
                 _creatId:"",//创建者id
                 creatName:"",//创建者姓名
                 sellCold : "",//订单号
-                detail:[],/*[
-                        _pid:[
+                detail:[
+                        [
+                                _id: "",
+                                name:"",
+                                code: "",
                                 num:0,
                                 price:0,
                                 remark:""
                         ],
-                ]*/
+                ],
                 modeTransport : "",//运输方式
                 userName : "",//客户姓名
                 _Uid: "",//客户id
