@@ -8,6 +8,7 @@
 					reserve-keyword
 					placeholder="请输入姓名或者电话号码来查找"
 					:remote-method="remoteMethod"
+                       clearable
 					:loading="loading">
 				<el-option
 						v-for="item in users"
@@ -16,6 +17,7 @@
 						:value="item.value">
 				</el-option>
 			</el-select>
+            <el-button type="primary" :disabled="disabled"  :loading="uloading" v-on:click="creatU()">创建客户</el-button>
 		</el-form-item>
         <el-form-item label="请选择商品">
             <el-select
@@ -64,13 +66,21 @@
 			</el-table-column>
 			<el-table-column label="数量" width="250">
 				<template slot-scope="scope">
-					<el-input-number v-model="scope.row.num" placeholder="请输入数量"  @change="addCli(scope.row)"></el-input-number>
+                    <el-input
+                            placeholder="请输入内容"
+                            v-model="scope.row.num"
+                            @change="addCli(scope.row)"
+                            clearable>
+                    </el-input>
 				</template>
 			</el-table-column>
 			<el-table-column fixed="right"   prop="amount" label="小计">
 			</el-table-column>
 		</el-table>
 		</el-form-item>
+        <el-form-item label="定金" style="width:500px" prop="modeTransport">
+            <el-input v-model="ruleForm.earnest"></el-input>
+        </el-form-item>
 		<el-form-item label="支付方式" prop="payWay">
 			<el-select v-model="ruleForm.payWay" placeholder="请选择支付方式" multiple>
 				<el-option label="微信支付" value="微信支付"></el-option>
@@ -108,7 +118,10 @@
 		data() {
 			return {
                 name:"",
+                uuuName:"",
+                disabled:true,
                 gloading:false,
+                uloading:false,
 				ruleForm: {
 					modeTransport : "",//运输方式
 					_Uid: "",//客户id
@@ -118,6 +131,7 @@
 					payWay:"",//支付方式
 					addr:"",//交货地址
 					num9:"",//数量
+                    earnest:0,
 				},
 				formLoading:false,
 				rules: {
@@ -184,7 +198,7 @@
 								return prev;
 							}
 						}, 0);
-						sums[index] += ' 元';
+						sums[index]=sums[index].toFixed(3)+' 元';
 					} else {
 						sums[index] = 'N/A';
 					}
@@ -206,7 +220,7 @@
                 this.goodsTable=[]
                 this.value10.forEach(it=>{
                     let g=JSON.parse(it)
-                    g.amount=g.price
+                    g.amount=0
                     this.goodsTable.push(g)
                 })
             },
@@ -230,14 +244,18 @@
 					if (valid) {
 						this.loading=true
                         let form=JSON.parse(JSON.stringify(this.ruleForm))
-                        form.detail=[]
+                        let detail=[]
                         this.goodsTable.forEach(it=>{
-                            let a=[]
-                            a.num=it.num
-                            a.price=it.price
-                            a.remark=it.remark
-                            form.detail[it._id]=a
+                            let a={
+                                _id:it._id,
+                                name:it.name,
+                                code:it.code,
+                                num:it.num,
+                                price:it.price,
+                            }
+                            detail.push(a)
                         })
+                        form.detail=JSON.stringify(detail)
 						form.leadTime = (!this.ruleForm.leadTime || this.ruleForm.leadTime == '') ? '' : util.formatDate.format(new Date(this.ruleForm.leadTime), 'yyyy-MM-dd');
 						$.getJSON('api/order/creat',form).then(data=>{
 							if(data.flag){
@@ -279,13 +297,43 @@
 								type: 'error'
 							});
 						}
+                        if(this.users.length>=1){
+                            this.disabled=true
+                        }else {
+                            this.uuuName=query
+                            this.disabled=false
+                        }
 					})
 				} else {
 					this.users = [];
 				}
 				this.loading=false
-			}
-
+			},
+            creatU(){
+			    this.uloading=true
+			    let form={
+                    name:this.uuuName,
+                    phone:this.uuuName,
+                    sex:"男",
+                }
+                $.getJSON('api/customer/creat',form).then(data=>{
+                    if(data.flag){
+                        this.$notify({
+                            title: '创建用户成功',
+                            message: data.remark,
+                            type: 'success'
+                        });
+                        this.disabled=true
+                    }else {
+                        this.$message({
+                            message: data.remark,
+                            type: 'error'
+                        });
+                    }
+                })
+                this.uloading=false
+                this.remoteMethod(this.uuuName)
+            }
 		},
         mounted() {
             this.getGoods()
