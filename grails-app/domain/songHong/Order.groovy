@@ -17,6 +17,7 @@ class Order {
                                 remark:""
                         ],
                 ]*/
+                orderId : "",//订单编号
                 modeTransport : "",//运输方式
                 userName : "",//客户姓名
                 _Uid: "",//客户id

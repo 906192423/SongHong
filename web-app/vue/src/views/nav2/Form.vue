@@ -41,43 +41,36 @@
             </el-input>
             <el-button type="primary" v-on:click="getGoods">搜索</el-button>
         </el-form-item>
-        <el-form-item label="商品表">
-        <el-table
-                :data="goodsTable"
-                stripe
-                style="width:900px">
-            <el-table-column
-                    prop="name"
-                    label="商品名"
-                    width="180">
-            </el-table-column>
-            <el-table-column
-                    prop="code"
-                    label="商品编号"
-                    width="180">
-            </el-table-column>
-            <el-table-column
-                    prop="price"
-                    label="商品价格"
-                    width="180">
-            </el-table-column>
-            <el-table-column
-                    label="数量"
-                    width="250">
-                <template slot-scope="scope">
-                    <el-input-number v-model="scope.row.num" placeholder="请输入数量"  @change="addCli(scope.row)"></el-input-number>
-                </template>
-            </el-table-column>
-            <el-table-column
-                    fixed="right"
-                    prop="amount"
-                    label="总额">
-            </el-table-column>
-        </el-table>
-        </el-form-item>
-        <el-form-item label="总金额" style="width:500px" prop="amount">
-            <el-input v-model="ruleForm.amount"></el-input>
-        </el-form-item>
+        <el-form-item label="商品列表">
+		<el-table
+				:data="goodsTable"
+				border
+				height="200"
+				:summary-method="getSummaries"
+				show-summary
+				style="width: 100%; margin-top: 20px">
+			<el-table-column
+					prop="cold"
+					label="商品编号"
+					width="180">
+			</el-table-column>
+			<el-table-column
+					prop="name"
+					label="产品名称">
+			</el-table-column>
+			<el-table-column
+					prop="price"
+					label="商品单价">
+			</el-table-column>
+			<el-table-column label="数量" width="250">
+				<template slot-scope="scope">
+					<el-input-number v-model="scope.row.num" placeholder="请输入数量"  @change="addCli(scope.row)"></el-input-number>
+				</template>
+			</el-table-column>
+			<el-table-column fixed="right"   prop="amount" label="小计">
+			</el-table-column>
+		</el-table>
+		</el-form-item>
 		<el-form-item label="支付方式" prop="payWay">
 			<el-select v-model="ruleForm.payWay" placeholder="请选择支付方式" multiple>
 				<el-option label="微信支付" value="微信支付"></el-option>
@@ -89,15 +82,9 @@
 		<el-form-item label="交货时间" required>
 			<el-col :span="11">
 				<el-form-item prop="leadTime" style="width: 216px">
-					<el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.leadTime" style="width: 100%;"></el-date-picker>
+					<el-date-picker v-model="ruleForm.leadTime" type="date" placeholder="选择日期"></el-date-picker>
 				</el-form-item>
 			</el-col>
-			<!--<el-col class="line" :span="2">-</el-col>-->
-			<!--<el-col :span="11">-->
-				<!--<el-form-item prop="date2">-->
-					<!--<el-time-picker type="fixed-time" placeholder="选择时间" v-model="ruleForm.date2" style="width: 100%;"></el-time-picker>-->
-				<!--</el-form-item>-->
-			<!--</el-col>-->
 		</el-form-item>
 		<el-form-item label="运输方式" style="width:500px" prop="modeTransport">
 			<el-input v-model="ruleForm.modeTransport"></el-input>
@@ -130,6 +117,7 @@
 					amount :0,//合计金额
 					payWay:"",//支付方式
 					addr:"",//交货地址
+					num9:"",//数量
 				},
 				formLoading:false,
 				rules: {
@@ -173,6 +161,37 @@
 			};
 		},
 		methods: {
+			getSummaries(param) {
+				const { columns, data } = param;
+				const sums = [];
+				columns.forEach((column, index) => {
+					if (index === 0) {
+						sums[index] = '合计金额';
+						return;
+					}
+					if (index === 1||index === 2||index === 3) {
+						sums[index] = '  ';
+						return;
+					}
+
+					const values = data.map(item => Number(item[column.property]));
+					if (!values.every(value => isNaN(value))) {
+						sums[index] = values.reduce((prev, curr) => {
+							const value = Number(curr);
+							if (!isNaN(value)) {
+								return prev + curr;
+							} else {
+								return prev;
+							}
+						}, 0);
+						sums[index] += ' 元';
+					} else {
+						sums[index] = 'N/A';
+					}
+				});
+
+				return sums;
+			},
             addCli(row){
                 console.log("num:"+row.num+"price: "+row.price)
                 row.amount= parseFloat((row.price*row.num).toFixed(3))
@@ -266,6 +285,7 @@
 				}
 				this.loading=false
 			}
+
 		},
         mounted() {
             this.getGoods()
