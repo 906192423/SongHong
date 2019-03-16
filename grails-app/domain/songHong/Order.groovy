@@ -9,7 +9,7 @@ class Order {
                 _id : "",
                 _creatId:"",//创建者id
                 creatName:"",//创建者姓名
-                sellCold : "",//订单号
+                sellCode: "",//订单号
                 detail:[
 //                        [
 //                                _id: "",

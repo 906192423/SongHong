@@ -306,6 +306,7 @@
 					})
 				} else {
 					this.users = [];
+                    this.disabled=true
 				}
 				this.loading=false
 			},
