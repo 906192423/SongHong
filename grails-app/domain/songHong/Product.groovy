@@ -10,7 +10,9 @@ class Product {
                 code: "",//商品编号
                 img:[],//商品图片
                 remark: "",//备注
+                costPrice:"",//进价
                 price:0,//单价
+                unit:"",//单位
                 ct  : new Date().format("yyyy-MM-dd HH:mm:ss.SSS"),//创建时间
                 state: 0,//0为可生产，-1无法生产
 

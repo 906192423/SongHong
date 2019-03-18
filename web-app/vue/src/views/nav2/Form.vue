@@ -18,6 +18,7 @@
 						:value="item.value">
 				</el-option>
 			</el-select>
+            <el-button type="primary" :disabled="disabled"  :loading="uloading"  @click="creatUU()">直接创建客户:{{uuuName}}</el-button>
 		</el-form-item>
         <el-form-item label="请选择商品">
             <el-select
@@ -77,6 +78,17 @@
 			<el-table-column fixed="right"   prop="amount" label="小计">
 			</el-table-column>
 		</el-table>
+		</el-form-item>
+        <el-form-item label="定金" style="width:500px" prop="modeTransport">
+            <el-input v-model="ruleForm.earnest"></el-input>
+        </el-form-item>
+		<el-form-item label="支付方式" prop="payWay">
+			<el-select v-model="ruleForm.payWay" placeholder="请选择支付方式" multiple>
+				<el-option label="微信支付" value="微信支付"></el-option>
+				<el-option label="支付宝支付" value="支付宝支付"></el-option>
+				<el-option label="刷卡支付" value="刷卡支付"></el-option>
+				<el-option label="现金支付" value="现金支付"></el-option>
+			</el-select>
 		</el-form-item>
 		<el-form-item label="交货时间" required>
 			<el-col :span="11">
@@ -196,9 +208,7 @@
 				return sums;
 			},
             addCli(row){
-                console.log("num:"+row.num+"price: "+row.price)
                 row.amount= parseFloat((row.price*row.num).toFixed(3))
-                console.log((row.price*row.num).toFixed(3))
                 let total=0.0
                 this.goodsTable.forEach(it=>{
                     total=parseFloat(it.amount+total)
@@ -280,18 +290,19 @@
 					$.getJSON('api/customer/getUsers',{name:query}).then(data=>{
 						if(data.flag){
 							this.users=data.users
+                            if(this.users.length>=1){
+                                this.disabled=true
+                            }else {
+                                this.uuuName=query
+                                this.disabled=false
+                            }
 						}else {
 							this.$message({
 								message: data.remark,
 								type: 'error'
 							});
 						}
-                        if(this.users.length>=1){
-                            this.disabled=true
-                        }else {
-                            this.uuuName=query
-                            this.disabled=false
-                        }
+                        this.loading=false
 					})
 				} else {
 					this.users = [];
@@ -301,8 +312,6 @@
                 console.log("88888888888888888888")
 			},
             creatUU(){
-			    console.log(this.uuuName)
-                console.log("11111111111111111")
 			    this.uloading=true
 			    let form={
                     name:this.uuuName,
