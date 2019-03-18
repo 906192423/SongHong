@@ -11,8 +11,7 @@ class Repetory {
                 remark: "",//备注
                 price:0,//单价
                 ct  : new Date().format("yyyy-MM-dd HH:mm:ss.SSS"),//创建时间
-                state: 0,//0为可生产，-1无法生产
-
+                amount: 0,//库存量
         ]
         if (initObj) item.putAll(initObj)
         return item

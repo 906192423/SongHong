@@ -1,6 +1,7 @@
 <template>
 	<el-form :model="ruleForm" :rules="rules" v-loading="formLoading" ref="ruleForm" label-width="100px" class="demo-ruleForm">
 		<el-form-item label="请选择客户" prop="_Uid">
+            <el-button type="primary" :disabled="disabled"  :loading="uloading"  @click="creatUU()">创建客户</el-button>
 			<el-select style="width: 300px"
 					v-model="ruleForm._Uid"
 					filterable
@@ -17,7 +18,6 @@
 						:value="item.value">
 				</el-option>
 			</el-select>
-            <el-button type="primary" :disabled="disabled"  :loading="uloading" v-on:click="creatU()">创建客户</el-button>
 		</el-form-item>
         <el-form-item label="请选择商品">
             <el-select
@@ -295,11 +295,14 @@
 					})
 				} else {
 					this.users = [];
-					this.disabled=true
+                    this.disabled=true
 				}
 				this.loading=false
+                console.log("88888888888888888888")
 			},
-            creatU(){
+            creatUU(){
+			    console.log(this.uuuName)
+                console.log("11111111111111111")
 			    this.uloading=true
 			    let form={
                     name:this.uuuName,
@@ -320,10 +323,10 @@
                             type: 'error'
                         });
                     }
+                    this.uloading=false
+                    this.remoteMethod(this.uuuName)
                 })
-                this.uloading=false
-                this.remoteMethod(this.uuuName)
-            }
+            },
 		},
         mounted() {
             this.getGoods()
