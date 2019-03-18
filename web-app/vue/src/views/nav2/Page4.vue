@@ -21,7 +21,7 @@
       </el-table-column>
       <el-table-column type="index" width="60">
       </el-table-column>
-      <el-table-column prop="_id" label="订单号" width="220" sortable>
+      <el-table-column prop="sellCode" label="订单号" width="220" sortable>
       </el-table-column>
       <el-table-column prop="amount" label="总金额" width="140" sortable>
       </el-table-column>
@@ -39,14 +39,7 @@
       </el-table-column>
     </el-table>
 
-    <!--工具条-->
-    <!--<el-col :span="24" class="toolbar">-->
-      <!--<el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>-->
-      <!--<el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="20" :total="total" style="float:right;">-->
-      <!--</el-pagination>-->
-    <!--</el-col>-->
 
-    <!--编辑界面-->
     <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
       <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
         <el-form-item label="姓名" prop="name">
