@@ -9,13 +9,17 @@ class ProductController extends BaseController{
         def p=Product.newOne([
                 name:params.name,//商品名
                 code:params.code,//商品编号
-                img:params.img,//商品图片
-                remark: params.remark,//备注
+                remark:params.remark,//备注
                 price:params.price,//单价
+                unit: params.unit,//单位
+                costPrice:params.costPrice,//进价
+                number:params.number,
         ])
         try{
+            p.number=Integer.valueOf(params.number)
             p.state=Integer.valueOf(params.state)
             p.price=Double.valueOf(params.price)
+            p.costPrice=Double.valueOf(params.costPrice)
             dataService.mongoDb.saveProduct(p)
             render(js(true,"创建商品成功"))
         }catch(Exception e){
@@ -32,7 +36,7 @@ class ProductController extends BaseController{
         def p=Product.newOne([
                 name:params.name,//商品名
                 code:params.code,//商品编号
-                img:params.img,//商品图片
+                unit:params.unit,//商品单位
                 remark: params.remark,//备注
                 price:params.price,//单价
                 state:Integer.valueOf(params.state),//0为可生产，-1无法生产

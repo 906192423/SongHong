@@ -12,6 +12,7 @@ import Page6 from './views/nav3/Page6.vue'
 import echarts from './views/charts/echarts.vue'
 import comein from './views/nav4/comein.vue'
 import repetory from './views/nav4/repetory.vue'
+import pay from './views/nav5/pay.vue'
 let routes = [
     {
         path: '/login',
@@ -47,6 +48,16 @@ let routes = [
             { path: '/page4', component: Page4, name: '浏览订单' },
             { path: '/page5', component: Page5, name: '生产中' },
             { path: '/end', component: end, name: '已完成' }
+        ]
+    },
+    {
+        path: '/',
+        component: Home,
+        name: '财务管理',
+        iconCls: 'fa fa-id-card-o',
+        children: [
+            { path: '/pay', component: pay, name: '收银缴款' },
+            { path: '/page4', component: Page4, name: '应收欠款' },
         ]
     },
     {

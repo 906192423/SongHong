@@ -20,7 +20,7 @@ class Order {
 //                        ],
                 ],
                 modeTransport : "",//运输方式
-                earnest:0,//交款方式，1为全款一次结清，2交一部分定金，-1欠款
+                earnest:0,//交款方式，1为全款一次结清，0交一部分定金，-1欠款
                 userName : "",//客户姓名
                 _Uid: "",//客户id
                 leadTime: " ",//交货时间

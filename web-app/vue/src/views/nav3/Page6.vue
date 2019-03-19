@@ -38,7 +38,7 @@
             </template>
         </el-table-column>
         <el-table-column
-                label="商品价格"
+                label="商品售价"
                 width="180">
             <template slot-scope="scope">
                 <el-tag type="success">{{scope.row.price}}</el-tag>
@@ -90,8 +90,17 @@
                 <el-form-item label="商品编号" prop="code">
                     <el-input v-model="addForm.code" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="商品价格" prop="price">
+                <el-form-item label="商品进价" prop="costPrice">
+                    <el-input v-model="addForm.costPrice" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="商品售价" prop="price">
                     <el-input v-model="addForm.price" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="商品单位" prop="unit">
+                    <el-input v-model="addForm.unit" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="库存数量" prop="number">
+                    <el-input v-model="addForm.number" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="商品状态">
                     <el-radio-group v-model="addForm.state">
@@ -117,7 +126,7 @@
                 <el-form-item label="商品编号" prop="code">
                     <el-input v-model="editForm.code" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="商品价格" prop="price">
+                <el-form-item label="商品售价" prop="price">
                     <el-input v-model="editForm.price" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="商品状态">
@@ -170,14 +179,17 @@
                     img:[],//商品图片
                     remark: "",//备注
                     price:"",//单价
+                    unit:"",//单位
+                    number:"",//库存数量
                     state: 0,//0为可生产，-1无法生产
+                    costPrice:"",//进价
                 },
                 //编辑商品界面数据
                 editForm: {
                     id:"",
                     name:"",//商品名
                     code: "",//商品编号
-                    img:[],//商品图片
+                    unit:"",//单位
                     remark: "",//备注
                     price:"",//单价
                     state:"",//0为可生产，-1无法生产

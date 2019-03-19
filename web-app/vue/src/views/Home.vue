@@ -75,7 +75,7 @@
 	export default {
 		data() {
 			return {
-				sysName:'洪峰工贸',
+				sysName:'ERP系统',
 				collapsed:false,
 				sysUserName: '',
 				sysUserAvatar: '',

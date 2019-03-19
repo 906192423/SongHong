@@ -51,7 +51,7 @@
 				show-summary
 				style="width: 100%">
 			<el-table-column
-					prop="cold"
+					prop="code"
 					label="商品编号"
 					width="180">
 			</el-table-column>
@@ -62,6 +62,10 @@
 			<el-table-column
 					prop="price"
 					label="商品单价">
+			</el-table-column>
+			<el-table-column
+					prop="unit"
+					label="产品单位">
 			</el-table-column>
 			<el-table-column label="数量" width="250">
 				<template slot-scope="scope">
