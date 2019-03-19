@@ -16,12 +16,12 @@
     </el-col>
 
     <!--列表-->
-    <el-table :data="users" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
+    <el-table :data="users" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;"ref="multipleTable">
       <el-table-column type="selection" width="55">
       </el-table-column>
       <el-table-column type="index" width="60">
       </el-table-column>
-      <el-table-column prop="_id" label="订单号" width="220" sortable>
+      <el-table-column prop="sellCode" label="订单号" width="220" sortable>
       </el-table-column>
       <el-table-column prop="amount" label="总金额" width="140" sortable>
       </el-table-column>
@@ -37,32 +37,22 @@
           <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
+
     </el-table>
+    <el-col :span="24" class="toolbar">
+      <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
+      <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="20" :total="total" style="float:right;">
+      </el-pagination>
+    </el-col>
 
-    <!--工具条-->
-    <!--<el-col :span="24" class="toolbar">-->
-      <!--<el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>-->
-      <!--<el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="20" :total="total" style="float:right;">-->
-      <!--</el-pagination>-->
-    <!--</el-col>-->
-
-    <!--编辑界面-->
     <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
       <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="editForm.name" auto-complete="off"></el-input>
+          <h1>订单号：{{editForm.sellCode}}</h1>
+        <el-form-item label="客户姓名" prop="userName">
+          <el-input v-model="editForm.userName" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="性别">
-          <el-radio-group v-model="editForm.sex">
-            <el-radio class="radio" :label="1">男</el-radio>
-            <el-radio class="radio" :label="0">女</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="邮箱" prop="email">
-          <el-input v-model="editForm.email" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="qq" prop="qq">
-          <el-input v-model="editForm.qq" auto-complete="off"></el-input>
+        <el-form-item label="交货时间" prop="leadTime">
+          <el-input v-model="editForm.leadTime" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="电话" prop="phone">
           <el-input v-model="editForm.phone" auto-complete="off"></el-input>
@@ -107,12 +97,27 @@
         },
         //编辑界面数据
         editForm: {
-          id: 0,
-          name: '',
-          sex: -1,
-          age: 0,
-          birth: '',
-          addr: ''
+          sellCode: "",//订单号
+          detail:[
+//                        [
+//                                _id: "",
+//                                name:"",
+//                                code: "",
+//                                num:0,
+//                                price:0,
+//                        ],
+          ],
+          modeTransport : "",//运输方式
+          earnest:0,//定金
+          userName : "",//客户姓名
+          _Uid: "",//客户id
+          leadTime: " ",//交货时间
+          remark : "",//备注
+          amount :"0",//合计金额
+          state: 0,//0为新创建的订单，1为生产中，2完成，-1未完成的
+          payState:"",//0结清，-1未结清
+          payRemark:"",//未结清时的说明
+          addr:"",//交货地址
         },
 
         addFormVisible: false,//新增界面是否显示
@@ -142,6 +147,7 @@
       // })
     },
     methods: {
+
       //性别显示转换
       formatSex: function (row, column) {
         return row.sex == 1 ? '男' : row.sex == 0 ? '女' : '未知';
@@ -173,7 +179,7 @@
           this.listLoading = true;
           //NProgress.start();
           let para = { _id: row._id };
-          $.getJSON('api/order/delete',para).then(data=>{
+          $.getJSON('api/order/deletes',para).then(data=>{
             if(data.flag){
               this.$message({
                 message:data.remark,
@@ -248,7 +254,7 @@
           this.listLoading = true;
           //NProgress.start();
           let para = { ids:ids };
-          $.getJSON('api/customer/deletes',para).then(data=>{
+          $.getJSON('api/order/deletes',para).then(data=>{
             this.listLoading = false;
             if(data.flag){
               this.$message({
