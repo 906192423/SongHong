@@ -47,10 +47,9 @@
 		<el-table
 				:data="goodsTable"
 				border
-				height="200"
 				:summary-method="getSummaries"
 				show-summary
-				style="width: 100%; margin-top: 20px">
+				style="width: 100%">
 			<el-table-column
 					prop="cold"
 					label="商品编号"
@@ -78,8 +77,11 @@
 			</el-table-column>
 		</el-table>
 		</el-form-item>
-        <el-form-item label="定金" style="width:500px" prop="modeTransport">
-            <el-input v-model="ruleForm.earnest"></el-input>
+
+        <el-form-item label="交款方式" style="width:500px" prop="modeTransport">
+			<el-radio v-model="ruleForm.earnest" label="1">全款结清</el-radio>
+			<el-radio v-model="ruleForm.earnest" label="0">定金付款</el-radio>
+			<el-radio v-model="ruleForm.earnest" label="-1">赊账欠款</el-radio>
         </el-form-item>
 		<!--<el-form-item label="支付方式" prop="payWay">-->
 			<!--<el-select v-model="ruleForm.payWay" placeholder="请选择支付方式" multiple>-->
@@ -89,12 +91,12 @@
 				<!--<el-option label="现金支付" value="现金支付"></el-option>-->
 			<!--</el-select>-->
 		<!--</el-form-item>-->
-		<el-form-item label="交货时间" required>
-			<el-col :span="11">
+
+		<el-form-item label="交货时间" style="width:500px" prop="leadTime">
 				<el-form-item prop="leadTime" style="width: 216px">
-					<el-date-picker v-model="ruleForm.leadTime" type="date" placeholder="选择日期"></el-date-picker>
+					<el-date-picker v-model="ruleForm.leadTime" type="date" placeholder="选择日期">
+					</el-date-picker>
 				</el-form-item>
-			</el-col>
 		</el-form-item>
 		<el-form-item label="运输方式" style="width:500px" prop="modeTransport">
 			<el-input v-model="ruleForm.modeTransport"></el-input>
@@ -128,10 +130,9 @@
 					leadTime: " ",//交货时间
 					remark : "",//备注
 					amount :0,//合计金额
-					payWay:"",//支付方式
 					addr:"",//交货地址
 					num9:"",//数量
-                    earnest:0,
+					earnest:0,
 				},
 				formLoading:false,
 				rules: {

@@ -19,14 +19,13 @@ class OrderController extends BaseController{
                     creatName:session.user.name,
                     sellCode:orderService.getCode(),
                     detail: JSONObject.parse(params.detail),
-                    earnest:Double.valueOf(params.earnest),
+                    earnest:params.earnest,
                     modeTransport : params.modeTransport,//运输方式
                     userName :cu.name,//客户姓名
                     _Uid:cu._id,//客户id
                     leadTime:params.leadTime,//交货时间
                     remark :params.remark,//备注
                     amount :Double.valueOf(params.amount),//合计金额
-                    payWay:params.payWay,//支付方式
                     addr:params.addr,//交货地址
             ])
             dataService.mongoDb.saveOrder(order)
