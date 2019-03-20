@@ -15,11 +15,11 @@
     </el-col>
     <el-table v-loading="listLoading"
             :data="tableData"
-            style="width: 100%">
+            >
 
         <el-table-column
                 label="商品名"
-                width="180">
+                width="100%">
             <template slot-scope="scope">
                 <el-popover trigger="hover" placement="top">
                     <!--<p>姓名: {{ scope.row.name }}</p>-->

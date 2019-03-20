@@ -9,6 +9,7 @@ import Page4 from './views/nav2/Page4.vue'
 import Page5 from './views/nav2/Page5.vue'
 import end from './views/nav2/end.vue'
 import Page6 from './views/nav3/Page6.vue'
+import Page7 from './views/nav3/Page7.vue'
 import echarts from './views/charts/echarts.vue'
 import comein from './views/nav4/comein.vue'
 import repetory from './views/nav4/repetory.vue'
@@ -68,6 +69,7 @@ let routes = [
         // leaf: true,//只有一个节点
         children: [
             { path: '/page6', component: Page6, name: '浏览商品' },
+            { path: '/page7', component: Page7, name: '分类管理'},
         ]
     },
     {

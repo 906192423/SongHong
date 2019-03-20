@@ -7,6 +7,7 @@ class Product {
         def item = [
                 _id : "",
                 name:"",//商品名
+                classification:"",//商品分类
                 code: "",//商品编号
                 remark: "",//备注
                 costPrice:"",//进价
