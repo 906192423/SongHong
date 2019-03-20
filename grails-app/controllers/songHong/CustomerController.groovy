@@ -40,23 +40,20 @@ class CustomerController extends BaseController{
         def form=[sort:[_id:-1]]
         if(params.name){
             def nu=params.name
-            def a
             try{
                 nu=Integer.parseInt(params.name)
                 form+=[phone: [$regex:/^${nu.toString()}/]]
-                a="name"
                 println("电话查找")
             }catch(Exception e){
                 println("名字查找："+nu)
                 form+=[name: [$regex:/^${nu}/]]
-                a="phone"
             }
             def u=dataService.mongoDb.searchCustomer(form,1,40)
             def users=[]
             u.contentlist.each{
                 users.add([
-                        value:it._id,
-                        label:"${it."${a}"}".toString()
+                        value:JSONObject.toJSONString(it),
+                        label:it.name
                 ])
             }
             render(JSONObject.toJSONString([users:users,flag:true]))

@@ -21,15 +21,57 @@
             </el-table-column>
             <el-table-column type="index" width="60">
             </el-table-column>
-            <el-table-column prop="sellCode" label="订单号" width="220" sortable>
+            <el-table-column type="expand">
+                <template slot-scope="scope">
+                    <div>
+                        <el-table
+                                :data="scope.row.detail"
+                                style="width: 100%">
+                            <el-table-column
+                                    prop="name"
+                                    label="商品名"
+                                    width="180">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="code"
+                                    label="商品码"
+                                    width="180">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="price"
+                                    width="120"
+                                    label="价格">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="num"
+                                    width="120"
+                                    label="数量">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="total"
+                                    label="总价">
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                </template>
             </el-table-column>
-            <el-table-column prop="amount" label="总金额" width="140" sortable>
+            <el-table-column prop="sellCode" label="订单号" width="120" sortable>
             </el-table-column>
-            <el-table-column prop="creatName" label="销售员" width="120" sortable>
+            <el-table-column prop="userName" label="消费者" width="120" sortable>
+            </el-table-column>
+            <el-table-column prop="amount" label="总金额" width="120" sortable>
             </el-table-column>
             <el-table-column prop="leadTime" label="交货时间" width="220" sortable>
             </el-table-column>
-            <el-table-column prop="addr" label="交货地址" min-width="180">
+            <el-table-column label="交货地址" min-width="180">
+                <template slot-scope="scope">
+                    <el-popover trigger="hover" placement="top">
+                        <p>{{ scope.row.addr}}</p>
+                        <div slot="reference" class="name-wrapper">
+                            <el-tag size="medium" type="info" color="blue">查看交货地址</el-tag>
+                        </div>
+                    </el-popover>
+                </template>
             </el-table-column>
             <el-table-column label="交款方式" width="150">
                 <template slot-scope="scope">
@@ -45,13 +87,14 @@
                     <el-tag v-if="scope.row.state==2" type="success">生产完成</el-tag>
                 </template>
             </el-table-column>
+            <el-table-column prop="creatName" label="销售员" width="120" sortable>
+            </el-table-column>
             <el-table-column label="操作" width="150">
                 <template slot-scope="scope">
                     <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                     <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
                 </template>
             </el-table-column>
-
         </el-table>
         <el-col :span="24" class="toolbar">
             <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">进入生产队列</el-button>
@@ -161,11 +204,6 @@
             // })
         },
         methods: {
-
-            //性别显示转换
-            formatSex: function (row, column) {
-                return row.sex == 1 ? '男' : row.sex == 0 ? '女' : '未知';
-            },
             handleCurrentChange(val) {
                 this.page = val;
                 this.getUsers();
@@ -296,5 +334,12 @@
 </script>
 
 <style scoped>
-
+    .table_c {
+        width: 100%;
+        height: 500px;
+        background: url("../../assets/images/page4/1.jpg") center
+        center no-repeat;
+        background-size: 100% auto;
+        padding: 10px;
+    }
 </style>

@@ -10,6 +10,7 @@ class Order {
                 _creatId:"",//创建者id
                 creatName:"",//创建者姓名
                 sellCode: "",//订单号
+                phone:"",//联系电话
                 detail:[
 //                        [
 //                                _id: "",

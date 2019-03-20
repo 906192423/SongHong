@@ -18,6 +18,7 @@ class OrderController extends BaseController{
                     _creatId:session.user._id,
                     creatName:session.user.name,
                     sellCode:orderService.getCode(),
+                    phone:params.phone,
                     detail: JSONObject.parse(params.detail),
                     earnest:Integer.valueOf(params.earnest),
                     modeTransport : params.modeTransport,//运输方式

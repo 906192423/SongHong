@@ -2,9 +2,10 @@
 	<el-form :model="ruleForm" :rules="rules" v-loading="formLoading" ref="ruleForm" label-width="100px" class="demo-ruleForm">
 		<el-form-item label="请选择客户" prop="_Uid">
 			<el-select style="width: 300px"
-					v-model="ruleForm._Uid"
+					v-model="selUser"
 					filterable
 					remote
+                       @change="chu()"
 					reserve-keyword
 					placeholder="请输入姓名或者电话号码来查找"
 					:remote-method="remoteMethod"
@@ -12,13 +13,16 @@
 					:loading="loading">
 				<el-option
 						v-for="item in users"
-						:key="item.value"
+						:key="item.label"
 						:label="item.label"
 						:value="item.value">
 				</el-option>
 			</el-select>
             <el-button type="primary" :disabled="disabled"  :loading="uloading"  @click="creatUU()">直接创建客户:{{uuuName}}</el-button>
 		</el-form-item>
+        <el-form-item label="联系电话" style="width:500px" prop="phone">
+            <el-input v-model="ruleForm.phone"></el-input>
+        </el-form-item>
         <el-form-item label="请选择商品">
             <el-select
                     v-model="value10"
@@ -126,8 +130,11 @@
                 disabled:true,
                 gloading:false,
                 uloading:false,
+                selUser:"",
+                user:"",
 				ruleForm: {
 					modeTransport : "",//运输方式
+                    phone:"",
 					_Uid: "",//客户id
 					leadTime:"",//交货时间
 					remark : "",//备注
@@ -153,6 +160,9 @@
                     earnest: [
                         { required: true, message: '请选择交款方式', trigger: 'change' }
 					],
+                    phone: [
+                        { required: true, message: '请选输入联系电话', trigger: 'change' }
+                    ],
 				},
 				users: [],
 				list: [],
@@ -255,6 +265,7 @@
                                     code:it.code,
                                     num:it.num,
                                     price:it.price,
+                                    total:it.amount,
                                 }
                                 detail.push(a)
                             })
@@ -343,6 +354,15 @@
                     this.remoteMethod(this.uuuName)
                 })
             },
+            chu(){
+			    if(this.selUser){
+                    this.user=JSON.parse(this.selUser)
+                }else {
+                    this.user={}
+                }
+                this.ruleForm._Uid=this.user._id
+                this.ruleForm.phone=this.user.phone
+            }
 		},
         mounted() {
             this.getGoods()
