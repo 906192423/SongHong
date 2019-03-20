@@ -129,36 +129,30 @@
 				ruleForm: {
 					modeTransport : "",//运输方式
 					_Uid: "",//客户id
-					leadTime: " ",//交货时间
+					leadTime:"",//交货时间
 					remark : "",//备注
 					amount :0,//合计金额
 					addr:"",//交货地址
 					num9:"",//数量
-					earnest:0,
+					earnest:"",
 				},
 				formLoading:false,
 				rules: {
                     _Uid: [
 						{ required: true, message: '请输入用户', trigger: 'blur' },
 					],
-					region: [
-						{ required: true, message: '请选择活动区域', trigger: 'change' }
+                    modeTransport: [
+						{ required: true, message: '请输入运输方式', trigger: 'blur' }
 					],
-					date1: [
+                    leadTime: [
 						{ type: 'date', required: true, message: '请选择日期', trigger: 'change' }
 					],
-					date2: [
-						{ type: 'date', required: true, message: '请选择时间', trigger: 'change' }
+                    addr: [
+                        { required: true, message: '请输入送货地址', trigger: 'blur' }
 					],
-					type: [
-						{ type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
+                    earnest: [
+                        { required: true, message: '请选择交款方式', trigger: 'change' }
 					],
-					resource: [
-						{ required: true, message: '请选择活动资源', trigger: 'change' }
-					],
-					desc: [
-						{ required: true, message: '请填写活动形式', trigger: 'blur' }
-					]
 				},
 				users: [],
 				list: [],
@@ -243,37 +237,46 @@
 			submitForm(formName) {
 				this.$refs[formName].validate((valid) => {
 					if (valid) {
-						this.loading=true
-                        let form=JSON.parse(JSON.stringify(this.ruleForm))
-                        let detail=[]
-                        this.goodsTable.forEach(it=>{
-                            let a={
-                                _id:it._id,
-                                name:it.name,
-                                code:it.code,
-                                num:it.num,
-                                price:it.price,
-                            }
-                            detail.push(a)
+					    if(this.goodsTable.length==0){
+                            this.$message({
+                                message:'请至少选择一个商品！',
+                                type: 'error'
+                            });
+                            return false;
+                        }
+                        this.$confirm('确认提交吗？', '提示', {}).then(() => {
+                            this.loading=true
+                            let form=JSON.parse(JSON.stringify(this.ruleForm))
+                            let detail=[]
+                            this.goodsTable.forEach(it=>{
+                                let a={
+                                    _id:it._id,
+                                    name:it.name,
+                                    code:it.code,
+                                    num:it.num,
+                                    price:it.price,
+                                }
+                                detail.push(a)
+                            })
+                            form.detail=JSON.stringify(detail)
+                            form.leadTime = (!this.ruleForm.leadTime || this.ruleForm.leadTime == '') ? '' : util.formatDate.format(new Date(this.ruleForm.leadTime), 'yyyy-MM-dd hh:mm:ss');
+                            $.getJSON('api/order/creat',form).then(data=>{
+                                if(data.flag){
+                                    this.$notify({
+                                        title: '成功',
+                                        message: data.remark,
+                                        type: 'success'
+                                    });
+                                    this.$refs['ruleForm'].resetFields();
+                                }else {
+                                    this.$message({
+                                        message: data.remark,
+                                        type: 'error'
+                                    });
+                                }
+                                this.loading=false
+                            })
                         })
-                        form.detail=JSON.stringify(detail)
-						form.leadTime = (!this.ruleForm.leadTime || this.ruleForm.leadTime == '') ? '' : util.formatDate.format(new Date(this.ruleForm.leadTime), 'yyyy-MM-dd');
-						$.getJSON('api/order/creat',form).then(data=>{
-							if(data.flag){
-								this.$notify({
-									title: '成功',
-									message: data.remark,
-									type: 'success'
-								});
-								this.$refs['ruleForm'].resetFields();
-							}else {
-								this.$message({
-									message: data.remark,
-									type: 'error'
-								});
-							}
-							this.loading=false
-						})
 					} else {
 						this.$message({
 							message:'请正确填写必要数据！',
@@ -312,6 +315,10 @@
 				}
 			},
             creatUU(){
+			    if(this.ruleForm._Uid){
+			        this.disabled=true
+			        return
+                }
 			    this.uloading=true
 			    let form={
                     name:this.uuuName,

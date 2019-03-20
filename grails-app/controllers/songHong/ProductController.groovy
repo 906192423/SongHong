@@ -8,14 +8,11 @@ class ProductController extends BaseController{
         println(params)
         def p=Product.newOne([
                 name:params.name,//商品名
-                code:params.code,//商品编号
                 remark:params.remark,//备注
-                price:params.price,//单价
                 unit: params.unit,//单位
-                costPrice:params.costPrice,//进价
-                number:params.number,
         ])
         try{
+            p.code=Integer.valueOf(params.code)//商品编号
             p.number=Integer.valueOf(params.number)
             p.state=Integer.valueOf(params.state)
             p.price=Double.valueOf(params.price)

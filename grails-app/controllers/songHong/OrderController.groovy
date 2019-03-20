@@ -38,6 +38,9 @@ class OrderController extends BaseController{
         println("查看订单数据"+params)
         def form=[sort:[_id:-1]]
         def page=Integer.valueOf(params.page)
+        if(params.state){
+            form.state=Integer.valueOf(params.state)
+        }
         def u=dataService.mongoDb.searchOrder(form,page,20)
         render(js(true,"查询成功",[list:u.contentlist,num:u.allNum]))
     }
@@ -78,7 +81,7 @@ class OrderController extends BaseController{
         }
         render(js(false,"你不具有此权限，只有创建者或超级管理员可以删除"))
     }
-    def deletes={
+    def toProduct={
         println(params)
         def ids=params."ids[]"
         def id=[]
@@ -92,7 +95,7 @@ class OrderController extends BaseController{
         for(def _id:id){
             def cu=dataService.mongoDb.findOneOrder([_id:_id])
             if(cu._creatId==params._id||session.user.superUser){
-                dataService.mongoDb.delOrder([_id:_id])
+                dataService.mongoDb.updateOrder([_id:_id],[state:1])
                 b++
             }else {
                 a++
@@ -102,10 +105,10 @@ class OrderController extends BaseController{
             render(js(true,"全部成功"))
         }else {
             if(b!=0){
-                render(js(true,"部分成功，注意只有是你创建的用户才能被你或超级管理员删除！"))
+                render(js(true,"部分成功，注意只有是你创建的订单才能被你或超级管理员操作！"))
                 return
             }
-            render(js(false,"全部失败,注意只有是你创建的用户才能被你或超级管理员删除！！!"))
+            render(js(false,"全部失败,注意只有是你创建的订单才能被你或超级管理员操作！"))
         }
     }
 }

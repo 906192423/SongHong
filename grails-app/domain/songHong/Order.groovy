@@ -27,7 +27,8 @@ class Order {
                 remark : "",//备注
                 amount :"0",//合计金额
                 ct  : new Date().format("yyyy-MM-dd HH:mm:ss.SSS"),//创建时间
-                state: 0,//0为新创建的订单，1为生产中，2完成，-1未完成的
+                state: 0,//0为新创建的订单，1为生产中，2生产完成，-1未完成的
+                allPay:false,//false未付完全部，true全部付清
                 addr:"",//交货地址
         ]
         if (initObj) item.putAll(initObj)
