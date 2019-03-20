@@ -97,10 +97,8 @@
 		<!--</el-form-item>-->
 
 		<el-form-item label="交货时间" style="width:500px" prop="leadTime">
-				<el-form-item prop="leadTime" style="width: 216px">
-					<el-date-picker v-model="ruleForm.leadTime" type="date" placeholder="选择日期">
-					</el-date-picker>
-				</el-form-item>
+			<el-date-picker v-model="ruleForm.leadTime" type="datetime" placeholder="选择日期时间">
+			</el-date-picker>
 		</el-form-item>
 		<el-form-item label="运输方式" style="width:500px" prop="modeTransport">
 			<el-input v-model="ruleForm.modeTransport"></el-input>
