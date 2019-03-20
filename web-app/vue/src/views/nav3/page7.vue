@@ -1,10 +1,17 @@
 <<template>
+
     <el-table :data="tableData" style="width: 100%" :row-class-name="tableRowClassName">
         <el-table-column prop="date" label="当前分类" width="180">
         </el-table-column>
         <el-table-column prop="name" label="姓名" width="180">
         </el-table-column>
         <el-table-column prop="address" label="地址">
+        </el-table-column>
+        <el-table-column label="操作" width="150">
+            <template slot-scope="scope">
+                <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+            </template>
         </el-table-column>
     </el-table>
 </template>
