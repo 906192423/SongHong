@@ -13,6 +13,7 @@ import Page7 from './views/nav3/Page7.vue'
 import echarts from './views/charts/echarts.vue'
 import comein from './views/nav5/comein.vue'
 import repetory from './views/nav5/repetory.vue'
+import supplier from './views/nav5/supplier.vue'
 import pay from './views/nav4/pay.vue'
 let routes = [
     {
@@ -60,6 +61,7 @@ let routes = [
         children: [
             { path: '/page6', component: Page6, name: '浏览商品' },
             { path: '/page7', component: Page7, name: '分类管理'},
+
         ]
     },
     {
@@ -78,7 +80,8 @@ let routes = [
         iconCls: 'fa fa-id-card-o',
         children: [
             { path: '/comein', component: comein, name: '进货' },
-            { path: '/repetory', component:repetory, name: '库存' }
+            { path: '/repetory', component:repetory, name: '库存' },
+            { path: '/supplier', component:supplier, name: '供货商' }
         ]
     },
     {
