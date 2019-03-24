@@ -32,14 +32,20 @@ class ProductController extends BaseController{
         }
         def p=Product.newOne([
                 name:params.name,//商品名
-                code:params.code,//商品编号
                 unit:params.unit,//商品单位
                 remark: params.remark,//备注
-                price:params.price,//单价
-                state:Integer.valueOf(params.state),//0为可生产，-1无法生产
         ])
-        dataService.mongoDb.updateProduct([_id:id],p)
-        render(js(true,"修改成功"))
+        try{
+            p.code=Integer.valueOf(params.code)//商品编号
+            p.number=Integer.valueOf(params.number)
+            p.state=Integer.valueOf(params.state)
+            p.price=Double.valueOf(params.price)
+            p.costPrice=Double.valueOf(params.costPrice)
+            dataService.mongoDb.updateProduct([_id:id],p)
+            render(js(true,"修改成功"))
+        }catch(Exception e){
+            render(js(false,"请输入正确的数据！"))
+        }
     }
     def delete={
         def id=params._id

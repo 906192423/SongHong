@@ -13,7 +13,7 @@
 					:loading="loading">
 				<el-option
 						v-for="item in users"
-						:key="item.label"
+						:key="item.value"
 						:label="item.label"
 						:value="item.value">
 				</el-option>
@@ -222,18 +222,27 @@
                 this.ruleForm.amount=total
             },
             change(){
-                this.goodsTable=[]
+                let goodsTable=[]
                 this.value10.forEach(it=>{
                     let g=JSON.parse(it)
-                    g.amount=0
-                    this.goodsTable.push(g)
+                    for(let j = 0,len = this.goodsTable.length; j < len; j++){
+                        if(g._id==this.goodsTable[j]._id){
+                            g.num=this.goodsTable[j].num
+                            g.amount=this.goodsTable[j].amount
+                            break
+                        }
+                    }
+                    goodsTable.push(g)
                 })
+                this.goodsTable=goodsTable
             },
             getGoods(){
                 this.gloading=true
                 $.getJSON('api/product/getGoods',{name:this.name}).then(data=>{
                     this.options5=[]
                     data.list.forEach(item=>{
+                        item.num=0
+                        item.amount=0
                         let disabled
                         if(item.state==0)
                             disabled=false

@@ -82,7 +82,7 @@
         <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="10":total="total" style="float:right;">
         </el-pagination>
         <!--添加商品界面-->
-        <el-dialog title="添加商品" v-model="addFormVisible" :close-on-click-modal="false">
+        <el-dialog title="添加商品" :visible.sync="addFormVisible" :close-on-click-modal="false">
             <el-form :model="addForm" label-width="80px" :rules="editFormRules" ref="addForm">
                 <el-form-item label="商品名" prop="name">
                     <el-input v-model="addForm.name" auto-complete="off"></el-input>
@@ -118,7 +118,7 @@
             </div>
         </el-dialog>
         <!--编辑商品界面-->
-        <el-dialog title="编辑商品" v-model="editFormVisible" :close-on-click-modal="false">
+        <el-dialog title="编辑商品" :visible.sync="editFormVisible" :close-on-click-modal="false">
             <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
                 <el-form-item label="商品名" prop="name">
                     <el-input v-model="editForm.name" auto-complete="off"></el-input>
@@ -168,9 +168,6 @@
                     price: [
                         { required: true, message: '请输入价格', trigger: 'blur' }
                     ],
-                    img:"",
-                    remark:"",
-                    state:"",
                 },
                 //添加商品界面数据
                 addForm: {

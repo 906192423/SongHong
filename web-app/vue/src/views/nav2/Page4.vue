@@ -104,7 +104,7 @@
       </el-pagination>
     </el-col>
 
-    <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
+    <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
       <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
           <h1>订单号：{{editForm.sellCode}}</h1>
           <h1>客户名：{{editForm.userName}}</h1>

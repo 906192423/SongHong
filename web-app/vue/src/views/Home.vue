@@ -130,12 +130,17 @@
 			}
 		},
 		mounted() {
-			var user = sessionStorage.getItem('user');
-			if (user) {
-				user = JSON.parse(user);
-				this.sysUserName = user.name || '';
-				this.sysUserAvatar = user.avatar || '';
-			}
+		    console.log("0000000000")
+            $.getJSON('api/user/info',{}).then(data=>{
+                this.sysUserName=data.user.name
+                this.sysUserAvatar="../../assets/images/home/1.jpg"
+            })
+			// var user = sessionStorage.getItem('user');
+			// if (user) {
+			// 	user = JSON.parse(user);
+			// 	this.sysUserName = user.name || '';
+			// 	this.sysUserAvatar = user.avatar || '';
+			// }
 
 		}
 	}
@@ -144,7 +149,7 @@
 
 <style scoped lang="scss">
 	@import '~scss_vars';
-	
+
 	.container {
 		position: absolute;
 		top: 0px;

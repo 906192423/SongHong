@@ -41,7 +41,7 @@ class RepetoryController extends BaseController{
         def id=params._id
         def pr=dataService.mongoDb.findOneRepetory([_id:id])
         if(!pr){
-            render(js(false,"此商品不存在"))
+            render(js(false,"此货物不存在"))
             return
         }
         def p=[
@@ -67,9 +67,9 @@ class RepetoryController extends BaseController{
             try{
                 nu=Integer.parseInt(params.name)
                 form+=[code: [$regex:/^${nu.toString()}/]]
-                println("商品码查找")
+                println("库存码查找")
             }catch(Exception e){
-                println("商品名查找："+nu)
+                println("库存名查找："+nu)
                 form+=[name: [$regex:/^${nu}/]]
             }
         }
