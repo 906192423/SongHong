@@ -253,6 +253,18 @@
                     this.gloading=false
                 })
             },
+           isNumber( s ) {
+               let regu = "^[0-9]+\.?[0-9]*$";
+               let re = new RegExp(regu);
+               if (re.test(s))
+               {
+                   return true;
+               }
+               else
+               {
+                   return false;
+               }
+               },
 			submitForm(formName) {
 				this.$refs[formName].validate((valid) => {
 					if (valid) {
@@ -262,6 +274,22 @@
                                 type: 'error'
                             });
                             return false;
+                        }
+                        for(let j=0,len=this.goodsTable.length;j<len;j++){
+                            if(!this.isNumber(this.goodsTable[j].num)){
+                                this.$message({
+                                    message:'数量处应输入数字！',
+                                    type: 'error'
+                                });
+                                return false;
+                            }
+                            if(this.goodsTable[j].num<=0){
+                                this.$message({
+                                    message:'数量至少为1！',
+                                    type: 'error'
+                                });
+                                return false;
+                            }
                         }
                         this.$confirm('确认提交吗？', '提示', {}).then(() => {
                             this.loading=true
@@ -371,6 +399,7 @@
                 }
                 this.ruleForm._Uid=this.user._id
                 this.ruleForm.phone=this.user.phone
+                this.ruleForm.addr=this.user.addr
             }
 		},
         mounted() {
