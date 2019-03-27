@@ -27,7 +27,9 @@
             </el-table-column>
             <el-table-column prop="address" label="地址" min-width="180" sortable>
             </el-table-column>
-            <el-table-column prop="email" label="地址" min-width="180" sortable>
+            <el-table-column prop="email" label="邮箱" min-width="180" sortable>
+            </el-table-column>
+            <el-table-column prop="remark" label="简介" min-width="180" sortable>
             </el-table-column>
             <el-table-column label="操作" width="150">
                 <template slot-scope="scope">
@@ -40,31 +42,31 @@
 
 
         <!--编辑界面-->
-        <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
+        <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
             <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
                 <el-form-item label="姓名" prop="name">
-                    <el-input v-model="newForm.name" auto-complete="off"></el-input>
+                    <el-input v-model="editForm.name" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="电话" prop="phone">
-                    <el-input v-model="newForm.elephone" auto-complete="off"></el-input>
+                    <el-input v-model="editForm.elephone" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="邮箱" prop="email">
-                    <el-input v-model="newForm.email" ></el-input>
+                    <el-input v-model="editForm.email" ></el-input>
                 </el-form-item>
                 <el-form-item label="地址">
-                    <el-input type="textarea" v-model="newForm.address"></el-input>
+                    <el-input type="textarea" v-model="editForm.address"></el-input>
                 </el-form-item>
                 <el-form-item label="备注">
-                    <el-input type="textarea" v-model="newForm.remark"></el-input>
+                    <el-input type="textarea" v-model="editForm.remark"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click.native="editFormVisible = false">取消</el-button>
-                <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
+                <el-button type="primary" @click.native="editSubmit('editForm')" :loading="editLoading">提交</el-button>
             </div>
         </el-dialog>
 
-        <el-dialog title="新增" v-model="newFormVisible" :close-on-click-modal="false">
+        <el-dialog title="新增" :visible.sync="newFormVisible" :close-on-click-modal="false">
             <el-form :model="editForm" label-width="80px" :rules="rules" ref="newForm">
                 <el-form-item label="姓名" prop="name">
                     <el-input v-model="newForm.name" auto-complete="off"></el-input>
@@ -84,7 +86,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click.native="editFormVisible = false">取消</el-button>
-                <el-button type="primary" @click.native="handleAdd('newForm')" >提交</el-button>
+                <el-button type="primary" @click.native="handleAdd('newForm')":loading="editLoading" >提交</el-button>
             </div>
         </el-dialog>
     </section>
@@ -111,7 +113,9 @@
                         { required: true, message: '请输入姓名', trigger: 'blur' }
                     ]
                 },
-                rules: {},
+                rules: {
+
+                },
                 //编辑界面数据
                 editForm: {
                     _id : "",
@@ -240,13 +244,13 @@
                 });
             },
             //编辑
-            editSubmit: function () {
-                this.$refs.editForm.validate((valid) => {
+            editSubmit: function (editForm) {
+                this.$refs[editForm].validate((valid) => {
                     if (valid) {
                         this.$confirm('确认提交吗？', '提示', {}).then(() => {
                             this.editLoading = true;
                             let para = Object.assign({}, this.editForm);
-                            $.getJSON('api/customer/edit',para).then(data=>{
+                            $.getJSON('api/supplier/edit',para).then(data=>{
                                 this.editLoading = false;
                                 if(data.flag){
                                     this.$message({

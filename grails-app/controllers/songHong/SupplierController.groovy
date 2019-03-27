@@ -29,7 +29,7 @@ class SupplierController extends BaseController{
             def nu=params.name
             try{
                 nu=Integer.parseInt(params.name)
-                form+=[phone: [$regex:/^${nu.toString()}/]]
+                form+=[elephone: [$regex:/^${nu.toString()}/]]
                 println("电话查找")
             }catch(Exception e){
                 println("名字查找："+nu)
@@ -67,8 +67,8 @@ class SupplierController extends BaseController{
         }
     }
     def edit={
-        println("修改用户数据")
-        def cu=dataService.mongoDb.findOneSuplier([_id:params._id])
+        println("修改用户数据" +params)
+        def cu=dataService.mongoDb.findOneSupplier([_id:params._id])
         if(!cu){
             render(js(false,"此用户不存在！"))
             return
@@ -82,6 +82,7 @@ class SupplierController extends BaseController{
                     email :params.email,
                     remark :params.remark,
             ]
+            println cus
             dataService.mongoDb.updateSupplier([_id:params._id],cus)
             render(js(true,"修改成功"))
             return
@@ -89,15 +90,15 @@ class SupplierController extends BaseController{
         render(js(false,"你不具有此权限，只有创建者或超级管理员可以删除"))
     }
     def delete={
-        println("scvsdvssv用户数据",params)
+        println("scvsdvssv用户数据"+params)
         def _id=params._id
-        def cu=dataService.mongoDb.findOneSuplier([_id:_id])
+        def cu=dataService.mongoDb.findOneSupplier([_id:_id])
         if(!cu){
             render(js(false,"此用户不存在！"))
             return
         }
-        if(cu._creatId==params._id||session.user.superUser){
-            dataService.mongoDb.delSuplier([_id:_id])
+        if(cu._id==params._id||session.user.superUser){
+            dataService.mongoDb.delSupplier([_id:_id])
             render(js(true,"删除成功！"))
             return
         }
@@ -115,9 +116,9 @@ class SupplierController extends BaseController{
         def a=0
         def b=0
         for(def _id:id){
-            def cu=dataService.mongoDb.findOneSuplier([_id:_id])
+            def cu=dataService.mongoDb.findOneSupplier([_id:_id])
             if(cu._creatId==params._id||session.user.superUser){
-                dataService.mongoDb.delSuplier([_id:_id])
+                dataService.mongoDb.delSupplier([_id:_id])
                 b++
             }else {
                 a++
