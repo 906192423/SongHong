@@ -95,7 +95,7 @@ class OrderController extends BaseController{
         def b=0
         for(def _id:id){
             def cu=dataService.mongoDb.findOneOrder([_id:_id])
-            if(cu._creatId==params._id||session.user.superUser){
+            if(cu._creatId==session.user._id||session.user.superUser){
                 dataService.mongoDb.updateOrder([_id:_id],[state:1])
                 b++
             }else {
