@@ -73,31 +73,12 @@
         </el-form-item>
 
         <el-form-item label="交款方式" style="width:500px" prop="modeTransport">
-            <el-radio v-model="ruleForm.earnest" label="1">全款结清</el-radio>
-            <el-radio v-model="ruleForm.earnest" label="0">定金付款</el-radio>
-            <el-radio v-model="ruleForm.earnest" label="-1">赊账欠款</el-radio>
+            <el-radio v-model="ruleForm.earnest" label="1">结清</el-radio>
+            <el-radio v-model="ruleForm.earnest" label="0">未结清</el-radio>
         </el-form-item>
-        <!--<el-form-item label="支付方式" prop="payWay">-->
-        <!--<el-select v-model="ruleForm.payWay" placeholder="请选择支付方式" multiple>-->
-        <!--<el-option label="微信支付" value="微信支付"></el-option>-->
-        <!--<el-option label="支付宝支付" value="支付宝支付"></el-option>-->
-        <!--<el-option label="刷卡支付" value="刷卡支付"></el-option>-->
-        <!--<el-option label="现金支付" value="现金支付"></el-option>-->
-        <!--</el-select>-->
-        <!--</el-form-item>-->
-
-        <el-form-item label="交货时间" style="width:500px" prop="leadTime">
+        <el-form-item label="进货时间" style="width:500px" prop="leadTime">
             <el-date-picker v-model="ruleForm.leadTime" type="datetime" placeholder="选择日期时间">
             </el-date-picker>
-        </el-form-item>
-        <el-form-item label="运输方式" style="width:500px" prop="modeTransport">
-            <el-input v-model="ruleForm.modeTransport"></el-input>
-        </el-form-item>
-        <el-form-item label="交货地址" prop="addr" style="width:500px">
-            <el-input type="textarea" v-model="ruleForm.addr"></el-input>
-        </el-form-item>
-        <el-form-item label="备注" prop="remark" style="width:500px">
-            <el-input type="textarea" v-model="ruleForm.remark"></el-input>
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
@@ -131,24 +112,7 @@
                 },
                 formLoading:false,
                 rules: {
-                    _Uid: [
-                        { required: true, message: '请输入用户', trigger: 'blur' },
-                    ],
-                    modeTransport: [
-                        { required: true, message: '请输入运输方式', trigger: 'blur' }
-                    ],
-                    leadTime: [
-                        { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
-                    ],
-                    addr: [
-                        { required: true, message: '请输入送货地址', trigger: 'blur' }
-                    ],
-                    earnest: [
-                        { required: true, message: '请选择交款方式', trigger: 'change' }
-                    ],
-                    phone: [
-                        { required: true, message: '请选输入联系电话', trigger: 'change' }
-                    ],
+
                 },
                 users: [],
                 list: [],
@@ -266,7 +230,7 @@
                             })
                             form.detail=JSON.stringify(detail)
                             form.leadTime = (!this.ruleForm.leadTime || this.ruleForm.leadTime == '') ? '' : util.formatDate.format(new Date(this.ruleForm.leadTime), 'yyyy-MM-dd hh:mm:ss');
-                            $.getJSON('api/order/creat',form).then(data=>{
+                            $.getJSON('api/stock/creat',form).then(data=>{
                                 if(data.flag){
                                     this.$notify({
                                         title: '成功',
@@ -298,7 +262,7 @@
             remoteMethod(query) {
                 this.loading=true
                 if (query !== '') {
-                    $.getJSON('api/stock/getUsers',{name:query}).then(data=>{
+                    $.getJSON('api/supplier/getUsers',{name:query}).then(data=>{
                         if(data.flag){
                             this.users=data.users
                             if(this.users.length>=1){
@@ -331,7 +295,7 @@
                     phone:this.uuuName,
                     sex:"男",
                 }
-                $.getJSON('api/stock/creat',form).then(data=>{
+                $.getJSON('api/supplier/creat',form).then(data=>{
                     if(data.flag){
                         this.$notify({
                             title: '创建用户成功',

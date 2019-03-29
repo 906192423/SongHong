@@ -79,9 +79,9 @@ let routes = [
         name: '库存管理',
         iconCls: 'fa fa-id-card-o',
         children: [
-            { path: '/comein', component: comein, name: '进货' },
-            { path: '/repetory', component:repetory, name: '库存' },
-            { path: '/supplier', component:supplier, name: '供货商' }
+            { path: '/comein', component: comein, name: '创建进货单' },
+            { path: '/repetory', component:repetory, name: '进货单浏览' },
+            { path: '/supplier', component:supplier, name: '供货商管理' }
         ]
     },
     {

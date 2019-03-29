@@ -47,13 +47,13 @@ class SupplierController extends BaseController{
             def a
             try{
                 nu=Integer.parseInt(params.name)
-                form+=[phone: [$regex:/^${nu.toString()}/]]
+                form+=[elephone:[$regex:/^${nu.toString()}/]]
                 a="name"
                 println("电话查找")
             }catch(Exception e){
                 println("名字查找："+nu)
                 form+=[name: [$regex:/^${nu}/]]
-                a="phone"
+                a="elephone"
             }
             def u=dataService.mongoDb.searchSupplier(form,1,40)
             def users=[]
