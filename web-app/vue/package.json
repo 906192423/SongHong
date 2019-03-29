@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "^0.15.3",
     "echarts": "^3.3.2",
+    "element": "^0.1.4",
     "element-ui": "^2.6.3",
     "font-awesome": "^4.7.0",
     "jquery": "^3.3.1",
