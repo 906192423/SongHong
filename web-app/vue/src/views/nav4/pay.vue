@@ -1,6 +1,6 @@
 <template>
-    <el-form :model="dynamicValidateForm" :rules="rules" ref="dynamicValidateForm" style="width: 90%" class="demo-dynamic">
-        <el-form-item label="请选择订单" prop="order">
+    <el-form :model="dynamicValidateForm" :rules="rules" ref="dynamicValidateForm" style="width: 90%" class="demo-dynamic" :v-loading="loading">
+        <el-form-item label="请选择订单">
         <el-autocomplete
                 v-model="state4"
                 :fetch-suggestions="querySearchAsync"
@@ -43,13 +43,13 @@
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column prop="sellCode" label="订单号" width="120" sortable>
+            <el-table-column prop="sellCode" label="订单号" width="120">
             </el-table-column>
-            <el-table-column prop="userName" label="消费者" width="120" sortable>
+            <el-table-column prop="userName" label="消费者" width="120">
             </el-table-column>
-            <el-table-column prop="amount" label="总金额" width="120" sortable>
+            <el-table-column prop="amount" label="总金额" width="120">
             </el-table-column>
-            <el-table-column prop="leadTime" label="交货时间" width="220" sortable>
+            <el-table-column prop="leadTime" label="交货时间" width="220">
             </el-table-column>
             <el-table-column label="交货地址" min-width="180">
                 <template slot-scope="scope">
@@ -61,7 +61,7 @@
                     </el-popover>
                 </template>
             </el-table-column>
-            <el-table-column prop="phone" label="联系电话" width="220" sortable>
+            <el-table-column prop="phone" label="联系电话" width="220">
             </el-table-column>
             <el-table-column label="交款方式" width="150">
                 <template slot-scope="scope">
@@ -77,21 +77,36 @@
                     <el-tag v-if="scope.row.state==2" type="success">生产完成</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column prop="creatName" label="销售员" width="120" sortable>
+            <el-table-column prop="creatName" label="销售员" width="120">
             </el-table-column>
         </el-table>
+        <el-form-item label="备注" style="width:500px">
+            <el-input type="textarea" v-model="dynamicValidateForm.remark"></el-input>
+        </el-form-item>
         <el-form-item
                 v-for="(domain, index) in dynamicValidateForm.domains"
-                :label="'域名' + index"
+                :label="'支付方式'"
                 :key="domain.key"
-                :prop="'domains.' + index + '.value'"
-                :rules="{required: true, message: '域名不能为空', trigger: 'blur'}"
         >
-            <el-input v-model="domain.value"></el-input><el-button @click.prevent="removeDomain(domain)">删除</el-button>
+            <div style="margin-top: 15px;">
+                <el-input placeholder="请输入内容" v-model="domain.amount"class="input-with-select" style="width: 400px">
+                    <el-select v-model="domain.name" slot="prepend" placeholder="请选择">
+                        <el-option
+                                v-for="item in options2"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value"
+                                @change="chan()"
+                                :disabled="item.disabled">
+                        </el-option>
+                    </el-select>
+                </el-input>
+                <el-button @click.prevent="removeDomain(domain)">删除</el-button>
+            </div>
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="submitForm('dynamicValidateForm')">提交</el-button>
-            <el-button @click="addDomain">新增域名</el-button>
+            <el-button @click="addDomain">新增支付方式</el-button>
             <el-button @click="resetForm('dynamicValidateForm')">重置</el-button>
         </el-form-item>
     </el-form>
@@ -101,37 +116,84 @@
     export default {
         data() {
             return {
+                loading:false,
                 state4:'',
                 order:[],
+                options2: [{
+                    value: 1,
+                    label: '支付宝',
+                    disabled: false
+                }, {
+                    value: 2,
+                    label: '微信支付',
+                    disabled: false
+                }, {
+                    value: 3,
+                    label: '现金支付',
+                    disabled: false
+                }, {
+                    value: 4,
+                    label: '刷卡支付',
+                    disabled: false
+                }],
                 rules:{
                     order: [
                         { required: true, message: '请选择订单号', trigger: 'blur' },
                     ],
+                    type:[
+                        { required: true, message: '请选择支付方式', trigger: 'change' }
+                    ],
+                    amount:[
+                        { required: true, message: '金额不能为空'},
+                        { type: 'number', message: '年龄必须为数字值'}
+                    ]
                 },
                 dynamicValidateForm: {
-                    order:"",
+                    _orderId:"",
                     domains: [{
-                        value: ''
+                        name: '',
+                        amount:'',
                     }],
-                    email: ''
+                    remark:''
                 }
             };
         },
         methods: {
+            chan(){
+            },
             querySearchAsync(queryString, cb) {
                 $.getJSON("api/order/cheOrder",{code:queryString}).then(data=>{
                     cb(data.list)
                 })
             },
             handleSelect(item) {
-                console.log(item);
-                this.dynamicValidateForm.order=item.item._id
+                this.dynamicValidateForm._orderId=item.item._id
                 this.order=[item.item]
             },
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        alert('submit!');
+                        this.$confirm('确认提交吗？', '提示', {}).then(() => {
+                            this.loading=true
+                            let form=JSON.parse(JSON.stringify(this.dynamicValidateForm))
+                            form.domains=JSON.stringify(form)
+                            $.getJSON('api/cash/creat',form).then(data=>{
+                                if(data.flag){
+                                    this.$notify({
+                                        title: '成功',
+                                        message: data.remark,
+                                        type: 'success'
+                                    });
+                                }else {
+                                    this.$message({
+                                        message: data.remark,
+                                        type: 'error'
+                                    });
+                                }
+                                this.loading=false
+                            })
+                            alert('submit!');
+                        })
                     } else {
                         console.log('error submit!!');
                         return false;
@@ -146,10 +208,10 @@
                 if (index !== -1) {
                     this.dynamicValidateForm.domains.splice(index, 1)
                 }
+                this.chan()
             },
             addDomain() {
                 this.dynamicValidateForm.domains.push({
-                    value: '',
                     key: Date.now()
                 });
             }
@@ -157,6 +219,8 @@
     }
 </script>
 
-<style scoped>
-
+<style>
+    .el-select .el-input {
+        width: 130px;
+    }
 </style>
