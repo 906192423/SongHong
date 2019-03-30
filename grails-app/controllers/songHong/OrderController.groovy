@@ -112,4 +112,18 @@ class OrderController extends BaseController{
             render(js(false,"全部失败,注意只有是你创建的订单才能被你或超级管理员操作！"))
         }
     }
+    def cheOrder={
+        println(params)
+        def form=[sort:[_id:-1]]
+        form+=[sellCode:[$regex:/^${params.code}/]]
+        def list=dataService.mongoDb.searchOrder(form,1,20)
+        def orders=[]
+        list.contentlist.each{
+            orders.add([
+                    value:it.sellCode,
+                    item:it
+            ])
+        }
+        render JSONObject.toJSONString([list:orders])
+    }
 }
