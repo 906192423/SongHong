@@ -31,6 +31,16 @@ class StockController extends BaseController{
         def users=dataService.mongoDb.searchStock(form,page,20)
         render(JSONObject.toJSONString([users:users.contentlist, num:users.allNum]))
     }
+    def getOrder={
+        println("查看订单数据"+params)
+        def form=[sort:[_id:-1]]
+        def page=Integer.valueOf(params.page)
+        if(params.state){
+            form.state=Integer.valueOf(params.state)
+        }
+        def u=dataService.mongoDb.searchStock(form,page,20)
+        render(js(true,"查询成功",[list:u.contentlist,num:u.allNum]))
+    }
     def getUsers={
         println("查找供应商数据"+params)
         def form=[sort:[_id:-1]]
