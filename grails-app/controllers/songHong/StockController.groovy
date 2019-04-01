@@ -3,15 +3,28 @@ import com.alibaba.fastjson.JSONObject
 class StockController extends BaseController{
 
     def creat={
-        def cus=Stock.newOne([
-                name:params.name,
-                email:params.email,
-                elephone:params.elephone,
-                remark :params.remark,
-                address:params.address,
-        ])
-        dataService.mongoDb.saveStock(cus)
-        render(js(true,"添加成功"))
+        println(params)
+        try {
+            def order=Stock.newOne([
+                    _creatId:session.user._id,
+                    creatName:session.user.name,
+                    sellCode:orderService.getCode(),
+                    phone :params.elephone,
+                    detail: JSONObject.parse(params.detail),
+                    earnest:Integer.valueOf(params.earnest),
+                    modeTransport : params.modeTransport,//运输方式
+                    userName :cu.name,//客户姓名
+                    _Uid:cu._id,//客户id
+                    leadTime:params.leadTime,//交货时间
+                    remark :params.remark,//备注
+                    amount :Double.valueOf(params.amount),//合计金额
+                    addr:params.addr,//交货地址
+            ])
+            dataService.mongoDb.saveStock(order)
+            render(js(true,"创建成功"))
+        }catch(Exception e){
+            render(js(false,"创建失败"))
+        }
     }
     def getCustomers={
         def page=params.page
