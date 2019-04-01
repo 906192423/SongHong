@@ -1,12 +1,12 @@
 <template>
     <el-form :model="dynamicValidateForm" :rules="rules" ref="dynamicValidateForm" style="width: 90%" class="demo-dynamic" :v-loading="loading">
         <el-form-item label="请选择订单">
-        <el-autocomplete
-                v-model="state4"
-                :fetch-suggestions="querySearchAsync"
-                placeholder="请输入订单号"
-                @select="handleSelect"
-        ></el-autocomplete>
+            <el-autocomplete
+                    v-model="state4"
+                    :fetch-suggestions="querySearchAsync"
+                    placeholder="请输入订单号"
+                    @select="handleSelect"
+            ></el-autocomplete>
         </el-form-item>
         <el-table :data="order" highlight-current-row  style="width: 100%;"ref="multipleTable">
             <el-table-column type="expand">
@@ -96,7 +96,6 @@
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value"
-                                @change="chan()"
                                 :disabled="item.disabled">
                         </el-option>
                     </el-select>
@@ -145,13 +144,13 @@
                     ],
                     amount:[
                         { required: true, message: '金额不能为空'},
-                        { type: 'number', message: '年龄必须为数字值'}
+                        { type: 'number', message: '金额必须为数字值'}
                     ]
                 },
                 dynamicValidateForm: {
                     _orderId:"",
                     domains: [{
-                        name: '',
+                        name:'',
                         amount:'',
                     }],
                     remark:''
@@ -159,8 +158,6 @@
             };
         },
         methods: {
-            chan(){
-            },
             querySearchAsync(queryString, cb) {
                 $.getJSON("api/order/cheOrder",{code:queryString}).then(data=>{
                     cb(data.list)
@@ -173,10 +170,40 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
+                        if(this.dynamicValidateForm._orderId==""){
+                            this.$message({
+                                message:"请选择订单",
+                                type: 'error'
+                            });
+                            return
+                        }
+                        if(this.dynamicValidateForm.domains.length<=0){
+                            this.$message({
+                                message:"请至少选择一种支付方式",
+                                type: 'error'
+                            });
+                            return
+                        }
+                        for(let i=0;i<this.dynamicValidateForm.domains.length;i++){
+                            if(!this.dynamicValidateForm.domains[i].name||this.dynamicValidateForm.domains[i].name==""){
+                                this.$message({
+                                    message:"请选择支付方式",
+                                    type: 'error'
+                                });
+                                return
+                            }
+                            if(!this.isNumber(this.dynamicValidateForm.domains[i].amount)){
+                                this.$message({
+                                    message:"请输入金额",
+                                    type: 'error'
+                                });
+                                return
+                            }
+                        }
                         this.$confirm('确认提交吗？', '提示', {}).then(() => {
                             this.loading=true
                             let form=JSON.parse(JSON.stringify(this.dynamicValidateForm))
-                            form.domains=JSON.stringify(form)
+                            form.domains=JSON.stringify(form.domains)
                             $.getJSON('api/cash/creat',form).then(data=>{
                                 if(data.flag){
                                     this.$notify({
@@ -184,6 +211,9 @@
                                         message: data.remark,
                                         type: 'success'
                                     });
+                                    this.dynamicValidateForm._orderId=""
+                                    this.dynamicValidateForm.remark=""
+                                    this.order=[]
                                 }else {
                                     this.$message({
                                         message: data.remark,
@@ -192,13 +222,24 @@
                                 }
                                 this.loading=false
                             })
-                            alert('submit!');
                         })
                     } else {
                         console.log('error submit!!');
                         return false;
                     }
                 });
+            },
+            isNumber( s ) {
+                let regu = "^[0-9]+\.?[0-9]*$";
+                let re = new RegExp(regu);
+                if (re.test(s))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             },
             resetForm(formName) {
                 this.$refs[formName].resetFields();
