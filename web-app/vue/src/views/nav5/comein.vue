@@ -9,6 +9,14 @@
             </el-select>
             <el-button type="primary" :disabled="disabled"  :loading="uloading"  @click="creatUU()">直接创建客户:{{uuuName}}</el-button>
         </el-form-item>
+        <el-form-item label="付款状态" style="width:500px" prop="modeTransport">
+            <el-radio v-model="ruleForm.earnest" label="1">结清</el-radio>
+            <el-radio v-model="ruleForm.earnest" label="0">未结清</el-radio>
+        </el-form-item>
+        <el-form-item label="进货日期" style="width:500px" prop="leadTime">
+            <el-date-picker v-model="ruleForm.leadTime" type="datetime" placeholder="选择日期时间">
+            </el-date-picker>
+        </el-form-item>
         <el-form-item label="请选择商品">
             <el-select
                     v-model="value10"
@@ -71,15 +79,6 @@
                 </el-table-column>
             </el-table>
         </el-form-item>
-
-        <el-form-item label="交款方式" style="width:500px" prop="modeTransport">
-            <el-radio v-model="ruleForm.earnest" label="1">结清</el-radio>
-            <el-radio v-model="ruleForm.earnest" label="0">未结清</el-radio>
-        </el-form-item>
-        <el-form-item label="进货时间" style="width:500px" prop="leadTime">
-            <el-date-picker v-model="ruleForm.leadTime" type="datetime" placeholder="选择日期时间">
-            </el-date-picker>
-        </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
             <el-button @click="resetForm('ruleForm')">重置</el-button>
@@ -100,15 +99,23 @@
                 selUser:"",
                 user:"",
                 ruleForm: {
-                    modeTransport : "",//运输方式
-                    phone:"",
-                    _Uid: "",//客户id
-                    leadTime:"",//交货时间
+                    _creatId:"",//创建者id
+                    _supplierId:"",//供货商id
+                    creatName:"",//创建者姓名
+                    stockCode: "",//订单号
+                    detail:[
+//                        [
+//                                _id: "",
+//                                name:"",
+//                                code: "",
+//                                num:0,
+//                                price:0,
+//                        ],
+                    ],
+                    time: " ",//交货时间
                     remark : "",//备注
-                    amount :0,//合计金额
-                    addr:"",//交货地址
-                    num9:"",//数量
-                    earnest:"",
+                    amount :"0",//合计金额
+                    state: 0,//0为新创建的订单，1为 ，2生产完成，-1未完成的
                 },
                 formLoading:false,
                 rules: {
