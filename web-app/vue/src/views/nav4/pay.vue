@@ -260,8 +260,8 @@
     }
 </script>
 
-<style>
-    .el-select .el-input {
+<style scoped>
+    .el-select{
         width: 130px;
     }
 </style>
