@@ -159,7 +159,7 @@
         },
         methods: {
             querySearchAsync(queryString, cb) {
-                $.getJSON("api/order/cheOrder",{code:queryString}).then(data=>{
+                this.VgetJSON("order/cheOrder",{code:queryString}).then(data=>{
                     cb(data.list)
                 })
             },
@@ -204,7 +204,7 @@
                             this.loading=true
                             let form=JSON.parse(JSON.stringify(this.dynamicValidateForm))
                             form.domains=JSON.stringify(form.domains)
-                            $.getJSON('api/cash/creat',form).then(data=>{
+                            this.VgetJSON('cash/creat',form).then(data=>{
                                 if(data.flag){
                                     this.$notify({
                                         title: '成功',

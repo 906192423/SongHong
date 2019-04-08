@@ -16,9 +16,6 @@
 </template>
 
 <script>
-  import { requestLogin } from '../api/api';
-  import axios from 'axios';
-  //import NProgress from 'nprogress'
   export default {
     data() {
       return {
@@ -56,20 +53,20 @@
               console.log(data)
               var js=JSON.parse(data)
               this.logining = false;
-              let { remark, flag, user } = js;
+              let { remark, flag} = js;
               if (!flag) {
                 this.$message({
                   message: remark,
                   type: 'error'
                 });
               } else {
-                requestLogin({username:this.ruleForm2.account,password: this.ruleForm2.checkPass})
+                this.VgetJSON("user/info",{username:this.ruleForm2.account,password: this.ruleForm2.checkPass})
                         .then(data=>{
+                          console.log("-------------")
                           console.log(data)
-                          sessionStorage.setItem('user', JSON.stringify(data.user));
+                          sessionStorage.setItem('user',data);
                           this.$router.push({ path: '/table' });
                         })
-
               }
             });
           } else {

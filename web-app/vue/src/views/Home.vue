@@ -131,9 +131,9 @@
 		},
 		mounted() {
 		    console.log("0000000000")
-            $.getJSON('api/user/info',{}).then(data=>{
+			this.VgetJSON('user/info',{}).then(data=>{
                 this.sysUserName=data.user.name
-                this.sysUserAvatar="../../assets/images/home/1.jpg"
+                this.sysUserAvatar="assets/images/home/1.jpg"
             })
 			// var user = sessionStorage.getItem('user');
 			// if (user) {

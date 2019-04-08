@@ -205,7 +205,7 @@
                     if (valid) {
                         this.$confirm('确认提交吗？', '提示', {}).then(() => {
                             this.editLoading=true
-                            $.getJSON('api/product/edit',this.editForm).then(data=>{
+                            this.VgetJSON('product/edit',this.editForm).then(data=>{
                                 if(data.flag){
                                     this.$notify({
                                         title: '成功',
@@ -234,7 +234,7 @@
             },
             handleDel(index, row) {
                 this.$confirm('确认提交吗？', '提示', {}).then(() => {
-                        $.getJSON('api/product/delete',{_id:row._id}).then(data=>{
+                    this.VgetJSON('product/delete',{_id:row._id}).then(data=>{
                             if(data.flag){
                                 this.$notify({
                                     title: '成功',
@@ -253,7 +253,7 @@
             },
             getProduct(){
                 this.listLoading=true
-                $.getJSON('api/product/getGoods',{name:this.name,page:this.page}).then(data=>{
+                this.VgetJSON('product/getGoods',{name:this.name,page:this.page}).then(data=>{
                     this.tableData=data.list
                     this.total=data.num
                     this.listLoading=false
@@ -272,7 +272,7 @@
                     if (valid) {
                         this.$confirm('确认提交吗？', '提示', {}).then(() => {
                             this.addLoading=true
-                            $.getJSON('api/product/creat',this.addForm).then(data=>{
+                            this.VgetJSON('product/creat',this.addForm).then(data=>{
                                 if(data.flag){
                                     this.$notify({
                                         title: '成功',

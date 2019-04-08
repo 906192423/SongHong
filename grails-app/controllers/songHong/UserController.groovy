@@ -4,6 +4,9 @@ import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
 class UserController extends BaseController{
+    def isLogin={
+        render(js(true,"已登陆"))
+    }
     def getInfo={
         def id=params._id
         def user=dataService.mongoDb.findOneUser([_id:id])

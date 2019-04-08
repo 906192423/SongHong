@@ -80,7 +80,7 @@
 					if (valid) {
 						this.loading=true
 						this.form.birth = (!this.form.birth || this.form.birth == '') ? '' : util.formatDate.format(new Date(this.form.birth), 'yyyy-MM-dd');
-						$.getJSON('api/customer/creat',this.form).then(data=>{
+						this.VgetJSON('customer/creat',this.form).then(data=>{
 							if(data.flag){
 								this.$notify({
 									title: '成功',

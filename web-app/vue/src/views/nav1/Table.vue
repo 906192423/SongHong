@@ -135,7 +135,7 @@
 		},
 		created: function () {
 			//页面加载时取到客户表
-			// $.getJSON('/api/customer/getCustomers',{page:1},d=>{
+			// this.VgetJSON('/api/customer/getCustomers',{page:1},d=>{
 			// 	console.log("取到用户数据")
 			// 	console.log(d)
 			// 	this.users=d
@@ -157,7 +157,7 @@
 					name: this.filters.name
 				};
 				this.listLoading = true;
-				$.getJSON('/api/customer/getCustomers',para,d=>{
+				this.VgetJSON('customer/getCustomers',para).then(d=>{
 					console.log("取到用户数据")
 					console.log(d)
 					this.users=d.users
@@ -173,7 +173,7 @@
 					this.listLoading = true;
 					//NProgress.start();
 					let para = { _id: row._id };
-					$.getJSON('api/customer/delete',para).then(data=>{
+					this.VgetJSON('customer/delete',para).then(data=>{
 						if(data.flag){
 							this.$message({
 								message:data.remark,
@@ -215,7 +215,7 @@
 							this.editLoading = true;
 							let para = Object.assign({}, this.editForm);
 							para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
-							$.getJSON('api/customer/edit',para).then(data=>{
+							this.VgetJSON('customer/edit',para).then(data=>{
 								this.editLoading = false;
 								if(data.flag){
 									this.$message({
@@ -249,7 +249,7 @@
 					this.listLoading = true;
 					//NProgress.start();
 					let para = { ids:ids };
-					$.getJSON('api/customer/deletes',para).then(data=>{
+					this.VgetJSON('customer/deletes',para).then(data=>{
 						this.listLoading = false;
 						if(data.flag){
 							this.$message({

@@ -1,8 +1,6 @@
 package songHong
 
 import com.alibaba.fastjson.JSONObject
-
-
 class LoginController extends BaseController{
     def index() {
         def a=dataService.mongoDb.findUser([sort:[ct:-1],limit:50])
@@ -10,7 +8,7 @@ class LoginController extends BaseController{
     }
     def login={//登陆界面
         println("登陆界面")
-        redirect(uri:"/dist/index.html")
+        redirect(status:605,uri:"/dist/index.html")
         return
     }
     def doLogin={//进行登陆验证

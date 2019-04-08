@@ -229,7 +229,7 @@
 			},
 			getGoods(){
 				this.gloading=true
-				$.getJSON('api/product/getGoods',{name:this.name}).then(data=>{
+				this.VgetJSON('product/getGoods',{name:this.name}).then(data=>{
 					this.options5=[]
 					data.list.forEach(item=>{
 						item.num=0
@@ -299,7 +299,7 @@
 							})
 							form.detail=JSON.stringify(detail)
 							form.leadTime = (!this.ruleForm.leadTime || this.ruleForm.leadTime == '') ? '' : util.formatDate.format(new Date(this.ruleForm.leadTime), 'yyyy-MM-dd hh:mm:ss');
-							$.getJSON('api/order/creat',form).then(data=>{
+							this.VgetJSON('order/creat',form).then(data=>{
 								if(data.flag){
 									this.$notify({
 										title: '成功',
@@ -331,7 +331,7 @@
 			remoteMethod(query) {
 				this.loading=true
 				if (query !== '') {
-					$.getJSON('api/customer/getUsers',{name:query}).then(data=>{
+					this.VgetJSON('customer/getUsers',{name:query}).then(data=>{
 						if(data.flag){
 							this.users=data.users
 							if(this.users.length>=1){
@@ -364,7 +364,7 @@
 					phone:this.uuuName,
 					sex:"男",
 				}
-				$.getJSON('api/customer/creat',form).then(data=>{
+				this.VgetJSON('customer/creat',form).then(data=>{
 					if(data.flag){
 						this.$notify({
 							title: '创建用户成功',

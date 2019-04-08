@@ -200,7 +200,7 @@
         },
         created: function () {
             //页面加载时取到客户表
-            // $.getJSON('/api/customer/getCustomers',{page:1},d=>{
+            // this.VgetJSON('/api/customer/getCustomers',{page:1},d=>{
             // 	console.log("取到用户数据")
             // 	console.log(d)
             // 	this.users=d
@@ -219,7 +219,7 @@
                     state: 0
                 };
                 this.listLoading = true;
-                $.getJSON('/api/order/getOrder',para,d=>{
+                this.VgetJSON('order/getOrder',para).then(d=>{
                     this.users=d.list
                     this.total=d.num
                     this.listLoading = false;
@@ -232,7 +232,7 @@
                 }).then(() => {
                     this.listLoading = true;
                     let para = { _id: row._id };
-                    $.getJSON('api/order/delete',para).then(data=>{
+                    this.VgetJSON('order/delete',para).then(data=>{
                         if(data.flag){
                             this.$message({
                                 message:data.remark,
@@ -273,7 +273,7 @@
                             this.editLoading = true;
                             let para = Object.assign({}, this.editForm);
                             para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
-                            $.getJSON('api/customer/edit',para).then(data=>{
+                            this.VgetJSON('customer/edit',para).then(data=>{
                                 this.editLoading = false;
                                 if(data.flag){
                                     this.$message({
@@ -306,7 +306,7 @@
                 }).then(() => {
                     this.listLoading = true;
                     let para = { ids:ids };
-                    $.getJSON('api/order/toProduct',para).then(data=>{
+                    this.VgetJSON('order/toProduct',para).then(data=>{
                         this.listLoading = false;
                         if(data.flag){
                             this.$message({

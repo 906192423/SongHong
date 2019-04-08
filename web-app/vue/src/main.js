@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import App from './App'
+import 'es6-promise/auto'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 //import './assets/theme/theme-green/index.css'
@@ -8,11 +9,10 @@ import store from './vuex/store'
 import Vuex from 'vuex'
 import routes from './routes'
 import Mock from './mock'
-import axios from 'axios';
-Vue.prototype.$axios=axios;
 Mock.bootstrap();
 import 'font-awesome/css/font-awesome.min.css'
-
+import api from './api/api.js';
+Vue.use(api)
 Vue.use(ElementUI)
 Vue.use(VueRouter)
 Vue.use(Vuex)
@@ -27,7 +27,7 @@ router.beforeEach((to, from, next) => {
   if (to.path == '/login') {
     sessionStorage.removeItem('user');
   }
-  let user = JSON.parse(sessionStorage.getItem('user'));
+  let user=sessionStorage.getItem('user');
   if (!user && to.path != '/login') {
     next({ path: '/login' })
   } else {
@@ -39,7 +39,7 @@ router.beforeEach((to, from, next) => {
 //NProgress.done();
 //});
 
-new Vue({
+let vue=new Vue({
   //el: '#app',
   //template: '<App/>',
   router,
@@ -47,4 +47,5 @@ new Vue({
   //components: { App }
   render: h => h(App)
 }).$mount('#app')
+export default vue
 

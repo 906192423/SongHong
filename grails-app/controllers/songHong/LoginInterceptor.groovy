@@ -1,5 +1,7 @@
 package songHong
 
+import com.alibaba.fastjson.JSONObject
+
 
 class LoginInterceptor {
     LoginInterceptor(){
@@ -12,6 +14,9 @@ class LoginInterceptor {
             return true
         }else {
             println("未登陆---重定向到登陆界面")
+            //redirect(uri:"/dist/index.html")
+            //forward(controller:"login",action:"login")
+            render(JSONObject.toJSONString([status:302,OnLine:true,remark:"登陆已失效！请重新登陆！！"]))
             return false
         }
     }
