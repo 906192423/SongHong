@@ -23,6 +23,11 @@ class LoginController extends BaseController{
         }
         render(JSONObject.toJSONString([flag:false,remark:"登陆失败"]))
     }
+    def logout={
+        println(params)
+        session.user=null
+        render(js(true,"成功下线"))
+    }
     def register={
     }
     def doRegister={//注册

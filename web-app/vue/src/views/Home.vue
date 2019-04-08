@@ -75,6 +75,7 @@
 	export default {
 		data() {
 			return {
+				img:require('../assets/images/home/1.jpg'),
 				sysName:'ERP系统',
 				collapsed:false,
 				sysUserName: '',
@@ -109,6 +110,19 @@
 				this.$confirm('确认退出吗?', '提示', {
 					//type: 'warning'
 				}).then(() => {
+					this.VgetJSON("login/logout",{}).then(data=>{
+						if(data.flag){
+							this.$message({
+								message:data.remark,
+								type: 'success'
+							});
+						}else {
+							this.$message({
+								message: data.remark,
+								type: 'error'
+							});
+						}
+					})
 					sessionStorage.removeItem('user');
 					_this.$router.push('/login');
 				}).catch(() => {
@@ -132,8 +146,10 @@
 		mounted() {
 		    console.log("0000000000")
 			this.VgetJSON('user/info',{}).then(data=>{
-                this.sysUserName=data.user.name
-                this.sysUserAvatar="assets/images/home/1.jpg"
+				console.log("--------------------------")
+				console.log(data)
+                this.sysUserName=data.name
+                this.sysUserAvatar=this.img
             })
 			// var user = sessionStorage.getItem('user');
 			// if (user) {
