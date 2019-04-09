@@ -6,19 +6,10 @@ class StockController extends BaseController{
         println(params)
         try {
             def order=Stock.newOne([
-                    _creatId:session.user._id,
-                    creatName:session.user.name,
-                    sellCode:orderService.getCode(),
-                    phone :params.elephone,
                     detail: JSONObject.parse(params.detail),
                     earnest:Integer.valueOf(params.earnest),
-                    modeTransport : params.modeTransport,//运输方式
-                    userName :cu.name,//客户姓名
-                    _Uid:cu._id,//客户id
-                    leadTime:params.leadTime,//交货时间
-                    remark :params.remark,//备注
+                    time:params.time,//交货时间
                     amount :Double.valueOf(params.amount),//合计金额
-                    addr:params.addr,//交货地址
             ])
             dataService.mongoDb.saveStock(order)
             render(js(true,"创建成功"))
@@ -52,6 +43,7 @@ class StockController extends BaseController{
             form.state=Integer.valueOf(params.state)
         }
         def u=dataService.mongoDb.searchStock(form,page,20)
+        println("查看订单数据"+u)
         render(js(true,"查询成功",[list:u.contentlist,num:u.allNum]))
     }
     def getUsers={

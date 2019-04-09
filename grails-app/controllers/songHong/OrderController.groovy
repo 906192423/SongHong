@@ -43,6 +43,7 @@ class OrderController extends BaseController{
             form.state=Integer.valueOf(params.state)
         }
         def u=dataService.mongoDb.searchOrder(form,page,20)
+        println("查看订单数据"+u)
         render(js(true,"查询成功",[list:u.contentlist,num:u.allNum]))
     }
     def delete={

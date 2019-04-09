@@ -63,24 +63,27 @@
             </el-table-column>
             <el-table-column prop="leadTime" label="交货时间" width="220" sortable>
             </el-table-column>
-            <el-table-column label="交货地址" min-width="180">
+            <el-table-column label="交货地址" min-width="100">
                 <template slot-scope="scope">
                     <el-popover trigger="hover" placement="top">
                         <p>{{ scope.row.addr}}</p>
                         <div slot="reference" class="name-wrapper">
-                            <el-tag size="medium" type="info" color="blue">查看交货地址</el-tag>
+                            <el-tag size="medium" type="info" style="color: #20a0ff">交货地址</el-tag>
                         </div>
                     </el-popover>
                 </template>
             </el-table-column>
-            <el-table-column prop="phone" label="联系电话" width="220" sortable>
+            <el-table-column prop="phone" label="联系电话" width="100">
             </el-table-column>
-            <el-table-column label="交款方式" width="150">
+            <el-table-column label="交款方式" width="100">
                 <template slot-scope="scope">
                     <el-tag v-if="scope.row.earnest==0" type="warning">定金</el-tag>
                     <el-tag v-if="scope.row.earnest==1" type="success">全款</el-tag>
                     <el-tag v-if="scope.row.earnest==-1">欠款</el-tag>
                 </template>
+            </el-table-column>
+            <el-table-column label="交款记录" width="100">
+
             </el-table-column>
             <el-table-column label="生产状态" width="150">
                 <template slot-scope="scope">
@@ -197,7 +200,7 @@
         },
         created: function () {
             //页面加载时取到客户表
-            // $.getJSON('/api/customer/getCustomers',{page:1},d=>{
+            // this.VgetJSON('/api/customer/getCustomers',{page:1},d=>{
             // 	console.log("取到用户数据")
             // 	console.log(d)
             // 	this.users=d
@@ -216,7 +219,7 @@
                     state: 0
                 };
                 this.listLoading = true;
-                $.getJSON('/api/stock/getOrder',para,d=>{
+                this.VgetJSON('stock/getOrder',para).then(d=>{
                     this.users=d.list
                     this.total=d.num
                     this.listLoading = false;
@@ -229,7 +232,7 @@
                 }).then(() => {
                     this.listLoading = true;
                     let para = { _id: row._id };
-                    $.getJSON('api/order/delete',para).then(data=>{
+                    this.VgetJSON('stock/delete',para).then(data=>{
                         if(data.flag){
                             this.$message({
                                 message:data.remark,
@@ -270,7 +273,7 @@
                             this.editLoading = true;
                             let para = Object.assign({}, this.editForm);
                             para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
-                            $.getJSON('api/customer/edit',para).then(data=>{
+                            this.VgetJSON('customer/edit',para).then(data=>{
                                 this.editLoading = false;
                                 if(data.flag){
                                     this.$message({
@@ -303,7 +306,7 @@
                 }).then(() => {
                     this.listLoading = true;
                     let para = { ids:ids };
-                    $.getJSON('api/order/toProduct',para).then(data=>{
+                    this.VgetJSON('order/toProduct',para).then(data=>{
                         this.listLoading = false;
                         if(data.flag){
                             this.$message({
