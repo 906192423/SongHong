@@ -96,6 +96,12 @@
                 disabled:true,
                 selUser:"",
                 user:"",
+                users:[],
+                rules:{},
+                options5:[],
+                uloading:false,
+                gloading:false,
+                loading:false,
                 ruleForm: {
                     earnest:"",//创建者id
                     time: " ",//交货时间
@@ -267,9 +273,8 @@
                 let form={
                     name:this.uuuName,
                     phone:this.uuuName,
-                    sex:"男",
                 }
-                $.getJSON('api/supplier/creat',form).then(data=>{
+                this.VgetJSON('supplier/creat',form).then(data=>{
                     if(data.flag){
                         this.$notify({
                             title: '创建用户成功',

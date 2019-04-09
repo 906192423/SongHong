@@ -6,6 +6,7 @@ class StockController extends BaseController{
         println(params)
         try {
             def order=Stock.newOne([
+                    _creatId:session.user._id,
                     detail: JSONObject.parse(params.detail),
                     earnest:Integer.valueOf(params.earnest),
                     time:params.time,//交货时间

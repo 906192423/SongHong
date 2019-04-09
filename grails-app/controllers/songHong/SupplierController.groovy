@@ -23,7 +23,6 @@ class SupplierController extends BaseController{
     }
     def getCustomers={
         def page=params.page
-        println("请求客户数据")
         def form=[sort:[_id:-1]]
         if(params.name){
             def nu=params.name
