@@ -8,7 +8,7 @@ class CashController extends BaseController{
     def cashService
     def creat={
         println(params)
-        def or=dataService.mongoDb.findOneOrder([_id:params._orderId],[include:["_id","cashList"]])
+        def or=dataService.mongoDb.findOneOrder([_id:params._orderId],[include:["_id","cashList","sellCode"]])
         if(!or){
             render(js(false,"此订单不存在"))
             return
@@ -29,6 +29,8 @@ class CashController extends BaseController{
                     code:cashService.getCode(),//流水号
                     _orderId:params._orderId,//订单号
                     _creatId:session.user._id,//创建人id
+                    creatName:session.user.name,
+                    ordCode:or.sellCode,
                     name:"",//支付人姓名
                     amount:total,//金额
                     payForm:pay,

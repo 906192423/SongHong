@@ -21,11 +21,11 @@ class Order {
 //                        ],
                 ],
                 cashList:[
-                        [
-                                _id:"",
-                                code:"",
-                                amount:"",
-                        ]
+//                        [
+//                                _id:"",
+//                                code:"",
+//                                amount:"",
+//                        ]
                 ],//交易单号
                 modeTransport : "",//运输方式
                 earnest:0,//交款方式，1为全款一次结清，0交一部分定金，-1欠款

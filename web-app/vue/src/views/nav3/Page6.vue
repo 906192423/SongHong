@@ -18,8 +18,7 @@
             >
 
         <el-table-column
-                label="商品名"
-                width="100%">
+                label="商品名">
             <template slot-scope="scope">
                 <el-popover trigger="hover" placement="top">
                     <!--<p>姓名: {{ scope.row.name }}</p>-->
@@ -32,7 +31,7 @@
         </el-table-column>
         <el-table-column
                 label="商品编号"
-                width="180">
+                width="150">
             <template slot-scope="scope">
             <el-tag type="success">{{scope.row.code}}</el-tag>
             </template>

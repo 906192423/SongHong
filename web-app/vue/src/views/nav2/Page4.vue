@@ -52,6 +52,7 @@
                                     label="总价">
                             </el-table-column>
                         </el-table>
+                        <h1>备注：{{scope.row.remark}}</h1>
                     </div>
                 </template>
             </el-table-column>

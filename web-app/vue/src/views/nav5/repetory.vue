@@ -59,7 +59,7 @@
             </el-table-column>
             <el-table-column prop="supName" label="供应商" width="250" sortable>
             </el-table-column>
-            <el-table-column prop="amount" label="总金额"  sortable>
+            <el-table-column prop="amount" label="总金额" width="150"  sortable>
             </el-table-column>
             <el-table-column prop="inTime" label="进货时间" width="220" sortable>
             </el-table-column>
@@ -69,9 +69,9 @@
                     <el-tag v-if="scope.row.earnest==1" type="success">结清</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column prop="creatName" label="创建者" width="120" sortable>
+            <el-table-column prop="creatName" label="创建者" sortable>
             </el-table-column>
-            <el-table-column label="操作" width="150">
+            <el-table-column label="操作" width="160">
                 <template slot-scope="scope">
                     <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                     <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>

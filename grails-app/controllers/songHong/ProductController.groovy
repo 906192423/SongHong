@@ -13,7 +13,7 @@ class ProductController extends BaseController{
         ])
         try{
             p.code=Integer.valueOf(params.code)//商品编号
-            p.number=Integer.valueOf(params.number)
+            p.number=Double.valueOf(params.number)
             p.state=Integer.valueOf(params.state)
             p.price=Double.valueOf(params.price)
             p.costPrice=Double.valueOf(params.costPrice)

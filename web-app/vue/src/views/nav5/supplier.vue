@@ -65,12 +65,12 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click.native="editFormVisible = false">取消</el-button>
-                <el-button type="primary" @click.native="editSubmit('editForm')" :loading="editLoading">提交</el-button>
+                <el-button type="primary" @click.native="editSubmit('editForm')">提交</el-button>
             </div>
         </el-dialog>
 
-        <el-dialog title="新增" :visible.sync="newFormVisible" :close-on-click-modal="false">
-            <el-form :model="editForm" label-width="80px" :rules="rules" ref="newForm">
+        <el-dialog title="新增" :visible.sync="newFormVisible" :close-on-click-modal="false" v-loading="addLoading">
+            <el-form :model="newForm" label-width="80px" :rules="rules" ref="newForm">
                 <el-form-item label="姓名" prop="name">
                     <el-input v-model="newForm.name" auto-complete="off"></el-input>
                 </el-form-item>
@@ -117,7 +117,9 @@
                     ]
                 },
                 rules: {
-
+                    name: [
+                        { required: true, message: '请输入姓名', trigger: 'blur' }
+                    ]
                 },
                 //编辑界面数据
                 editForm: {
@@ -227,10 +229,9 @@
                 this.$refs[newForm].validate((valid) => {
                     if (valid) {
                         this.$confirm('确认提交吗？', '提示', {}).then(() => {
-                            this.editLoading = true;
+                            this.addLoading = true;
                             let para = Object.assign({}, this.newForm);
-                            $.getJSON('api/supplier/creat',para).then(data=>{
-                                this.editLoading = false;
+                            this.VgetJSON('supplier/creat',para).then(data=>{
                                 if(data.flag){
                                     this.$message({
                                         message:data.remark,
@@ -242,9 +243,10 @@
                                         type: 'error'
                                     });
                                 }
-                                this.$refs['editForm'].resetFields();
-                                this.editFormVisible = false;
+                                //this.$refs['editForm'].resetFields();
+                                this.newFormVisible = false;
                                 this.getUsers();
+                                this.addLoading = false;
                             });
                         });
                     }

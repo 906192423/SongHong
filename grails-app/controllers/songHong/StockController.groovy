@@ -19,6 +19,7 @@ class StockController extends BaseController{
                         inTime:params.inTime,//交货时间
                         amount :Double.valueOf(params.amount),//合计金额
                 ])
+                stockService.inCome(order.detail)
                 dataService.mongoDb.saveStock(order)
                 render(js(true,"创建成功"))
             }catch(Exception e){
@@ -30,7 +31,7 @@ class StockController extends BaseController{
     }
     def getCustomers={
         def page=params.page
-        println("请求客户数据")
+        println("请求数据")
         def form=[sort:[_id:-1]]
         if(params.name){
             def nu=params.name
@@ -115,7 +116,7 @@ class StockController extends BaseController{
             return
         }
         if(cu._creatId==params._id||session.user.superUser){
-            dataService.mongoDb.delCustomer([_id:_id])
+            dataService.mongoDb.delStock([_id:_id])
             render(js(true,"删除成功！"))
             return
         }

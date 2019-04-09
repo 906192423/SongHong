@@ -1,5 +1,5 @@
 <template>
-    <el-form :model="dynamicValidateForm" :rules="rules"  ref="dynamicValidateForm" style="width: 100%"  :v-loading="loading" label-width="100px">
+    <el-form :model="dynamicValidateForm" :rules="rules" ref="dynamicValidateForm" style="width: 100%"  :v-loading="loading" label-width="100px">
         <el-form-item label="请选择订单">
             <el-autocomplete
                     v-model="state4"
@@ -204,6 +204,7 @@
                             this.loading=true
                             let form=JSON.parse(JSON.stringify(this.dynamicValidateForm))
                             form.domains=JSON.stringify(form.domains)
+                            console.log(form)
                             this.VgetJSON('cash/creat',form).then(data=>{
                                 if(data.flag){
                                     this.$notify({

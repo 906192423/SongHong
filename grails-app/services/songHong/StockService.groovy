@@ -18,4 +18,14 @@ class StockService extends BaseService{
             return "K"+a+"0001"
         }
     }
+    def inCome(detail){
+        detail.each{
+            def a=dataService.mongoDb.findOneProduct([_id:it._id],[include:["number"]])
+            if(a){
+                a.number+=Double.valueOf(it.num)
+                dataService.mongoDb.updateProduct([_id:it._id],[number:a.number])
+            }
+        }
+        true
+    }
 }
