@@ -38,9 +38,9 @@
                                     width="180">
                             </el-table-column>
                             <el-table-column
-                                    prop="price"
+                                    prop="inPrice"
                                     width="120"
-                                    label="价格">
+                                    label="进价">
                             </el-table-column>
                             <el-table-column
                                     prop="num"
@@ -55,44 +55,21 @@
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column prop="sellCode" label="订单号" width="120" sortable>
+            <el-table-column prop="code" label="进货单号" width="150" sortable>
             </el-table-column>
-            <el-table-column prop="userName" label="消费者" width="120" sortable>
+            <el-table-column prop="supName" label="供应商" width="250" sortable>
             </el-table-column>
-            <el-table-column prop="amount" label="总金额" width="120" sortable>
+            <el-table-column prop="amount" label="总金额"  sortable>
             </el-table-column>
-            <el-table-column prop="leadTime" label="交货时间" width="220" sortable>
+            <el-table-column prop="inTime" label="进货时间" width="220" sortable>
             </el-table-column>
-            <el-table-column label="交货地址" min-width="100">
+            <el-table-column label="交款状态" width="100">
                 <template slot-scope="scope">
-                    <el-popover trigger="hover" placement="top">
-                        <p>{{ scope.row.addr}}</p>
-                        <div slot="reference" class="name-wrapper">
-                            <el-tag size="medium" type="info" style="color: #20a0ff">交货地址</el-tag>
-                        </div>
-                    </el-popover>
+                    <el-tag v-if="scope.row.earnest==0" type="warning">未结清</el-tag>
+                    <el-tag v-if="scope.row.earnest==1" type="success">结清</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column prop="phone" label="联系电话" width="100">
-            </el-table-column>
-            <el-table-column label="交款方式" width="100">
-                <template slot-scope="scope">
-                    <el-tag v-if="scope.row.earnest==0" type="warning">定金</el-tag>
-                    <el-tag v-if="scope.row.earnest==1" type="success">全款</el-tag>
-                    <el-tag v-if="scope.row.earnest==-1">欠款</el-tag>
-                </template>
-            </el-table-column>
-            <el-table-column label="交款记录" width="100">
-
-            </el-table-column>
-            <el-table-column label="生产状态" width="150">
-                <template slot-scope="scope">
-                    <el-tag v-if="scope.row.state==0">待处理</el-tag>
-                    <el-tag v-if="scope.row.state==1" type="warning">生产中</el-tag>
-                    <el-tag v-if="scope.row.state==2" type="success">生产完成</el-tag>
-                </template>
-            </el-table-column>
-            <el-table-column prop="creatName" label="销售员" width="120" sortable>
+            <el-table-column prop="creatName" label="创建者" width="120" sortable>
             </el-table-column>
             <el-table-column label="操作" width="150">
                 <template slot-scope="scope">
@@ -102,15 +79,15 @@
             </el-table-column>
         </el-table>
         <el-col :span="24" class="toolbar">
-            <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">进入生产队列</el-button>
+            <!--<el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">进入生产队列</el-button>-->
             <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="20" :total="total" style="float:right;">
             </el-pagination>
         </el-col>
 
         <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
             <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-                <h1>订单号：{{editForm.sellCode}}</h1>
-                <h1>客户名：{{editForm.userName}}</h1>
+                <h1>订单号：{{editForm.code}}</h1>
+                <h1>客户名：{{editForm._Uid}}</h1>
                 <el-form-item label="交货时间" prop="leadTime">
                     <el-input v-model="editForm.leadTime" auto-complete="off"></el-input>
                 </el-form-item>
@@ -216,7 +193,6 @@
                 let para = {
                     page: this.page,
                     name: this.filters.name,
-                    state: 0
                 };
                 this.listLoading = true;
                 this.VgetJSON('stock/getOrder',para).then(d=>{

@@ -1,21 +1,31 @@
 package songHong
 import com.alibaba.fastjson.JSONObject
 class StockController extends BaseController{
-
+    def stockService
     def creat={
         println(params)
-        try {
-            def order=Stock.newOne([
-                    _creatId:session.user._id,
-                    detail: JSONObject.parse(params.detail),
-                    earnest:Integer.valueOf(params.earnest),
-                    time:params.time,//交货时间
-                    amount :Double.valueOf(params.amount),//合计金额
-            ])
-            dataService.mongoDb.saveStock(order)
-            render(js(true,"创建成功"))
-        }catch(Exception e){
-            render(js(false,"创建失败"))
+        println stockService.getCode()
+        def s=dataService.mongoDb.findOneSupplier([_id:params._Uid])
+        if(s){
+            try {
+                def order=Stock.newOne([
+                        _creatId:session.user._id,
+                        creatName:session.user.name,
+                        _supplierId:s._id,
+                        code:stockService.getCode(),
+                        supName:s.name,
+                        detail: JSONObject.parse(params.detail),
+                        earnest:Integer.valueOf(params.earnest),
+                        inTime:params.inTime,//交货时间
+                        amount :Double.valueOf(params.amount),//合计金额
+                ])
+                dataService.mongoDb.saveStock(order)
+                render(js(true,"创建成功"))
+            }catch(Exception e){
+                render(js(false,"创建失败"))
+            }
+        }else {
+            render(js(false,"没有此供货商"))
         }
     }
     def getCustomers={
@@ -37,14 +47,14 @@ class StockController extends BaseController{
         render(JSONObject.toJSONString([users:users.contentlist, num:users.allNum]))
     }
     def getOrder={
-        println("查看订单数据"+params)
+        println("查看进货单数据"+params)
         def form=[sort:[_id:-1]]
         def page=Integer.valueOf(params.page)
-        if(params.state){
-            form.state=Integer.valueOf(params.state)
+        if(params.name){
+            form.name=Integer.valueOf(params.name)
         }
         def u=dataService.mongoDb.searchStock(form,page,20)
-        println("查看订单数据"+u)
+        println("查看进货单"+u)
         render(js(true,"查询成功",[list:u.contentlist,num:u.allNum]))
     }
     def getUsers={

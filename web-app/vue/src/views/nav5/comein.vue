@@ -4,17 +4,17 @@
             <el-select style="width: 300px" v-model="selUser" filterable remote @change="chu()" reserve-keyword placeholder="请输入姓名或者电话号码来查找"
                        :remote-method="remoteMethod"
                        clearable :loading="loading">
-                <el-option v-for="item in users" :key="item.value" :label="item.label" :value="item.value">
+                <el-option v-for="item in users" :key="item.label" :label="item.label" :value="item.value">
                 </el-option>
             </el-select>
-            <el-button type="primary" :disabled="disabled"  :loading="uloading"  @click="creatUU()">直接创建客户:{{uuuName}}</el-button>
+            <!--<el-button type="primary" :disabled="disabled"  :loading="uloading"  @click="creatUU()">直接创建客户:{{uuuName}}</el-button>-->
         </el-form-item>
-        <el-form-item label="付款状态" style="width:500px" prop="modeTransport">
+        <el-form-item label="付款状态" style="width:500px" prop="earnest">
             <el-radio v-model="ruleForm.earnest" label="1">结清</el-radio>
             <el-radio v-model="ruleForm.earnest" label="0">未结清</el-radio>
         </el-form-item>
-        <el-form-item label="进货日期" style="width:500px" prop="leadTime">
-            <el-date-picker v-model="ruleForm.time" type="datetime" placeholder="选择日期时间">
+        <el-form-item label="进货日期" style="width:500px" prop="inTime">
+            <el-date-picker v-model="ruleForm.inTime" type="datetime" placeholder="选择日期时间">
             </el-date-picker>
         </el-form-item>
         <el-form-item label="请选择商品">
@@ -58,12 +58,26 @@
                         label="产品名称">
                 </el-table-column>
                 <el-table-column
+                        width="120"
                         prop="price"
                         label="商品单价">
                 </el-table-column>
                 <el-table-column
+                        width="100"
                         prop="unit"
                         label="产品单位">
+                </el-table-column>
+                <el-table-column
+                        width="120"
+                        label="商品进价">
+                    <template slot-scope="scope">
+                        <el-input
+                                placeholder="请输入进价"
+                                v-model="scope.row.inPrice"
+                                @change="addCli(scope.row)"
+                                clearable>
+                        </el-input>
+                    </template>
                 </el-table-column>
                 <el-table-column label="数量" width="250">
                     <template slot-scope="scope">
@@ -93,18 +107,32 @@
             return {
                 name:"",
                 uuuName:"",
-                disabled:true,
+                //disabled:true,
                 selUser:"",
                 user:"",
                 users:[],
-                rules:{},
+                rules:{
+                    _Uid: [
+                        { required: true, message: '请选择供货商', trigger: 'blur' },
+                    ],
+                    earnest: [
+                        { required: true, message: '请选择状态', trigger: 'change' }
+                    ],
+                    inTime: [
+                        { type: 'date', required: true, message: '请选择进货日期', trigger: 'change' }
+                    ],
+                    date2: [
+                        { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
+                    ]
+                },
                 options5:[],
-                uloading:false,
+                //uloading:false,
                 gloading:false,
                 loading:false,
                 ruleForm: {
-                    earnest:"",//创建者id
-                    time: " ",//交货时间
+                    _Uid:"",
+                    inTime:"",//交货时间
+                    earnest:"",
                 },
                 formLoading:false,
                 value10: [],
@@ -144,7 +172,7 @@
                 return sums;
             },
             addCli(row){
-                row.amount= parseFloat((row.price*row.num).toFixed(3))
+                row.amount= parseFloat((row.inPrice*row.num).toFixed(3))
                 let total=0.0
                 this.goodsTable.forEach(it=>{
                     total=parseFloat(it.amount+total)
@@ -173,11 +201,7 @@
                     data.list.forEach(item=>{
                         item.num=0
                         item.amount=0
-                        let disabled
-                        if(item.state==0)
-                            disabled=false
-                        else
-                            disabled=true
+                        let disabled=false
                         this.options5.push({value:JSON.stringify(item),label:item.name,disabled:disabled})
                     })
                     this.gloading=false
@@ -193,6 +217,29 @@
                             });
                             return false;
                         }
+                        for(let j=0,len=this.goodsTable.length;j<len;j++){
+                            if(!this.isNumber(this.goodsTable[j].num)){
+                                this.$message({
+                                    message:'数量处应输入数字！',
+                                    type: 'error'
+                                });
+                                return false;
+                            }
+                            if(!this.isNumber(this.goodsTable[j].inPrice)){
+                                this.$message({
+                                    message:'进价处应输入数字！',
+                                    type: 'error'
+                                });
+                                return false;
+                            }
+                            if(this.goodsTable[j].num<=0){
+                                this.$message({
+                                    message:'数量至少为1！',
+                                    type: 'error'
+                                });
+                                return false;
+                            }
+                        }
                         this.$confirm('确认提交吗？', '提示', {}).then(() => {
                             this.loading=true
                             let form=JSON.parse(JSON.stringify(this.ruleForm))
@@ -203,14 +250,14 @@
                                     name:it.name,
                                     code:it.code,
                                     num:it.num,
-                                    price:it.price,
+                                    inPrice:it.inPrice,
                                     total:it.amount,
                                 }
                                 detail.push(a)
                             })
+                            form.inTime = (!this.ruleForm.inTime || this.ruleForm.inTime == '') ? '' : util.formatDate.format(new Date(this.ruleForm.inTime), 'yyyy-MM-dd hh:mm:ss');
                             form.detail=JSON.stringify(detail)
-                            form.leadTime = (!this.ruleForm.leadTime || this.ruleForm.leadTime == '') ? '' : util.formatDate.format(new Date(this.ruleForm.leadTime), 'yyyy-MM-dd hh:mm:ss');
-                            $.getJSON('api/stock/creat',form).then(data=>{
+                            this.VgetJSON('stock/creat',form).then(data=>{
                                 if(data.flag){
                                     this.$notify({
                                         title: '成功',
@@ -218,6 +265,9 @@
                                         type: 'success'
                                     });
                                     this.$refs['ruleForm'].resetFields();
+                                    this.selUser=""
+                                    this.value10=[]
+                                    this.goodsTable=[]
                                 }else {
                                     this.$message({
                                         message: data.remark,
@@ -236,21 +286,33 @@
                     }
                 });
             },
+            isNumber( s ) {
+                let regu = "^[0-9]+\.?[0-9]*$";
+                let re = new RegExp(regu);
+                if (re.test(s))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            },
             resetForm(formName) {
                 this.$refs[formName].resetFields();
             },
             remoteMethod(query) {
                 this.loading=true
                 if (query !== '') {
-                    $.getJSON('api/supplier/getUsers',{name:query}).then(data=>{
+                    this.VgetJSON('supplier/getUsers',{name:query}).then(data=>{
                         if(data.flag){
                             this.users=data.users
-                            if(this.users.length>=1){
-                                this.disabled=true
-                            }else {
-                                this.uuuName=query
-                                this.disabled=false
-                            }
+                            // if(this.users.length>=1){
+                            //     this.disabled=true
+                            // }else {
+                            //     this.uuuName=query
+                            //     this.disabled=false
+                            // }
                         }else {
                             this.$message({
                                 message: data.remark,
@@ -264,42 +326,46 @@
                     this.loading=false
                 }
             },
-            creatUU(){
-                if(this.ruleForm._Uid){
-                    this.disabled=true
-                    return
-                }
-                this.uloading=true
-                let form={
-                    name:this.uuuName,
-                    phone:this.uuuName,
-                }
-                this.VgetJSON('supplier/creat',form).then(data=>{
-                    if(data.flag){
-                        this.$notify({
-                            title: '创建用户成功',
-                            message: data.remark,
-                            type: 'success'
-                        });
-                        this.disabled=true
-                    }else {
-                        this.$message({
-                            message: data.remark,
-                            type: 'error'
-                        });
-                    }
-                    this.uloading=false
-                    this.remoteMethod(this.uuuName)
-                })
-            },
+            // creatUU(){
+            //     if(this.ruleForm._Uid){
+            //         this.disabled=true
+            //         return
+            //     }
+            //     this.uloading=true
+            //     let form={
+            //         name:this.uuuName,
+            //         phone:this.uuuName,
+            //     }
+            //     this.VgetJSON('supplier/creat',form).then(data=>{
+            //         if(data.flag){
+            //             this.$notify({
+            //                 title: '创建用户成功',
+            //                 message: data.remark,
+            //                 type: 'success'
+            //             });
+            //             this.disabled=true
+            //         }else {
+            //             this.$message({
+            //                 message: data.remark,
+            //                 type: 'error'
+            //             });
+            //         }
+            //         this.uloading=false
+            //         this.remoteMethod(this.uuuName)
+            //     })
+            // },
             chu(){
+                console.log(this.users)
+                console.log(this.selUser)
                 if(this.selUser){
-                    this.user=JSON.parse(this.selUser)
+                    this.user=this.selUser
                 }else {
                     this.user={}
                 }
                 this.ruleForm._Uid=this.user._id
                 this.ruleForm.phone=this.user.phone
+                console.log("---------------")
+                console.log(this.ruleForm)
             }
         },
         mounted() {

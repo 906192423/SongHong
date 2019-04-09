@@ -38,7 +38,10 @@
                 </template>
             </el-table-column>
         </el-table>
-
+        <el-col :span="24" class="toolbar">
+            <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="20" :total="total" style="float:right;">
+            </el-pagination>
+        </el-col>
 
 
         <!--编辑界面-->
@@ -161,6 +164,10 @@
         },
         methods: {
             //获取用户列表
+            handleCurrentChange(val) {
+                this.page = val;
+                this.getUsers();
+            },
             getUsers() {
                 let para = {
                     page: this.page,

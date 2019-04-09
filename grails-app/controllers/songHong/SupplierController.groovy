@@ -12,7 +12,7 @@ class SupplierController extends BaseController{
         println(params)
         def cuss=Supplier.newOne([
                 name:params.name,
-                elephone:params.elephone,
+                phone:params.elephone,
                 email:params.email,
                 address:params.address,
                 email :params.email,
@@ -39,26 +39,26 @@ class SupplierController extends BaseController{
         render(JSONObject.toJSONString([users:users.contentlist, num:users.allNum]))
     }
     def getUsers={
-        println("创建订单查找客户数据"+params)
+        println("查找供货商"+params)
         def form=[sort:[_id:-1]]
         if(params.name){
             def nu=params.name
             def a
             try{
                 nu=Integer.parseInt(params.name)
-                form+=[elephone:[$regex:/^${nu.toString()}/]]
+                form+=[phone:[$regex:/^${nu.toString()}/]]
                 a="name"
                 println("电话查找")
             }catch(Exception e){
                 println("名字查找："+nu)
                 form+=[name: [$regex:/^${nu}/]]
-                a="elephone"
+                a="phone"
             }
             def u=dataService.mongoDb.searchSupplier(form,1,40)
             def users=[]
             u.contentlist.each{
                 users.add([
-                        value:it._id,
+                        value:it,
                         label:"${it."${a}"}".toString()
                 ])
             }

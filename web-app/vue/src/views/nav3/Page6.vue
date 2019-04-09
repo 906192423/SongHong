@@ -1,7 +1,7 @@
 <template>
     <section>
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
-        <el-form :inline="true" :model="name">
+        <el-form :inline="true">
             <el-form-item>
                 <el-input style="width: 280px" v-model="name" placeholder="输入商品名或者商品编号来查找"></el-input>
             </el-form-item>
@@ -172,13 +172,13 @@
                 //添加商品界面数据
                 addForm: {
                     name:"",//商品名
-                    code: "",//商品编号
+                    code:"",//商品编号
                     img:[],//商品图片
                     remark: "",//备注
                     price:"",//单价
                     unit:"",//单位
                     number:"",//库存数量
-                    state: 0,//0为可生产，-1无法生产
+                    state:0,//0为可生产，-1无法生产
                     costPrice:"",//进价
                 },
                 //编辑商品界面数据
