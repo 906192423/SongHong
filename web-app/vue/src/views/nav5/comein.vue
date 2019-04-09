@@ -14,7 +14,7 @@
             <el-radio v-model="ruleForm.earnest" label="0">未结清</el-radio>
         </el-form-item>
         <el-form-item label="进货日期" style="width:500px" prop="leadTime">
-            <el-date-picker v-model="ruleForm.leadTime" type="datetime" placeholder="选择日期时间">
+            <el-date-picker v-model="ruleForm.time" type="datetime" placeholder="选择日期时间">
             </el-date-picker>
         </el-form-item>
         <el-form-item label="请选择商品">
@@ -94,46 +94,13 @@
                 name:"",
                 uuuName:"",
                 disabled:true,
-                gloading:false,
-                uloading:false,
                 selUser:"",
                 user:"",
                 ruleForm: {
-                    _creatId:"",//创建者id
-                    _supplierId:"",//供货商id
-                    creatName:"",//创建者姓名
-                    stockCode: "",//订单号
-                    detail:[
-//                        [
-//                                _id: "",
-//                                name:"",
-//                                code: "",
-//                                num:0,
-//                                price:0,
-//                        ],
-                    ],
+                    earnest:"",//创建者id
                     time: " ",//交货时间
-                    remark : "",//备注
-                    amount :"0",//合计金额
-                    state: 0,//0为新创建的订单，1为 ，2生产完成，-1未完成的
                 },
                 formLoading:false,
-                rules: {
-
-                },
-                users: [],
-                list: [],
-                loading: false,
-                options5: [{
-                    value: 'HTML',
-                    label: 'HTML'
-                }, {
-                    value: 'CSS',
-                    label: 'CSS'
-                }, {
-                    value: 'JavaScript',
-                    label: 'JavaScript'
-                }],
                 value10: [],
                 goodsTable:[],
             };
