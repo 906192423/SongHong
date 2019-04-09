@@ -43,9 +43,9 @@ class CustomerController extends BaseController{
             try{
                 nu=Integer.parseInt(params.name)
                 form+=[phone: [$regex:/^${nu.toString()}/]]
-                println("电话查找")
+                println("订单号查找")
             }catch(Exception e){
-                println("名字查找："+nu)
+                println("交易号查找："+nu)
                 form+=[name: [$regex:/^${nu}/]]
             }
             def u=dataService.mongoDb.searchCustomer(form,1,40)

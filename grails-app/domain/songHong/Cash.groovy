@@ -7,7 +7,8 @@ class Cash {
         def item = [
                 _id : "",
                 code:"",//流水号
-                _orderId:"",//订单号
+                ordCode:"",//订单号
+                _orderId:"",//订单id
                 _creatId:"",//创建人id
                 name:"",//支付人姓名
                 amount:"",//金额

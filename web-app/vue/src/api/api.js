@@ -6,7 +6,6 @@ exports.install = function (Vue, options) {
     Vue.prototype.Vpost= function (url,params){
         return new Promise(function (resolve, reject) {
             $.post(`${base}/${url}`, params).then(res=>{
-                console.log("1111111111111")
                 let data=JSON.parse(res)
                 if(data.OnLine&&data.OnLine){
                     console.log("未登陆")
@@ -16,9 +15,9 @@ exports.install = function (Vue, options) {
                         type: 'error'
                     });
                     vue.$router.push({ path: '/login' })
+                    return
                 }else {
                 }
-                console.log("0000")
                 resolve(res)
             })
         })
@@ -26,7 +25,6 @@ exports.install = function (Vue, options) {
     Vue.prototype.VgetJSON= function (url,params){
         return new Promise(function (resolve, reject) {
             $.getJSON(`${base}/${url}`, params).then(res=>{
-                console.log("JSON22222222222")
                 if(res.OnLine&&res.OnLine){
                     console.log("未登陆")
                     sessionStorage.removeItem('user')
@@ -37,7 +35,6 @@ exports.install = function (Vue, options) {
                     vue.$router.push({ path: '/login' })
                 }else {
                 }
-                console.log("0000")
                 resolve(res)
             })
         })

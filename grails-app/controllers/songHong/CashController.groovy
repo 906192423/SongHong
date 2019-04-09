@@ -54,4 +54,21 @@ class CashController extends BaseController{
             render(js(false,"失败"))
         }
     }
+    def getList= {
+        println("查找交易数据" + params)
+        def form = [sort: [_id: -1]]
+        if (params.name) {
+            def nu = params.name
+            try {
+                nu = Integer.parseInt(params.name)
+                form += [ordCode: [$regex: /^${nu.toString()}/]]
+                println("订单查找")
+            } catch (Exception e) {
+                println("交易号查找：" + nu)
+                form += [code: [$regex: /^${nu}/]]
+            }
+        }
+        def u = dataService.mongoDb.searchCash(form, 1, 40)
+        render(JSONObject.toJSONString([users: u.contentlist,num:u.allNum, flag: true]))
+    }
 }

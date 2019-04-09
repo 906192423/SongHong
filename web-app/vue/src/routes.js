@@ -15,6 +15,7 @@ import comein from './views/nav5/comein.vue'
 import repetory from './views/nav5/repetory.vue'
 import supplier from './views/nav5/supplier.vue'
 import pay from './views/nav4/pay.vue'
+import payList from "./views/nav4/payList";
 let routes = [
     {
         path: '/login',
@@ -71,6 +72,7 @@ let routes = [
         iconCls: 'fa fa-id-card-o',
         children: [
             { path: '/pay', component: pay, name: '收银缴款' },
+            { path: '/payList', component: payList, name: '收款列表' },
         ]
     },
     {

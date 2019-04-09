@@ -1,5 +1,5 @@
 <template>
-    <el-form :model="dynamicValidateForm" :rules="rules" ref="dynamicValidateForm" style="width: 90%" class="demo-dynamic" :v-loading="loading">
+    <el-form :model="dynamicValidateForm" :rules="rules" :label-position="left" ref="dynamicValidateForm" style="width: 100%"  :v-loading="loading" label-width="100px">
         <el-form-item label="请选择订单">
             <el-autocomplete
                     v-model="state4"

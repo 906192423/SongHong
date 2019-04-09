@@ -13,9 +13,9 @@ class CashService extends BaseService{
             def c=Integer.valueOf(b)
             def code=c+1
             code=String.format("%04d", code)
-            return a+code
+            return "S"+a+code
         }else {
-            return a+"0001"
+            return "S"+a+"0001"
         }
     }
 }
