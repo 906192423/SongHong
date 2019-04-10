@@ -1,5 +1,12 @@
 <template>
     <section>
+        <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect1"
+                 background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
+            <el-menu-item index="1">全部商品</el-menu-item>
+            <el-menu-item index="2">标准商品</el-menu-item>
+            <el-menu-item index="3">称重商品</el-menu-item>
+            <el-menu-item index="4">组合商品</el-menu-item>
+        </el-menu>
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
         <el-form :inline="true">
             <el-form-item>
@@ -13,68 +20,67 @@
             </el-form-item>
         </el-form>
     </el-col>
-    <el-table v-loading="listLoading"
-            :data="tableData"
-            >
 
-        <el-table-column
-                label="商品名">
+    <el-table v-loading="listLoading" :data="tableData">
+
+        <el-table-column label="商品编号" >
+            <template slot-scope="scope">
+                <el-tag type="success">{{scope.row.code}}</el-tag>
+            </template>
+        </el-table-column>
+
+        <el-table-column label="商品名">
             <template slot-scope="scope">
                 <el-popover trigger="hover" placement="top">
-                    <!--<p>姓名: {{ scope.row.name }}</p>-->
-                    <!--<p>住址: {{ scope.row.address }}</p>-->
                     <div slot="reference" class="name-wrapper">
                         <el-tag size="medium" type="warning">{{ scope.row.name }}</el-tag>
                     </div>
                 </el-popover>
             </template>
         </el-table-column>
-        <el-table-column
-                label="商品编号"
-                width="150">
+
+        <el-table-column label="单位" width="80">
             <template slot-scope="scope">
-            <el-tag type="success">{{scope.row.code}}</el-tag>
+                <el-tag type="success">{{scope.row.unit}}</el-tag>
             </template>
         </el-table-column>
-        <el-table-column
-                label="商品售价"
-                width="180">
+
+        <el-table-column label="库存数量" width="80">
+            <template slot-scope="scope">
+                <el-tag type="success">{{scope.row.number}}</el-tag>
+            </template>
+        </el-table-column>
+
+        <el-table-column label="商品进价" width="80">
+            <template slot-scope="scope">
+                <el-tag type="success">{{scope.row.costPrice}}</el-tag>
+            </template>
+        </el-table-column>
+
+        <el-table-column label="商品售价" width="80">
             <template slot-scope="scope">
                 <el-tag type="success">{{scope.row.price}}</el-tag>
             </template>
         </el-table-column>
-        <el-table-column
-                label="备注"
-                width="180">
-            <template slot-scope="scope">
-                <el-popover trigger="hover" placement="top">
-                    <p>{{ scope.row.remark}}</p>
-                    <div slot="reference" class="name-wrapper">
-                        <el-tag size="medium" type="info">查看备注</el-tag>
-                    </div>
-                </el-popover>
-            </template>
-        </el-table-column>
-        <el-table-column
-                label="状态"
-                width="180">
+
+        <el-table-column label="状态" width="100">
             <template slot-scope="scope">
                 <el-tag v-if="scope.row.state==0" type="success">可生产</el-tag>
                 <el-tag v-if="scope.row.state==-1" type="danger">无法生产</el-tag>
             </template>
         </el-table-column>
-        <el-table-column
-                label="创建日期"
-                width="250">
+        <el-table-column label="分类" width="120">
             <template slot-scope="scope">
-                <i class="el-icon-time"></i>
-                <span style="margin-left: 10px">{{ scope.row.ct}}</span>
+                <el-tag v-if="scope.row.classification==2" type="success">标准商品</el-tag>
+                <el-tag v-if="scope.row.classification==3" type="danger">称重商品</el-tag>
+                <el-tag v-if="scope.row.classification==4" type="success">组合商品</el-tag>
             </template>
         </el-table-column>
+
         <el-table-column label="操作" width="150">
             <template slot-scope="scope">
-                <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+                <el-button type="danger" size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                <!--<el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>-->
             </template>
         </el-table-column>
     </el-table>
@@ -107,6 +113,13 @@
                         <el-radio class="radio" :label="-1">无法生产</el-radio>
                     </el-radio-group>
                 </el-form-item>
+                <el-form-item label="商品分类">
+                    <el-radio-group v-model="addForm.classification">
+                        <el-radio class="radio" :label="2">标准商品</el-radio>
+                        <el-radio class="radio" :label="3">称重商品</el-radio>
+                        <el-radio class="radio" :label="4">组合商品</el-radio>
+                    </el-radio-group>
+                </el-form-item>
                 <el-form-item label="备注">
                     <el-input type="textarea" v-model="addForm.remark"></el-input>
                 </el-form-item>
@@ -134,6 +147,13 @@
                         <el-radio class="radio" :label="-1">无法生产</el-radio>
                     </el-radio-group>
                 </el-form-item>
+                <el-form-item label="商品分类">
+                    <el-radio-group v-model="editForm.classification">
+                        <el-radio class="radio" :label="2">标准商品</el-radio>
+                        <el-radio class="radio" :label="3">称重商品</el-radio>
+                        <el-radio class="radio" :label="4">组合商品</el-radio>
+                    </el-radio-group>
+                </el-form-item>
                 <el-form-item label="备注">
                     <el-input type="textarea" v-model="editForm.remark"></el-input>
                 </el-form-item>
@@ -149,10 +169,13 @@
     export default {
         data() {
             return {
+                cancel:"",
+                activeIndex: '1',
                 name:"",
                 page:"1",
                 total:1,
                 listLoading:false,
+                handleSelect:false,
                 editFormVisible:false,
                 editLoading:false,
                 addFormVisible:false,
@@ -172,7 +195,7 @@
                 addForm: {
                     name:"",//商品名
                     code:"",//商品编号
-                    img:[],//商品图片
+                    classification:"",//商品分类，2为标准商品，3为称重商品，4为组合商品
                     remark: "",//备注
                     price:"",//单价
                     unit:"",//单位
@@ -189,11 +212,15 @@
                     remark: "",//备注
                     price:"",//单价
                     state:"",//0为可生产，-1无法生产
+                    classification:"",
                 },
                 tableData: []
             }
         },
         methods: {
+            handleSelect1() {
+                console.log(888888);
+            },
             handleEdit(index, row) {
                 this.editFormVisible=true
                 console.log(row.state)
@@ -231,25 +258,25 @@
                     }
                 })
             },
-            handleDel(index, row) {
-                this.$confirm('确认提交吗？', '提示', {}).then(() => {
-                    this.VgetJSON('product/delete',{_id:row._id}).then(data=>{
-                            if(data.flag){
-                                this.$notify({
-                                    title: '成功',
-                                    message: data.remark,
-                                    type: 'success'
-                                });
-                                this.getProduct()
-                            }else {
-                                this.$message({
-                                    message: data.remark,
-                                    type: 'error'
-                                });
-                            }
-                        })
-                })
-            },
+            // handleDel(index, row) {
+            //     this.$confirm('确认提交吗？', '提示', {}).then(() => {
+            //         this.VgetJSON('product/delete',{_id:row._id}).then(data=>{
+            //                 if(data.flag){
+            //                     this.$notify({
+            //                         title: '成功',
+            //                         message: data.remark,
+            //                         type: 'success'
+            //                     });
+            //                     this.getProduct()
+            //                 }else {
+            //                     this.$message({
+            //                         message: data.remark,
+            //                         type: 'error'
+            //                     });
+            //                 }
+            //             })
+            //     })
+            // },
             getProduct(){
                 this.listLoading=true
                 this.VgetJSON('product/getGoods',{name:this.name,page:this.page}).then(data=>{
