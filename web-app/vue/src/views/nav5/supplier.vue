@@ -237,12 +237,21 @@
                                         message:data.remark,
                                         type: 'success'
                                     });
+
                                 }else {
                                     this.$message({
                                         message: data.remark,
                                         type: 'error'
                                     });
                                 }
+                                this.newForm={
+                                    _id : "",
+                                    name:"",//供货商名
+                                    elephone:"",//供货电话
+                                    address:"",//地址
+                                    email : "",//郵箱
+                                    remark : "",//简介开户信息
+                                },
                                 //this.$refs['editForm'].resetFields();
                                 this.newFormVisible = false;
                                 this.getUsers();

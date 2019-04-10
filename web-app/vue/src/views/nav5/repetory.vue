@@ -9,9 +9,6 @@
                 <el-form-item>
                     <el-button type="primary" v-on:click="getUsers">查询</el-button>
                 </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="handleAdd">新增</el-button>
-                </el-form-item>
             </el-form>
         </el-col>
 
@@ -63,19 +60,13 @@
             </el-table-column>
             <el-table-column prop="inTime" label="进货时间" width="200" sortable>
             </el-table-column>
-            <el-table-column label="交款状态" width="100">
+            <el-table-column label="交款状态" width="160">
                 <template slot-scope="scope">
                     <el-tag v-if="scope.row.earnest==0" type="warning">未结清</el-tag>
                     <el-tag v-if="scope.row.earnest==1" type="success">结清</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column prop="creatName" label="创建者" width="160" sortable>
-            </el-table-column>
-            <el-table-column label="操作" width="160">
-                <template slot-scope="scope">
-                    <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                    <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
-                </template>
+            <el-table-column prop="creatName" label="创建者" sortable>
             </el-table-column>
         </el-table>
         <el-col :span="24" class="toolbar">
@@ -202,45 +193,10 @@
                 })
             },
             //删除
-            handleDel: function (index, row) {
-                this.$confirm('确认删除该记录吗?', '提示', {
-                    type: 'warning'
-                }).then(() => {
-                    this.listLoading = true;
-                    let para = { _id: row._id };
-                    this.VgetJSON('stock/delete',para).then(data=>{
-                        if(data.flag){
-                            this.$message({
-                                message:data.remark,
-                                type: 'success'
-                            });
-                        }else {
-                            this.$message({
-                                message: data.remark,
-                                type: 'error'
-                            });
-                        }
-                        this.listLoading = false
-                        this.getUsers();
-                    }).catch(() => {
-                        this.$message({
-                            message: "请求超时",
-                            type: 'error'
-                        });
-                    });
-                }).catch(() => {
 
-                });
-            },
             //显示编辑界面
-            handleEdit: function (index, row) {
-                this.editFormVisible = true;
-                this.editForm = Object.assign({}, row);
-            },
+
             //显示新增界面
-            handleAdd: function () {
-                this.$router.push({ path: '/user' });
-            },
             //编辑
             editSubmit: function () {
                 this.$refs.editForm.validate((valid) => {

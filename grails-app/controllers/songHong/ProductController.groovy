@@ -15,6 +15,7 @@ class ProductController extends BaseController{
             p.code=Integer.valueOf(params.code)//商品编号
             p.number=Double.valueOf(params.number)
             p.state=Integer.valueOf(params.state)
+            p.classification=Integer.valueOf(params.classification)
             p.price=Double.valueOf(params.price)
             p.costPrice=Double.valueOf(params.costPrice)
             dataService.mongoDb.saveProduct(p)
@@ -39,6 +40,7 @@ class ProductController extends BaseController{
             p.code=Integer.valueOf(params.code)//商品编号
             p.number=Integer.valueOf(params.number)
             p.state=Integer.valueOf(params.state)
+            p.classification=Integer.valueOf(params.classification)
             p.price=Double.valueOf(params.price)
             p.costPrice=Double.valueOf(params.costPrice)
             dataService.mongoDb.updateProduct([_id:id],p)
