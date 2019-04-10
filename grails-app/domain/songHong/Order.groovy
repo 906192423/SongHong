@@ -24,10 +24,12 @@ class Order {
 //                        [
 //                                _id:"",
 //                                code:"",
+//                                amount:"",
 //                        ]
                 ],//交易单号
                 modeTransport : "",//运输方式
                 earnest:0,//交款方式，1为全款一次结清，0交一部分定金，-1欠款
+                payState:0,//2需要结清剩余金额   1需要交定金  0一次性全部付清  -1已交完全部款
                 userName : "",//客户姓名
                 _Uid: "",//客户id
                 leadTime: " ",//交货时间

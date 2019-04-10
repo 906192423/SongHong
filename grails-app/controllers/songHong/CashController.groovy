@@ -8,13 +8,15 @@ class CashController extends BaseController{
     def cashService
     def creat={
         println(params)
-        def or=dataService.mongoDb.findOneOrder([_id:params._orderId],[include:["_id","cashList","sellCode"]])
+        def or=dataService.mongoDb.findOneOrder([_id:params._orderId],[include:["_id","cashList","sellCode","payState","allPay"]])
         if(!or){
             render(js(false,"此订单不存在"))
             return
         }
         try {
             def payForm= JSONObject.parse(params.domains)
+            def earnest=Integer.valueOf(params.earnest)
+            def cutAmount=Double.valueOf(params.cutAmount)
             def pay=[]
             double total=0
             payForm.each {
@@ -31,6 +33,8 @@ class CashController extends BaseController{
                     _creatId:session.user._id,//创建人id
                     creatName:session.user.name,
                     ordCode:or.sellCode,
+                    cutAmount:cutAmount,
+                    earnest:earnest,
                     name:"",//支付人姓名
                     amount:total,//金额
                     payForm:pay,
@@ -47,10 +51,17 @@ class CashController extends BaseController{
                         [
                                 code:c.code,
                                 _id:c._id,
+                                amount:c.amount
                         ]
                 ]
             }
-            dataService.mongoDb.updateOrder([_id:or._id],[cashList:or.cashList])
+            if(or.payState==1){//下次交款状态的转移
+                or.payState=2
+            }else {
+                or.payState=-1
+                or.allPay=true
+            }
+            dataService.mongoDb.updateOrder([_id:or._id],[cashList:or.cashList,payState:or.payState,allPay:or.allPay])
             render(js(true,"成功"))
         }catch(Exception e){
             render(js(false,"失败"))
@@ -70,7 +81,7 @@ class CashController extends BaseController{
                 form += [code: [$regex: /^${nu}/]]
             }
         }
-        def u = dataService.mongoDb.searchCash(form, 1, 40)
+        def u = dataService.mongoDb.searchCash(form, 1, 20)
         render(JSONObject.toJSONString([users: u.contentlist,num:u.allNum, flag: true]))
     }
     def getInfoList={

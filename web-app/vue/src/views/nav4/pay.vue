@@ -1,13 +1,21 @@
 <template>
     <el-form :model="dynamicValidateForm" :rules="rules" ref="dynamicValidateForm" style="width: 100%"  :v-loading="loading" label-width="100px">
-        <el-form-item label="请选择订单">
+        <el-form-item label="请选择订单：">
             <el-autocomplete
                     v-model="state4"
+                    clearable
                     :fetch-suggestions="querySearchAsync"
                     placeholder="请输入订单号"
                     @select="handleSelect"
             ></el-autocomplete>
         </el-form-item>
+        <el-alert
+                :title="info"
+                type="info"
+                center
+                :closable="false"
+                show-icon>
+        </el-alert>
         <el-table :data="order" highlight-current-row  style="width: 100%;"ref="multipleTable">
             <el-table-column type="expand">
                 <template slot-scope="scope">
@@ -80,12 +88,28 @@
             <el-table-column prop="creatName" label="销售员" width="120">
             </el-table-column>
         </el-table>
-        <el-form-item label="备注" style="width:500px">
-            <el-input type="textarea" v-model="dynamicValidateForm.remark"></el-input>
+        <el-alert
+                :title="info"
+                type="info"
+                center
+                :closable="false"
+                show-icon>
+        </el-alert>
+        <el-alert
+                v-if="needCash>0"
+                title="需要交的金额"
+                type="warning"
+                :closable="false"
+                center
+                :description="needCash+'元'"
+                show-icon>
+        </el-alert>
+        <el-form-item v-if="this.order[0]&&this.order[0].payState!=1" label="优惠金额：" style="width: 200px">
+            <el-input v-model="dynamicValidateForm.cutAmount" @change="cha"></el-input>
         </el-form-item>
         <el-form-item
                 v-for="(domain, index) in dynamicValidateForm.domains"
-                :label="'支付方式'"
+                :label="'支付方式：'"
                 :key="domain.key"
         >
             <div style="margin-top: 15px;">
@@ -100,8 +124,11 @@
                         </el-option>
                     </el-select>
                 </el-input>
-                <el-button @click.prevent="removeDomain(domain)">删除</el-button>
+                <el-button v-if="index!=0" @click.prevent="removeDomain(domain)">删除</el-button>
             </div>
+        </el-form-item>
+        <el-form-item label="备注：" style="width:500px">
+            <el-input type="textarea" v-model="dynamicValidateForm.remark"></el-input>
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="submitForm('dynamicValidateForm')">提交</el-button>
@@ -117,7 +144,9 @@
             return {
                 loading:false,
                 state4:'',
+                info:"",
                 order:[],
+                needCash:0,//需要的金额
                 options2: [{
                     value: 1,
                     label: '支付宝',
@@ -149,6 +178,8 @@
                 },
                 dynamicValidateForm: {
                     _orderId:"",
+                    earnest:"",
+                    cutAmount:0,
                     domains: [{
                         name:'',
                         amount:'',
@@ -158,7 +189,24 @@
             };
         },
         methods: {
+            cha(){
+                if(!this.isNumber(this.dynamicValidateForm.cutAmount)){
+                    this.$message({
+                        message:"请输入数字",
+                        type: 'error'
+                    });
+                    this.dynamicValidateForm.cutAmount=0
+                    return
+                }
+            },
+            clear(){
+                this.needCash=0
+                this.order=[]
+            },
             querySearchAsync(queryString, cb) {
+                if(this.state4==""){
+                    this.clear()
+                }
                 this.VgetJSON("order/cheOrder",{code:queryString}).then(data=>{
                     cb(data.list)
                 })
@@ -166,6 +214,21 @@
             handleSelect(item) {
                 this.dynamicValidateForm._orderId=item.item._id
                 this.order=[item.item]
+                this.dynamicValidateForm.earnest=this.order[0].payState
+                if(this.order[0].payState==1){
+                    this.info="当前交款方式：付定金"
+                }else if(this.order[0].payState==2){
+                    this.info="当前交款方式：支付剩余金额"
+                    this.countCash(this.order[0].cashList)
+                }else if(this.order[0].payState==0){
+                    this.info="当前交款方式：一次性结清"
+                    this.needCash=this.order[0].amount
+                }else {
+                    this.info="当前交款方式：额外交款"
+                }
+            },
+            countCash(list){
+                this.needCash=this.order[0].amount-list[0].amount
             },
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
@@ -184,6 +247,7 @@
                             });
                             return
                         }
+                        let amount=0
                         for(let i=0;i<this.dynamicValidateForm.domains.length;i++){
                             if(!this.dynamicValidateForm.domains[i].name||this.dynamicValidateForm.domains[i].name==""){
                                 this.$message({
@@ -195,6 +259,27 @@
                             if(!this.isNumber(this.dynamicValidateForm.domains[i].amount)){
                                 this.$message({
                                     message:"请输入金额",
+                                    type: 'error'
+                                });
+                                return
+                            }
+                            amount+=parseFloat(this.dynamicValidateForm.domains[i].amount)
+                        }
+                        if(this.order[0].payState!=-1){
+                            let cc=amount-this.needCash+parseFloat(this.dynamicValidateForm.cutAmount)
+                            if(cc<0){
+                                this.$message({
+                                    message:"付款金额不足"+-cc,
+                                    type: 'error'
+                                });
+                                return
+                            }
+                            if(this.order[0].payState==1){
+                                cc=amount-this.order[0].amount+parseFloat(this.dynamicValidateForm.cutAmount)
+                            }
+                            if(cc>0){
+                                this.$message({
+                                    message:"付款金额超出"+cc,
                                     type: 'error'
                                 });
                                 return
@@ -214,6 +299,11 @@
                                     this.dynamicValidateForm._orderId=""
                                     this.dynamicValidateForm.remark=""
                                     this.order=[]
+                                    this.state4=""
+                                    this.dynamicValidateForm.domains=[{
+                                        name:'',
+                                        amount:'',
+                                    }]
                                 }else {
                                     this.$message({
                                         message: data.remark,

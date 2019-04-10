@@ -13,7 +13,7 @@
         </el-col>
 
         <!--列表-->
-        <el-table :data="users" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
+        <el-table :data="users" stripe highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
             <el-table-column type="selection" width="55">
             </el-table-column>
             <el-table-column type="index" width="60">
@@ -45,6 +45,16 @@
             <el-table-column prop="code" label="交易单号" sortable>
             </el-table-column>
             <el-table-column prop="ordCode" label="订单号" width="140" sortable>
+            </el-table-column>
+            <el-table-column label="付款类型" width="140">
+                <template slot-scope="scope">
+                    <el-tag v-if="scope.row.earnest==1" type="warning">定金</el-tag>
+                    <el-tag v-else-if="scope.row.earnest==0" type="success">全款</el-tag>
+                    <el-tag v-else-if="scope.row.earnest==2">支付余款</el-tag>
+                    <el-tag v-else>额外付款</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column prop="cutAmount" label="优惠金额" width="100" sortable>
             </el-table-column>
             <el-table-column prop="amount" label="总金额" width="100" sortable>
             </el-table-column>
