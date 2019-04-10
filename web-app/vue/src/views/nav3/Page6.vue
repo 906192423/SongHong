@@ -218,7 +218,13 @@
         },
         methods: {
             handleSelect1() {
-                console.log(888888);
+                this.listLoading=true
+                this.VgetJSON('product/gets',{name:this.classification,page:this.page}).then(data=>{
+                    this.tableData=data.list
+                    this.total=data.num
+                    this.listLoading=false
+                })
+                this.listLoading=false
             },
             handleEdit(index, row) {
                 this.editFormVisible=true

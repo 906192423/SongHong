@@ -77,4 +77,20 @@ class ProductController extends BaseController{
         def goods=d.contentlist
         render(JSONObject.toJSONString([list:goods,flag:true,num:d.allNum]))
     }
+    def gets={
+        println("查找商品数据"+params)
+        def nu=params.name
+        def form=[sort:[_id:-1]]
+        if(params.name){
+            form+=[classification:Integer.valueOf(nu)]
+        }
+        def page=1
+        try{
+            page=Integer.valueOf(params.page)
+        }catch(Exception e){
+        }
+        def d=dataService.mongoDb.searchProduct(form,page,10)
+        def goods=d.contentlist
+        render(JSONObject.toJSONString([list:goods,flag:true,num:d.allNum]))
+    }
 }
