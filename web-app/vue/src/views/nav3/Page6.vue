@@ -169,7 +169,6 @@
     export default {
         data() {
             return {
-                cancel:"",
                 activeIndex: '1',
                 name:"",
                 page:"1",

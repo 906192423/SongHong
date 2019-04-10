@@ -206,6 +206,9 @@
 			// })
 		},
 		methods: {
+			cancel(){
+				this.addFormVisible=false
+			},
 			onSubmit() {
 				this.$refs['form'].validate((valid) => {
 					if (valid) {
