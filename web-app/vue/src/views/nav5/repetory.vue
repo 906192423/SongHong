@@ -9,9 +9,6 @@
                 <el-form-item>
                     <el-button type="primary" v-on:click="getUsers">查询</el-button>
                 </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="handleAdd">新增</el-button>
-                </el-form-item>
             </el-form>
         </el-col>
 
@@ -238,9 +235,6 @@
                 this.editForm = Object.assign({}, row);
             },
             //显示新增界面
-            handleAdd: function () {
-                this.$router.push({ path: '/user' });
-            },
             //编辑
             editSubmit: function () {
                 this.$refs.editForm.validate((valid) => {
