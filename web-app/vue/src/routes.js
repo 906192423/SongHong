@@ -10,6 +10,8 @@ import end from './views/nav2/end.vue'
 import Page6 from './views/nav3/Page6.vue'
 import echarts from './views/charts/echarts.vue'
 import comein from './views/nav5/comein.vue'
+import HRM from './views/nav6/HRM.vue'
+import stamp from './views/nav6/stamp.vue'
 import repetory from './views/nav5/repetory.vue'
 import supplier from './views/nav5/supplier.vue'
 import pay from './views/nav4/pay.vue'
@@ -88,6 +90,16 @@ let routes = [
         iconCls: 'fa fa-bar-chart',
         children: [
             { path: '/echarts', component: echarts, name: 'echarts' }
+        ]
+    },
+    {
+        path: '/',
+        component: Home,
+        name: '店员管理',
+        iconCls: 'el-icon-message',//图标样式class
+        children: [
+            { path: '/HRM', component: HRM, name: '人员列表' },
+            { path: '/stamp', component: stamp, name: '打印测试' },
         ]
     },
     {

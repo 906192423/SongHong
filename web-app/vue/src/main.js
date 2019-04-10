@@ -16,7 +16,8 @@ Vue.use(api)
 Vue.use(ElementUI)
 Vue.use(VueRouter)
 Vue.use(Vuex)
-
+import Print from 'vue-print-nb'
+Vue.use(Print); //注册
 
 const router = new VueRouter({
   routes
