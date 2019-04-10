@@ -11,8 +11,9 @@ class Cash {
                 _orderId:"",//订单id
                 _creatId:"",//创建人id
                 name:"",//支付人姓名
+                cutAmount:0,//优惠金额
                 amount:"",//金额
-                earnest:"",//交款方式，1为全款一次结清，0交一部分定金,
+                earnest:"",//交款方式，0为全款一次结清，1付定金 2支付剩余金额 其他 额外交款
                 payForm:[
 //                        [
 //                                name:"",//支付名称 1：支付宝  2：微信 3：现金 4：刷卡

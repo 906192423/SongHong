@@ -14,13 +14,21 @@ class OrderController extends BaseController{
             return
         }
         try {
+            int payState
+            def earnest=Integer.valueOf(params.earnest)
+            if(earnest==0){
+                payState=1
+            }else {
+                payState=0
+            }
             def order=Order.newOne([
                     _creatId:session.user._id,
                     creatName:session.user.name,
                     sellCode:orderService.getCode(),
+                    payState:payState,
                     phone:params.phone,
                     detail: JSONObject.parse(params.detail),
-                    earnest:Integer.valueOf(params.earnest),
+                    earnest:earnest,
                     modeTransport : params.modeTransport,//运输方式
                     userName :cu.name,//客户姓名
                     _Uid:cu._id,//客户id
@@ -116,7 +124,7 @@ class OrderController extends BaseController{
     def cheOrder={
         println(params)
         def form=[sort:[_id:-1]]
-        form+=[sellCode:[$regex:/^${params.code}/]]
+        form+=[sellCode:[$regex:/^${params.code}/],allPay:false]
         def list=dataService.mongoDb.searchOrder(form,1,20)
         def orders=[]
         list.contentlist.each{

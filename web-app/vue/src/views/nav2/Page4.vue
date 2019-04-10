@@ -113,9 +113,9 @@
             </el-pagination>
         </el-col>
 
-        <el-dialog title="交款详细信息" :visible.sync="dialog">
-            <el-table :data="cashList" highlight-current-row v-loading="csahLoading" style="width: 100%;">
-                <el-table-column type="index" width="60">
+        <el-dialog title="交款详细信息" :visible.sync="dialog" width="1000px">
+            <el-table :data="cashList" stripe highlight-current-row v-loading="csahLoading" style="width: 100%;">
+                <el-table-column type="index" width="50">
                 </el-table-column>
                 <el-table-column type="expand">
                     <template slot-scope="scope">
@@ -141,13 +141,15 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column prop="code" label="交易单号" width="140" sortable>
+                <el-table-column prop="code" label="交易单号" width="150" sortable>
                 </el-table-column>
-                <el-table-column prop="amount" label="总金额" width="100" >
+                <el-table-column prop="cutAmount" label="优惠金额" width="110">
                 </el-table-column>
-                <el-table-column prop="ct" label="创建时间" width="180">
+                <el-table-column prop="amount" label="总金额" width="120" >
                 </el-table-column>
-                <el-table-column label="备注" width="80">
+                <el-table-column prop="ct" label="创建时间" width="200">
+                </el-table-column>
+                <el-table-column label="备注" width="100">
                     <template slot-scope="scope">
                         <el-popover trigger="hover" placement="top">
                             <p>{{ scope.row.remark}}</p>
@@ -157,7 +159,7 @@
                         </el-popover>
                     </template>
                 </el-table-column>
-                <el-table-column prop="creatName" label="创建人" width="120">
+                <el-table-column prop="creatName" label="创建人">
                 </el-table-column>
                 <!--<el-table-column label="操作" width="200">-->
                     <!--<template slot-scope="scope">-->
