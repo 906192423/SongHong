@@ -57,11 +57,11 @@
             </el-table-column>
             <el-table-column prop="code" label="进货单号" width="150" sortable>
             </el-table-column>
-            <el-table-column prop="supName" label="供应商" width="250" sortable>
+            <el-table-column prop="supName" label="供应商" width="200" sortable>
             </el-table-column>
             <el-table-column prop="amount" label="总金额" width="150"  sortable>
             </el-table-column>
-            <el-table-column prop="inTime" label="进货时间" width="220" sortable>
+            <el-table-column prop="inTime" label="进货时间" width="200" sortable>
             </el-table-column>
             <el-table-column label="交款状态" width="100">
                 <template slot-scope="scope">
@@ -69,7 +69,7 @@
                     <el-tag v-if="scope.row.earnest==1" type="success">结清</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column prop="creatName" label="创建者" sortable>
+            <el-table-column prop="creatName" label="创建者" width="160" sortable>
             </el-table-column>
             <el-table-column label="操作" width="160">
                 <template slot-scope="scope">

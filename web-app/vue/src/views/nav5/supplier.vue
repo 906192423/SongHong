@@ -21,15 +21,15 @@
             </el-table-column>
             <el-table-column type="index" width="60">
             </el-table-column>
-            <el-table-column prop="name" label="姓名" width="120" sortable>
+            <el-table-column prop="name" label="姓名" width="220" sortable>
             </el-table-column>
-            <el-table-column prop="elephone" label="电话" width="140" sortable>
+            <el-table-column prop="phone" label="电话" width="140" sortable>
             </el-table-column>
             <el-table-column prop="address" label="地址" min-width="180" sortable>
             </el-table-column>
             <el-table-column prop="email" label="邮箱" min-width="180" sortable>
             </el-table-column>
-            <el-table-column prop="remark" label="简介" min-width="180" sortable>
+            <el-table-column prop="remark" label="简介"  sortable>
             </el-table-column>
             <el-table-column label="操作" width="150">
                 <template slot-scope="scope">
@@ -51,7 +51,7 @@
                     <el-input v-model="editForm.name" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="电话" prop="phone">
-                    <el-input v-model="editForm.elephone" auto-complete="off"></el-input>
+                    <el-input v-model="editForm.phone" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="邮箱" prop="email">
                     <el-input v-model="editForm.email" ></el-input>
