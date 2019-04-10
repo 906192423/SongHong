@@ -204,7 +204,6 @@
                             this.loading=true
                             let form=JSON.parse(JSON.stringify(this.dynamicValidateForm))
                             form.domains=JSON.stringify(form.domains)
-                            console.log(form)
                             this.VgetJSON('cash/creat',form).then(data=>{
                                 if(data.flag){
                                     this.$notify({

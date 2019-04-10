@@ -19,9 +19,12 @@ class StockController extends BaseController{
                         inTime:params.inTime,//交货时间
                         amount :Double.valueOf(params.amount),//合计金额
                 ])
-                stockService.inCome(order.detail)
-                dataService.mongoDb.saveStock(order)
-                render(js(true,"创建成功"))
+                if(stockService.inCome(order.detail)){
+                    dataService.mongoDb.saveStock(order)
+                    render(js(true,"创建成功"))
+                }else {
+                    render(js(false,"创建失败"))
+                }
             }catch(Exception e){
                 render(js(false,"创建失败"))
             }

@@ -24,7 +24,6 @@ class Order {
 //                        [
 //                                _id:"",
 //                                code:"",
-//                                amount:"",
 //                        ]
                 ],//交易单号
                 modeTransport : "",//运输方式
