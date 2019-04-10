@@ -50,7 +50,7 @@ class OrderController extends BaseController{
         if(params.state){
             form.state=Integer.valueOf(params.state)
         }
-        def u=dataService.mongoDb.searchOrder(form,page,20)
+        def u=dataService.mongoDb.searchOrder(form,page,10)
         println("查看订单数据"+u)
         render(js(true,"查询成功",[list:u.contentlist,num:u.allNum]))
     }
@@ -125,7 +125,7 @@ class OrderController extends BaseController{
         println(params)
         def form=[sort:[_id:-1]]
         form+=[sellCode:[$regex:/^${params.code}/],allPay:false]
-        def list=dataService.mongoDb.searchOrder(form,1,20)
+        def list=dataService.mongoDb.searchOrder(form,1,10)
         def orders=[]
         list.contentlist.each{
             orders.add([

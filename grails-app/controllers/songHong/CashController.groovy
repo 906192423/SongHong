@@ -81,7 +81,7 @@ class CashController extends BaseController{
                 form += [code: [$regex: /^${nu}/]]
             }
         }
-        def u = dataService.mongoDb.searchCash(form, 1, 20)
+        def u = dataService.mongoDb.searchCash(form, 1, 10)
         render(JSONObject.toJSONString([users: u.contentlist,num:u.allNum, flag: true]))
     }
     def getInfoList={
