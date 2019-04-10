@@ -84,7 +84,12 @@
                 </template>
             </el-table-column>
             <el-table-column label="交款记录" width="100">
-
+                <template slot-scope="scope">
+                    <div v-if="scope.row.cashList.length">
+                        <el-button type="text" @click="lookCash(scope.row.cashList)">{{scope.row.cashList.length}}条记录</el-button>
+                    </div>
+                    <el-tag type="danger" v-if="scope.row.cashList.length==0">无</el-tag>
+                </template>
             </el-table-column>
             <el-table-column label="生产状态" width="150">
                 <template slot-scope="scope">
@@ -107,6 +112,60 @@
             <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="20" :total="total" style="float:right;">
             </el-pagination>
         </el-col>
+
+        <el-dialog title="交款详细信息" :visible.sync="dialog">
+            <el-table :data="cashList" highlight-current-row v-loading="csahLoading" style="width: 100%;">
+                <el-table-column type="index" width="60">
+                </el-table-column>
+                <el-table-column type="expand">
+                    <template slot-scope="scope">
+                        <div>
+                            <el-table
+                                    :data="scope.row.payForm"
+                                    style="width: 100%">
+                                <el-table-column
+                                        label="支付方式"
+                                        width="180">
+                                    <template slot-scope="scope">
+                                        <el-tag v-if="scope.row.name==1" type="success">支付宝</el-tag>
+                                        <el-tag v-if="scope.row.name==2" type="success">微信</el-tag>
+                                        <el-tag v-if="scope.row.name==3" type="success">现金</el-tag>
+                                        <el-tag v-if="scope.row.name==4" type="success">刷卡</el-tag>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column
+                                        prop="amount"
+                                        label="支付金额">
+                                </el-table-column>
+                            </el-table>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="code" label="交易单号" width="140" sortable>
+                </el-table-column>
+                <el-table-column prop="amount" label="总金额" width="100" >
+                </el-table-column>
+                <el-table-column prop="ct" label="创建时间" width="180">
+                </el-table-column>
+                <el-table-column label="备注" width="80">
+                    <template slot-scope="scope">
+                        <el-popover trigger="hover" placement="top">
+                            <p>{{ scope.row.remark}}</p>
+                            <div slot="reference" class="name-wrapper">
+                                <el-tag size="medium" type="info" style="color: #20a0ff">交易备注</el-tag>
+                            </div>
+                        </el-popover>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="creatName" label="创建人" width="120">
+                </el-table-column>
+                <!--<el-table-column label="操作" width="200">-->
+                    <!--<template slot-scope="scope">-->
+                        <!--<el-button size="small" @click="handleEdit(scope.row)">查看详细</el-button>-->
+                    <!--</template>-->
+                <!--</el-table-column>-->
+            </el-table>
+        </el-dialog>
 
         <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
             <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
@@ -144,6 +203,9 @@
                 filters: {
                     name: ''
                 },
+                dialog:false,
+                cashList:[],
+                csahLoading:false,
                 users: [],
                 total: 0,
                 page: 1,
@@ -208,6 +270,14 @@
             // })
         },
         methods: {
+            lookCash(list){
+                this.dialog=true
+                this.csahLoading=true
+                this.VgetJSON('cash/getInfoList',{list:JSON.stringify(list)}).then(data=>{
+                    this.cashList=data.list
+                    this.csahLoading=false
+                })
+            },
             handleCurrentChange(val) {
                 this.page = val;
                 this.getUsers();

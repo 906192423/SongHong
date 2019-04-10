@@ -73,4 +73,13 @@ class CashController extends BaseController{
         def u = dataService.mongoDb.searchCash(form, 1, 40)
         render(JSONObject.toJSONString([users: u.contentlist,num:u.allNum, flag: true]))
     }
+    def getInfoList={
+        println(params)
+        def list=JSONObject.parse(params.list)
+        def li=[]
+        list.each {
+            li.add(dataService.mongoDb.findOneCash([_id: it._id]))
+        }
+        render(JSONObject.toJSONString([list:li]))
+    }
 }
