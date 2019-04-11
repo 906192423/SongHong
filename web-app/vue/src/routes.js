@@ -12,6 +12,8 @@ import echarts from './views/charts/echarts.vue'
 import comein from './views/nav5/comein.vue'
 import HRM from './views/nav6/HRM.vue'
 import stamp from './views/nav6/stamp.vue'
+import exchange from './views/nav7/exchange.vue'
+import browse from './views/nav7/browse.vue'
 import repetory from './views/nav5/repetory.vue'
 import supplier from './views/nav5/supplier.vue'
 import pay from './views/nav4/pay.vue'
@@ -50,6 +52,17 @@ let routes = [
             { path: '/page4', component: Page4, name: '浏览订单' },
             { path: '/page5', component: Page5, name: '生产中' },
             { path: '/end', component: end, name: '已完成' }
+        ]
+    },
+    {
+        path: '/',
+        component: Home,
+        name: '退货管理',
+        iconCls: 'fa fa-id-card-o',
+        children: [
+            { path: '/exchange', component: exchange, name: '创建退货单' },
+            { path: '/browse', component: browse, name: '退货单浏览' },
+
         ]
     },
     {

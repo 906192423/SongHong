@@ -1,9 +1,6 @@
 package songHong
-
 import com.alibaba.fastjson.JSONObject
-import grails.transaction.Transactional
 
-@Transactional(readOnly = true)
 class OrderController extends BaseController{
     def orderService
     def creat={
