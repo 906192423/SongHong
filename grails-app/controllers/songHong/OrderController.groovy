@@ -61,7 +61,8 @@ class OrderController extends BaseController{
             render(js(false,"此订单不存在！"))
             return
         }
-        if(cu._creatId==params._id||session.user.superUser){
+        println(cu._creatId+"-------"+params._id+"----------"+session.user.superUser)
+        if(cu._creatId==session.user._id||session.user.superUser){
             dataService.mongoDb.delOrder([_id:_id])
             render(js(true,"删除成功！"))
             return

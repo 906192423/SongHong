@@ -16,12 +16,12 @@
         </el-col>
 
         <!--列表-->
-        <el-table :data="users" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;"ref="multipleTable">
-            <el-table-column type="selection" width="55">
+        <el-table :data="users" highlight-current-row v-loading="listLoading" :row-class-name="tableRowClassName" @selection-change="selsChange" style="width: 100%;"ref="multipleTable">
+            <el-table-column type="selection" width="50" :selectable='checkboxInit'>
             </el-table-column>
-            <el-table-column type="index" width="60">
+            <el-table-column type="index" width="40">
             </el-table-column>
-            <el-table-column type="expand">
+            <el-table-column type="expand" >
                 <template slot-scope="scope">
                     <div>
                         <el-table
@@ -52,6 +52,7 @@
                                     label="总价">
                             </el-table-column>
                         </el-table>
+                        <h1>备注：{{scope.row.remark}}</h1>
                     </div>
                 </template>
             </el-table-column>
@@ -63,21 +64,31 @@
             </el-table-column>
             <el-table-column prop="leadTime" label="交货时间" width="220" sortable>
             </el-table-column>
-            <el-table-column label="交货地址" min-width="180">
+            <el-table-column label="交货地址" min-width="100">
                 <template slot-scope="scope">
                     <el-popover trigger="hover" placement="top">
                         <p>{{ scope.row.addr}}</p>
                         <div slot="reference" class="name-wrapper">
-                            <el-tag size="medium" type="info" color="blue">查看交货地址</el-tag>
+                            <el-tag size="medium" type="info" style="color: #20a0ff">交货地址</el-tag>
                         </div>
                     </el-popover>
                 </template>
             </el-table-column>
-            <el-table-column label="交款方式" width="150">
+            <el-table-column prop="phone" label="联系电话" width="100">
+            </el-table-column>
+            <el-table-column label="交款方式" width="100">
                 <template slot-scope="scope">
                     <el-tag v-if="scope.row.earnest==0" type="warning">定金</el-tag>
                     <el-tag v-if="scope.row.earnest==1" type="success">全款</el-tag>
                     <el-tag v-if="scope.row.earnest==-1">欠款</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column label="交款记录" width="100">
+                <template slot-scope="scope">
+                    <div v-if="scope.row.cashList.length">
+                        <el-button type="text" @click="lookCash(scope.row.cashList)">{{scope.row.cashList.length}}条记录</el-button>
+                    </div>
+                    <el-tag type="danger" v-if="scope.row.cashList.length==0">无</el-tag>
                 </template>
             </el-table-column>
             <el-table-column label="生产状态" width="150">
@@ -89,46 +100,100 @@
             </el-table-column>
             <el-table-column prop="creatName" label="销售员" width="120" sortable>
             </el-table-column>
-            <el-table-column label="操作" width="150">
+            <el-table-column label="操作" width="100">
                 <template slot-scope="scope">
-                    <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                    <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+                    <!--<el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>-->
+                    <el-button :disabled="scope.row.cashList.length>0? true:false" type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
         <el-col :span="24" class="toolbar">
             <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">进入生产队列</el-button>
-            <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="20" :total="total" style="float:right;">
+            <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="10" :total="total" style="float:right;">
             </el-pagination>
         </el-col>
 
-        <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
-            <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-                <h1>订单号：{{editForm.sellCode}}</h1>
-                <el-form-item label="客户姓名" prop="userName">
-                    <el-input v-model="editForm.userName" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="交货时间" prop="leadTime">
-                    <el-input v-model="editForm.leadTime" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="电话" prop="phone">
-                    <el-input v-model="editForm.phone" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="生日">
-                    <el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>
-                </el-form-item>
-                <el-form-item label="身份证号" prop="idCardNumber">
-                    <el-input v-model="editForm.idCardNumber" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="地址">
-                    <el-input type="textarea" v-model="editForm.addr"></el-input>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click.native="editFormVisible = false">取消</el-button>
-                <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
-            </div>
+        <el-dialog title="交款详细信息" :visible.sync="dialog" width="1000px">
+            <el-table :data="cashList" stripe highlight-current-row v-loading="csahLoading" style="width: 100%;">
+                <el-table-column type="index" width="50">
+                </el-table-column>
+                <el-table-column type="expand">
+                    <template slot-scope="scope">
+                        <div>
+                            <el-table
+                                    :data="scope.row.payForm"
+                                    style="width: 100%">
+                                <el-table-column
+                                        label="支付方式"
+                                        width="180">
+                                    <template slot-scope="scope">
+                                        <el-tag v-if="scope.row.name==1" type="success">支付宝</el-tag>
+                                        <el-tag v-if="scope.row.name==2" type="success">微信</el-tag>
+                                        <el-tag v-if="scope.row.name==3" type="success">现金</el-tag>
+                                        <el-tag v-if="scope.row.name==4" type="success">刷卡</el-tag>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column
+                                        prop="amount"
+                                        label="支付金额">
+                                </el-table-column>
+                            </el-table>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="code" label="交易单号" width="150" sortable>
+                </el-table-column>
+                <el-table-column prop="cutAmount" label="优惠金额" width="110">
+                </el-table-column>
+                <el-table-column prop="amount" label="总金额" width="120" >
+                </el-table-column>
+                <el-table-column prop="ct" label="创建时间" width="200">
+                </el-table-column>
+                <el-table-column label="备注" width="100">
+                    <template slot-scope="scope">
+                        <el-popover trigger="hover" placement="top">
+                            <p>{{ scope.row.remark}}</p>
+                            <div slot="reference" class="name-wrapper">
+                                <el-tag size="medium" type="info" style="color: #20a0ff">交易备注</el-tag>
+                            </div>
+                        </el-popover>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="creatName" label="创建人">
+                </el-table-column>
+                <!--<el-table-column label="操作" width="200">-->
+                <!--<template slot-scope="scope">-->
+                <!--<el-button size="small" @click="handleEdit(scope.row)">查看详细</el-button>-->
+                <!--</template>-->
+                <!--</el-table-column>-->
+            </el-table>
         </el-dialog>
+
+        <!--<el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">-->
+        <!--<el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">-->
+        <!--<h1>订单号：{{editForm.sellCode}}</h1>-->
+        <!--<h1>客户名：{{editForm.userName}}</h1>-->
+        <!--<el-form-item label="交货时间" prop="leadTime">-->
+        <!--<el-input v-model="editForm.leadTime" auto-complete="off"></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="电话" prop="phone">-->
+        <!--<el-input v-model="editForm.phone" auto-complete="off"></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="生日">-->
+        <!--<el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="身份证号" prop="idCardNumber">-->
+        <!--<el-input v-model="editForm.idCardNumber" auto-complete="off"></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="地址">-->
+        <!--<el-input type="textarea" v-model="editForm.addr"></el-input>-->
+        <!--</el-form-item>-->
+        <!--</el-form>-->
+        <!--<div slot="footer" class="dialog-footer">-->
+        <!--<el-button @click.native="editFormVisible = false">取消</el-button>-->
+        <!--<el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>-->
+        <!--</div>-->
+        <!--</el-dialog>-->
     </section>
 </template>
 
@@ -140,6 +205,9 @@
                 filters: {
                     name: ''
                 },
+                dialog:false,
+                cashList:[],
+                csahLoading:false,
                 users: [],
                 total: 0,
                 page: 1,
@@ -153,45 +221,25 @@
                     ]
                 },
                 //编辑界面数据
-                editForm: {
-                    sellCode: "",//订单号
-                    detail:[
-//                        [
-//                                _id: "",
-//                                name:"",
-//                                code: "",
-//                                num:0,
-//                                price:0,
-//                        ],
-                    ],
-                    modeTransport : "",//运输方式
-                    earnest:0,//定金
-                    userName : "",//客户姓名
-                    _Uid: "",//客户id
-                    leadTime: " ",//交货时间
-                    remark : "",//备注
-                    amount :"0",//合计金额
-                    state: 0,//0为新创建的订单，1为生产中，2完成，-1未完成的
-                    payState:"",//0结清，-1未结清
-                    payRemark:"",//未结清时的说明
-                    addr:"",//交货地址
-                },
-
-                addFormVisible: false,//新增界面是否显示
-                addLoading: false,
-                addFormRules: {
-                    name: [
-                        { required: true, message: '请输入姓名', trigger: 'blur' }
-                    ]
-                },
+                // editForm: {
+                //
+                // },
+                //
+                // addFormVisible: false,//新增界面是否显示
+                // addLoading: false,
+                // addFormRules: {
+                //     name: [
+                //         { required: true, message: '请输入姓名', trigger: 'blur' }
+                //     ]
+                // },
                 //新增界面数据
-                addForm: {
-                    name: '',
-                    sex: -1,
-                    age: 0,
-                    birth: '',
-                    addr: ''
-                }
+                // addForm: {
+                //     name: '',
+                //     sex: -1,
+                //     age: 0,
+                //     birth: '',
+                //     addr: ''
+                // }
 
             }
         },
@@ -204,6 +252,28 @@
             // })
         },
         methods: {
+            tableRowClassName({row, rowIndex}) {
+                if (row.earnest!=-1&&row.cashList.length==0) {
+                    return 'warning-row'
+                }else {
+                    return 'success-row'
+                }
+            },
+            checkboxInit(row,index){
+                if(row.earnest!=-1&&row.cashList.length==0){
+                    return 0;
+                }else {
+                    return 1
+                }
+            },
+            lookCash(list){
+                this.dialog=true
+                this.csahLoading=true
+                this.VgetJSON('cash/getInfoList',{list:JSON.stringify(list)}).then(data=>{
+                    this.cashList=data.list
+                    this.csahLoading=false
+                })
+            },
             handleCurrentChange(val) {
                 this.page = val;
                 this.getUsers();
@@ -217,8 +287,6 @@
                 };
                 this.listLoading = true;
                 this.VgetJSON('order/getOrder',para).then(d=>{
-                    console.log("取到订单数据")
-                    console.log(d)
                     this.users=d.list
                     this.total=d.num
                     this.listLoading = false;
@@ -230,7 +298,6 @@
                     type: 'warning'
                 }).then(() => {
                     this.listLoading = true;
-                    //NProgress.start();
                     let para = { _id: row._id };
                     this.VgetJSON('order/delete',para).then(data=>{
                         if(data.flag){
@@ -333,13 +400,11 @@
 
 </script>
 
-<style scoped>
-    .table_c {
-        width: 100%;
-        height: 500px;
-        background: url("../../assets/images/page4/1.jpg") center
-        center no-repeat;
-        background-size: 100% auto;
-        padding: 10px;
+<style>
+    .el-table .warning-row {
+        background: #f4bba6;
+    }
+    .el-table .success-row{
+        background: #ffffff;
     }
 </style>

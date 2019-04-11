@@ -16,12 +16,12 @@
         </el-col>
 
         <!--列表-->
-        <el-table :data="users" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;"ref="multipleTable">
-            <el-table-column type="selection" width="30">
+        <el-table :data="users" highlight-current-row v-loading="listLoading" :row-class-name="tableRowClassName" @selection-change="selsChange" style="width: 100%;"ref="multipleTable">
+            <el-table-column type="selection" width="50" :selectable='checkboxInit'>
             </el-table-column>
-            <el-table-column type="index" width="30">
+            <el-table-column type="index" width="40">
             </el-table-column>
-            <el-table-column type="expand">
+            <el-table-column type="expand" >
                 <template slot-scope="scope">
                     <div>
                         <el-table
@@ -100,10 +100,10 @@
             </el-table-column>
             <el-table-column prop="creatName" label="销售员" width="120" sortable>
             </el-table-column>
-            <el-table-column label="操作" width="150">
+            <el-table-column label="操作" width="100">
                 <template slot-scope="scope">
-                    <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                    <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+                    <!--<el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>-->
+                    <el-button :disabled="scope.row.cashList.length>0? true:false" type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -169,31 +169,31 @@
             </el-table>
         </el-dialog>
 
-        <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
-            <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-                <h1>订单号：{{editForm.sellCode}}</h1>
-                <h1>客户名：{{editForm.userName}}</h1>
-                <el-form-item label="交货时间" prop="leadTime">
-                    <el-input v-model="editForm.leadTime" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="电话" prop="phone">
-                    <el-input v-model="editForm.phone" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="生日">
-                    <el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>
-                </el-form-item>
-                <el-form-item label="身份证号" prop="idCardNumber">
-                    <el-input v-model="editForm.idCardNumber" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="地址">
-                    <el-input type="textarea" v-model="editForm.addr"></el-input>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click.native="editFormVisible = false">取消</el-button>
-                <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
-            </div>
-        </el-dialog>
+        <!--<el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">-->
+            <!--<el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">-->
+                <!--<h1>订单号：{{editForm.sellCode}}</h1>-->
+                <!--<h1>客户名：{{editForm.userName}}</h1>-->
+                <!--<el-form-item label="交货时间" prop="leadTime">-->
+                    <!--<el-input v-model="editForm.leadTime" auto-complete="off"></el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="电话" prop="phone">-->
+                    <!--<el-input v-model="editForm.phone" auto-complete="off"></el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="生日">-->
+                    <!--<el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="身份证号" prop="idCardNumber">-->
+                    <!--<el-input v-model="editForm.idCardNumber" auto-complete="off"></el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="地址">-->
+                    <!--<el-input type="textarea" v-model="editForm.addr"></el-input>-->
+                <!--</el-form-item>-->
+            <!--</el-form>-->
+            <!--<div slot="footer" class="dialog-footer">-->
+                <!--<el-button @click.native="editFormVisible = false">取消</el-button>-->
+                <!--<el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>-->
+            <!--</div>-->
+        <!--</el-dialog>-->
     </section>
 </template>
 
@@ -221,45 +221,25 @@
                     ]
                 },
                 //编辑界面数据
-                editForm: {
-                    sellCode: "",//订单号
-                    detail:[
-//                        [
-//                                _id: "",
-//                                name:"",
-//                                code: "",
-//                                num:0,
-//                                price:0,
-//                        ],
-                    ],
-                    modeTransport : "",//运输方式
-                    earnest:0,//定金
-                    userName : "",//客户姓名
-                    _Uid: "",//客户id
-                    leadTime: "",//交货时间
-                    remark : "",//备注
-                    amount :"0",//合计金额
-                    state: 0,//0为新创建的订单，1为生产中，2完成，-1未完成的
-                    payState:"",//0结清，-1未结清
-                    payRemark:"",//未结清时的说明
-                    addr:"",//交货地址
-                },
-
-                addFormVisible: false,//新增界面是否显示
-                addLoading: false,
-                addFormRules: {
-                    name: [
-                        { required: true, message: '请输入姓名', trigger: 'blur' }
-                    ]
-                },
+                // editForm: {
+                //
+                // },
+                //
+                // addFormVisible: false,//新增界面是否显示
+                // addLoading: false,
+                // addFormRules: {
+                //     name: [
+                //         { required: true, message: '请输入姓名', trigger: 'blur' }
+                //     ]
+                // },
                 //新增界面数据
-                addForm: {
-                    name: '',
-                    sex: -1,
-                    age: 0,
-                    birth: '',
-                    addr: ''
-                }
+                // addForm: {
+                //     name: '',
+                //     sex: -1,
+                //     age: 0,
+                //     birth: '',
+                //     addr: ''
+                // }
 
             }
         },
@@ -272,6 +252,20 @@
             // })
         },
         methods: {
+            tableRowClassName({row, rowIndex}) {
+                if (row.earnest!=-1&&row.cashList.length==0) {
+                    return 'warning-row'
+                }else {
+                    return 'success-row'
+                }
+            },
+            checkboxInit(row,index){
+                if(row.earnest!=-1&&row.cashList.length==0){
+                    return 0;
+                }else {
+                    return 1
+                }
+            },
             lookCash(list){
                 this.dialog=true
                 this.csahLoading=true
@@ -406,13 +400,11 @@
 
 </script>
 
-<style scoped>
-    .table_c {
-        width: 100%;
-        height: 500px;
-        background: url("../../assets/images/page4/1.jpg") center
-        center no-repeat;
-        background-size: 100% auto;
-        padding: 10px;
+<style>
+    .el-table .warning-row {
+        background: #f4bba6;
+    }
+    .el-table .success-row{
+        background: #ffffff;
     }
 </style>
