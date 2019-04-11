@@ -91,7 +91,7 @@ class CustomerController extends BaseController{
             render(js(false,"此用户不存在！"))
             return
         }
-        if(cu._creatId==params._id||session.user.superUser){
+        if(cu._creatId==session.user._id||session.user.superUser){
             dataService.mongoDb.delCustomer([_id:_id])
             render(js(true,"删除成功！"))
             return
