@@ -12,13 +12,14 @@ class Order {
                 sellCode: "",//订单号
                 phone:"",//联系电话
                 detail:[
-//                        [
-//                                _id: "",
-//                                name:"",
-//                                code: "",
-//                                num:0,
-//                                price:0,
-//                        ],
+                        [
+                                _id: "",
+                                name:"",
+                                code: "",
+                                num:0,
+                                unit:"",
+                                price:0,
+                        ],
                 ],
                 cashList:[
 //                        [
