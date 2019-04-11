@@ -41,6 +41,7 @@ class OrderController extends BaseController{
                     addr:params.addr,//交货地址
             ])
             dataService.mongoDb.saveOrder(order)
+            orderService.out(detail)
             render(js(true,"创建成功"))
         }catch(Exception e){
             render(js(false,"创建失败"))
@@ -64,11 +65,17 @@ class OrderController extends BaseController{
             render(js(false,"此订单不存在！"))
             return
         }
-        println(cu._creatId+"-------"+params._id+"----------"+session.user.superUser)
         if(cu._creatId==session.user._id||session.user.superUser){
-            dataService.mongoDb.delOrder([_id:_id])
-            render(js(true,"删除成功！"))
-            return
+            if(cu.state==0){
+                orderService.income(cu.detail)
+            }
+            if(cu.state==0||cu.state==2){
+                dataService.mongoDb.delOrder([_id:_id])
+                render(js(true,"删除成功！"))
+                return
+            }else {
+                render(js(false,"现在状态下无法删除"))
+            }
         }
         render(js(false,"只有创建者或超级管理员能删除！"))
     }

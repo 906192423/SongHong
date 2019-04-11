@@ -18,4 +18,18 @@ class ExchangeService extends BaseService{
             return "T"+a+"0001"
         }
     }
+    def inCome(detail){
+        try {
+            for(int i=0;i<detail.size();i++){
+                def a=dataService.mongoDb.findOneProduct([_id:detail[i]._id],[include:["number"]])
+                if(a) {
+                    a.number += Double.valueOf(detail[i].num)
+                    dataService.mongoDb.updateProduct([_id: detail[i]._id], [number:a.number])
+                }
+            }
+            return true
+        }catch(Exception e){
+            return false
+        }
+    }
 }

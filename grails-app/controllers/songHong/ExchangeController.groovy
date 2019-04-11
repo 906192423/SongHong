@@ -12,18 +12,25 @@ class ExchangeController extends BaseController{
             return
         }
         try {
+            def detail=JSONObject.parse(params.detail)
             def exchange=Exchange.newOne([
                     _creatId:session.user._id,
                     creatName:session.user.name,
                     code:exchangeService.getCode(),
-                    detail: JSONObject.parse(params.detail),
+                    detail: detail,
                     userName :cu.name,//客户姓名
                     _Uid:cu._id,//客户id
                     remark :params.remark,//备注
                     amount :Double.valueOf(params.amount),//合计金额
             ])
-            dataService.mongoDb.saveExchange(exchange)
-            render(js(true,"创建成功"))
+            def e=dataService.mongoDb.saveExchange(exchange)
+            if(e){
+                if(exchangeService.inCome(detail)){
+                    render(js(true,"创建成功"))
+                    return
+                }
+            }
+            render(js(false,"创建失败"))
         }catch(Exception e){
             render(js(false,"创建失败"))
         }
