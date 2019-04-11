@@ -18,13 +18,19 @@ class OrderController extends BaseController{
             }else {
                 payState=0
             }
+            def detail=JSONObject.parse(params.detail)
+            for (int i=0;i<detail.size();i++){
+                detail[i].total=Double.valueOf(detail[i].total)
+                detail[i].price=Double.valueOf(detail[i].price)
+                detail[i].num=Double.valueOf(detail[i].num)
+            }
             def order=Order.newOne([
                     _creatId:session.user._id,
                     creatName:session.user.name,
                     sellCode:orderService.getCode(),
                     payState:payState,
                     phone:params.phone,
-                    detail: JSONObject.parse(params.detail),
+                    detail:detail,
                     earnest:earnest,
                     modeTransport : params.modeTransport,//运输方式
                     userName :cu.name,//客户姓名
@@ -132,5 +138,9 @@ class OrderController extends BaseController{
             ])
         }
         render JSONObject.toJSONString([list:orders])
+    }
+    def a={
+        def li=orderService.countProduct()
+        render(JSONObject.toJSONString(li))
     }
 }

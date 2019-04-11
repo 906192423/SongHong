@@ -1,117 +1,123 @@
 <template>
     <section>
-        <!--工具条-->
-        <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
-            <el-form :inline="true" :model="filters">
-                <el-form-item>
-                    <el-input v-model="filters.name" placeholder="输入姓名或者电话来查找"></el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" v-on:click="getUsers">查询</el-button>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="handleAdd">新增</el-button>
-                </el-form-item>
-            </el-form>
-        </el-col>
+        <el-tabs tab-position="top" style="background-color: rgba(231,202,64,0.78)">
+            <el-tab-pane label="生产订单查看">
+                <!--工具条-->
+                <el-col :span="24" class="toolbar" style="padding-bottom:0px;">
+                    <el-form :inline="true" :model="filters">
+                        <el-form-item>
+                            <el-input v-model="filters.name" placeholder="输入姓名或者电话来查找"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" v-on:click="getUsers">查询</el-button>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="handleAdd">新增</el-button>
+                        </el-form-item>
+                    </el-form>
+                </el-col>
 
-        <!--列表-->
-        <el-table :data="users" highlight-current-row v-loading="listLoading" :row-class-name="tableRowClassName" @selection-change="selsChange" style="width: 100%;"ref="multipleTable">
-            <el-table-column type="selection" width="50" :selectable='checkboxInit'>
-            </el-table-column>
-            <el-table-column type="index" width="40">
-            </el-table-column>
-            <el-table-column type="expand" >
-                <template slot-scope="scope">
-                    <div>
-                        <el-table
-                                :data="scope.row.detail"
-                                style="width: 100%">
-                            <el-table-column
-                                    prop="name"
-                                    label="商品名"
-                                    width="180">
-                            </el-table-column>
-                            <el-table-column
-                                    prop="code"
-                                    label="商品码"
-                                    width="180">
-                            </el-table-column>
-                            <el-table-column
-                                    prop="price"
-                                    width="120"
-                                    label="价格">
-                            </el-table-column>
-                            <el-table-column
-                                    prop="num"
-                                    width="120"
-                                    label="数量">
-                            </el-table-column>
-                            <el-table-column
-                                    prop="total"
-                                    label="总价">
-                            </el-table-column>
-                        </el-table>
-                        <h1>备注：{{scope.row.remark}}</h1>
-                    </div>
-                </template>
-            </el-table-column>
-            <el-table-column prop="sellCode" label="订单号" width="120" sortable>
-            </el-table-column>
-            <el-table-column prop="userName" label="消费者" width="120" sortable>
-            </el-table-column>
-            <el-table-column prop="amount" label="总金额" width="120" sortable>
-            </el-table-column>
-            <el-table-column prop="leadTime" label="交货时间" width="220" sortable>
-            </el-table-column>
-            <el-table-column label="交货地址" min-width="100">
-                <template slot-scope="scope">
-                    <el-popover trigger="hover" placement="top">
-                        <p>{{ scope.row.addr}}</p>
-                        <div slot="reference" class="name-wrapper">
-                            <el-tag size="medium" type="info" style="color: #20a0ff">交货地址</el-tag>
-                        </div>
-                    </el-popover>
-                </template>
-            </el-table-column>
-            <el-table-column prop="phone" label="联系电话" width="100">
-            </el-table-column>
-            <el-table-column label="交款方式" width="100">
-                <template slot-scope="scope">
-                    <el-tag v-if="scope.row.earnest==0" type="warning">定金</el-tag>
-                    <el-tag v-if="scope.row.earnest==1" type="success">全款</el-tag>
-                    <el-tag v-if="scope.row.earnest==-1">欠款</el-tag>
-                </template>
-            </el-table-column>
-            <el-table-column label="交款记录" width="100">
-                <template slot-scope="scope">
-                    <div v-if="scope.row.cashList.length">
-                        <el-button type="text" @click="lookCash(scope.row.cashList)">{{scope.row.cashList.length}}条记录</el-button>
-                    </div>
-                    <el-tag type="danger" v-if="scope.row.cashList.length==0">无</el-tag>
-                </template>
-            </el-table-column>
-            <el-table-column label="生产状态" width="150">
-                <template slot-scope="scope">
-                    <el-tag v-if="scope.row.state==0">待处理</el-tag>
-                    <el-tag v-if="scope.row.state==1" type="warning">生产中</el-tag>
-                    <el-tag v-if="scope.row.state==2" type="success">生产完成</el-tag>
-                </template>
-            </el-table-column>
-            <el-table-column prop="creatName" label="销售员" width="120" sortable>
-            </el-table-column>
-            <el-table-column label="操作" width="100">
-                <template slot-scope="scope">
-                    <!--<el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>-->
-                    <el-button :disabled="scope.row.cashList.length>0? true:false" type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-        <el-col :span="24" class="toolbar">
-            <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">进入生产队列</el-button>
-            <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="10" :total="total" style="float:right;">
-            </el-pagination>
-        </el-col>
+                <!--列表-->
+                <el-table :data="users" highlight-current-row v-loading="listLoading" :row-class-name="tableRowClassName" @selection-change="selsChange" style="width: 100%;"ref="multipleTable">
+                    <el-table-column type="selection" width="50" :selectable='checkboxInit'>
+                    </el-table-column>
+                    <el-table-column type="index" width="40">
+                    </el-table-column>
+                    <el-table-column type="expand" >
+                        <template slot-scope="scope">
+                            <div>
+                                <el-table
+                                        :data="scope.row.detail"
+                                        style="width: 100%">
+                                    <el-table-column
+                                            prop="name"
+                                            label="商品名"
+                                            width="180">
+                                    </el-table-column>
+                                    <el-table-column
+                                            prop="code"
+                                            label="商品码"
+                                            width="180">
+                                    </el-table-column>
+                                    <el-table-column
+                                            prop="price"
+                                            width="120"
+                                            label="价格">
+                                    </el-table-column>
+                                    <el-table-column
+                                            prop="num"
+                                            width="120"
+                                            label="数量">
+                                    </el-table-column>
+                                    <el-table-column
+                                            prop="total"
+                                            label="总价">
+                                    </el-table-column>
+                                </el-table>
+                                <h1>备注：{{scope.row.remark}}</h1>
+                            </div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="sellCode" label="订单号" width="120" sortable>
+                    </el-table-column>
+                    <el-table-column prop="userName" label="消费者" width="120" sortable>
+                    </el-table-column>
+                    <el-table-column prop="amount" label="总金额" width="120" sortable>
+                    </el-table-column>
+                    <el-table-column prop="leadTime" label="交货时间" width="220" sortable>
+                    </el-table-column>
+                    <el-table-column label="交货地址" min-width="100">
+                        <template slot-scope="scope">
+                            <el-popover trigger="hover" placement="top">
+                                <p>{{ scope.row.addr}}</p>
+                                <div slot="reference" class="name-wrapper">
+                                    <el-tag size="medium" type="info" style="color: #20a0ff">交货地址</el-tag>
+                                </div>
+                            </el-popover>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="phone" label="联系电话" width="100">
+                    </el-table-column>
+                    <el-table-column label="交款方式" width="100">
+                        <template slot-scope="scope">
+                            <el-tag v-if="scope.row.earnest==0" type="warning">定金</el-tag>
+                            <el-tag v-if="scope.row.earnest==1" type="success">全款</el-tag>
+                            <el-tag v-if="scope.row.earnest==-1">欠款</el-tag>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="交款记录" width="100">
+                        <template slot-scope="scope">
+                            <div v-if="scope.row.cashList.length">
+                                <el-button type="text" @click="lookCash(scope.row.cashList)">{{scope.row.cashList.length}}条记录</el-button>
+                            </div>
+                            <el-tag type="danger" v-if="scope.row.cashList.length==0">无</el-tag>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="生产状态" width="150">
+                        <template slot-scope="scope">
+                            <el-tag v-if="scope.row.state==0">待处理</el-tag>
+                            <el-tag v-if="scope.row.state==1" type="warning">生产中</el-tag>
+                            <el-tag v-if="scope.row.state==2" type="success">生产完成</el-tag>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="creatName" label="销售员" width="120" sortable>
+                    </el-table-column>
+                    <el-table-column label="操作" width="100">
+                        <template slot-scope="scope">
+                            <!--<el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>-->
+                            <el-button :disabled="scope.row.cashList.length>0? true:false" type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <el-col :span="24" class="toolbar">
+                    <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">进入生产队列</el-button>
+                    <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="10" :total="total" style="float:right;">
+                    </el-pagination>
+                </el-col>
+            </el-tab-pane>
+            <el-tab-pane label="配置管理">
+            </el-tab-pane>
+        </el-tabs>
 
         <el-dialog title="交款详细信息" :visible.sync="dialog" width="1000px">
             <el-table :data="cashList" stripe highlight-current-row v-loading="csahLoading" style="width: 100%;">

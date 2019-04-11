@@ -3,6 +3,7 @@ package songHong
 import grails.transaction.Transactional
 import service.DbService
 
+
 @Transactional
 //mongo 链接服务
 class DataService {
