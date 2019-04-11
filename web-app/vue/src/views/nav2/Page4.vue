@@ -17,9 +17,9 @@
 
         <!--列表-->
         <el-table :data="users" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;"ref="multipleTable">
-            <el-table-column type="selection" width="55">
+            <el-table-column type="selection" width="30">
             </el-table-column>
-            <el-table-column type="index" width="60">
+            <el-table-column type="index" width="30">
             </el-table-column>
             <el-table-column type="expand">
                 <template slot-scope="scope">
