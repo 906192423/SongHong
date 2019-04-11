@@ -9,80 +9,10 @@
                     @select="handleSelect"
             ></el-autocomplete>
         </el-form-item>
-        <!--<el-table :data="order" highlight-current-row  style="width: 100%;"ref="multipleTable">-->
-            <!--<el-table-column type="expand">-->
-                <!--<template slot-scope="scope">-->
-                    <!--<div>-->
-                        <!--<el-table-->
-                                <!--:data="scope.row.detail"-->
-                                <!--style="width: 100%">-->
-                            <!--<el-table-column-->
-                                    <!--prop="name"-->
-                                    <!--label="商品名"-->
-                                    <!--width="180">-->
-                            <!--</el-table-column>-->
-                            <!--<el-table-column-->
-                                    <!--prop="code"-->
-                                    <!--label="商品码"-->
-                                    <!--width="180">-->
-                            <!--</el-table-column>-->
-                            <!--<el-table-column-->
-                                    <!--prop="price"-->
-                                    <!--width="120"-->
-                                    <!--label="价格">-->
-                            <!--</el-table-column>-->
-                            <!--<el-table-column-->
-                                    <!--prop="num"-->
-                                    <!--width="120"-->
-                                    <!--label="数量">-->
-                            <!--</el-table-column>-->
-                            <!--<el-table-column-->
-                                    <!--prop="total"-->
-                                    <!--label="总价">-->
-                            <!--</el-table-column>-->
-                        <!--</el-table>-->
-                    <!--</div>-->
-                <!--</template>-->
-            <!--</el-table-column>-->
-            <!--<el-table-column prop="sellCode" label="订单号" width="120">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column prop="userName" label="消费者" width="120">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column prop="amount" label="总金额" width="120">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column prop="leadTime" label="交货时间" width="220">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column label="交货地址" min-width="180">-->
-                <!--<template slot-scope="scope">-->
-                    <!--<el-popover trigger="hover" placement="top">-->
-                        <!--<p>{{ scope.row.addr}}</p>-->
-                        <!--<div slot="reference" class="name-wrapper">-->
-                            <!--<el-tag size="medium" type="info" color="blue">查看交货地址</el-tag>-->
-                        <!--</div>-->
-                    <!--</el-popover>-->
-                <!--</template>-->
-            <!--</el-table-column>-->
-            <!--<el-table-column prop="phone" label="联系电话" width="220">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column label="交款方式" width="150">-->
-                <!--<template slot-scope="scope">-->
-                    <!--<el-tag v-if="scope.row.earnest==0" type="warning">定金</el-tag>-->
-                    <!--<el-tag v-if="scope.row.earnest==1" type="success">全款</el-tag>-->
-                    <!--<el-tag v-if="scope.row.earnest==-1">欠款</el-tag>-->
-                <!--</template>-->
-            <!--</el-table-column>-->
-            <!--<el-table-column label="生产状态" width="150">-->
-                <!--<template slot-scope="scope">-->
-                    <!--<el-tag v-if="scope.row.state==0">待处理</el-tag>-->
-                    <!--<el-tag v-if="scope.row.state==1" type="warning">生产中</el-tag>-->
-                    <!--<el-tag v-if="scope.row.state==2" type="success">生产完成</el-tag>-->
-                <!--</template>-->
-            <!--</el-table-column>-->
-            <!--<el-table-column prop="creatName" label="销售员" width="120">-->
-            <!--</el-table-column>-->
-        <!--</el-table>-->
     <div v-if="order[0]">
     <div class="page" id="printMe" style="background:#fff;">
+        <center><h3><b> 辽宁洪锋工贸有限责任公司--销售单</b></h3></center>
+        <p>基本信息-------------------------------------------------------------------------------------------------------------------------------------------------------------</p>
         <el-table :data="order" style="width: 100%">
             <el-table-column prop="sellCode" label="订单号" width="180">
             </el-table-column>
@@ -108,6 +38,7 @@
             <el-table-column prop="creatName" label="销售员" >
             </el-table-column>
         </el-table>
+        <p>商品清单--------------------------------------------------------------------------------------------------------------------------------------------------------------</p>
         <el-table v-if="order[0]" :data="order[0].detail" style="width: 100%">
             <el-table-column prop="name" label="商品名" width="180">
             </el-table-column>
@@ -119,32 +50,37 @@
             </el-table-column>
         </el-table>
         <h4 v-if="order[0]">备注：{{order[0].remark}}</h4>
-        <el-table :data="cashList" style="width: 100%">
-            <el-table-column prop="code" label="交易单号" width="150" sortable>
+        <p>付款信息--------------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+        <template v-for="(item,index) in this.cashList">
+        <el-table :data="[item]" style="width: 100%">
+            <el-table-column prop="code" label="付款单号" width="180">
             </el-table-column>
-            <el-table-column prop="cutAmount" label="优惠金额" width="110">
+            <el-table-column prop="cutAmount" label="优惠金额" width="180">
             </el-table-column>
-            <el-table-column prop="amount" label="总金额" width="120" >
+            <el-table-column prop="amount" label="总金额" width="180" >
             </el-table-column>
-            <el-table-column prop="ct" label="创建时间" width="200">
-            </el-table-column>
-            <el-table-column label="备注" width="100">
-                <template slot-scope="scope">
-                    <el-popover trigger="hover" placement="top">
-                        <p>{{ scope.row.remark}}</p>
-                        <div slot="reference" class="name-wrapper">
-                            <el-tag size="medium" type="info" style="color: #20a0ff">交易备注</el-tag>
-                        </div>
-                    </el-popover>
-                </template>
-            </el-table-column>
-            <el-table-column prop="creatName" label="创建人">
+            <el-table-column label="备注" prop="remark" width="180">
             </el-table-column>
         </el-table>
-        <p >--------------------------------------- </p>
+        <el-table :data="item.payForm" style="width: 100%">
+            <el-table-column label="支付方式" width="180">
+                <template slot-scope="scope">
+                    <el-tag v-if="scope.row.name==1" type="success">支付宝</el-tag>
+                    <el-tag v-if="scope.row.name==2" type="success">微信</el-tag>
+                    <el-tag v-if="scope.row.name==3" type="success">现金</el-tag>
+                    <el-tag v-if="scope.row.name==4" type="success">刷卡</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column prop="amount" label="支付金额">
+            </el-table-column>
+        </el-table>
+        </template>
+        <p>-------------------------------------------------------------------------------------------------------------------------------------------------------------------</p>
         <p >地址：辽宁省铁岭市调兵山市施荒地村东 </p>
         <p >板材部：024-76952999 024-76953999 024-76901777 13804103658 </p>
-        <p >钢材部：024-76860123 024-76883456 024-76874567 15941038386 </p> </div>
+        <p >钢材部：024-76860123 024-76883456 024-76874567 15941038386 </p>
+        <p>-------------------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+    </div>
     <el-button v-print="'#printMe'">打印页面</el-button>
     </div>
 

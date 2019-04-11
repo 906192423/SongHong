@@ -113,11 +113,38 @@
                         <el-radio class="radio" :label="-1">无法生产</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="商品分类">
+                <el-form-item >
                     <el-radio-group v-model="addForm.classification">
                         <el-radio class="radio" :label="2">标准商品</el-radio>
                         <el-radio class="radio" :label="3">称重商品</el-radio>
                         <el-radio class="radio" :label="4">组合商品</el-radio>
+                        <template v-if="addForm.classification==4">
+                            <el-form-item>
+                            <el-select v-model="value10" multiple filterable :loading="gloading" @change="change()" placeholder="请选择商品">
+                                <el-option v-for="item in options5" :key="item.label" :label="item.label" :value="item.value" :disabled="item.disabled">
+                                </el-option>
+                            </el-select>
+                            <el-input style="width: 150px" placeholder="输入内容查找商品" v-model="name" clearable>
+                            </el-input>
+                            <el-button type="primary" v-on:click="getGoods">搜索</el-button>
+                           <el-form-item >
+                           </el-form-item>
+                    <el-table :data="goodsTable" border :summary-method="getSummaries" show-summary style="width: 100%">
+                        <el-table-column prop="code" label="商品编号" width="80">
+                        </el-table-column>
+                        <el-table-column prop="name" label="产品名称">
+                        </el-table-column>
+                        <el-table-column prop="unit" label="产品单位">
+                        </el-table-column>
+                        <el-table-column label="数量" >
+                            <template slot-scope="scope">
+                                <el-input placeholder="请输入内容" v-model="scope.row.num" @change="addCli(scope.row)" clearable>
+                                </el-input>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </el-form-item>
+                        </template>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="备注">
@@ -169,6 +196,8 @@
     export default {
         data() {
             return {
+                options5: [],
+                value10: [],
                 activeIndex: '1',
                 name:"",
                 page:"1",
@@ -217,6 +246,38 @@
             }
         },
         methods: {
+            getGoods(){
+                this.gloading=true
+                this.VgetJSON('product/getGoods',{name:this.name}).then(data=>{
+                    this.options5=[]
+                    data.list.forEach(item=>{
+                        item.num=0
+                        item.amount=0
+                        let disabled
+                        if(item.state==0)
+                            disabled=false
+                        else
+                            disabled=true
+                        this.options5.push({value:JSON.stringify(item),label:item.name,disabled:disabled})
+                    })
+                    this.gloading=false
+                })
+            },
+            change(){
+                let goodsTable=[]
+                this.value10.forEach(it=>{
+                    let g=JSON.parse(it)
+                    for(let j = 0,len = this.goodsTable.length; j < len; j++){
+                        if(g._id==this.goodsTable[j]._id){
+                            g.num=this.goodsTable[j].num
+                            g.amount=this.goodsTable[j].amount
+                            break
+                        }
+                    }
+                    goodsTable.push(g)
+                })
+                this.goodsTable=goodsTable
+            },
             handleSelect1() {
                 this.listLoading=true
                 this.VgetJSON('product/gets',{name:this.classification,page:this.page}).then(data=>{
