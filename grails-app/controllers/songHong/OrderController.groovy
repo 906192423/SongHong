@@ -139,6 +139,20 @@ class OrderController extends BaseController{
         }
         render JSONObject.toJSONString([list:orders])
     }
+    def printOrder={
+        println(params)
+        def form=[sort:[_id:-1]]
+        form+=[sellCode:[$regex:/^${params.code}/]]
+        def list=dataService.mongoDb.searchOrder(form,1,10)
+        def orders=[]
+        list.contentlist.each{
+            orders.add([
+                    value:it.sellCode,
+                    item:it
+            ])
+        }
+        render JSONObject.toJSONString([list:orders])
+    }
     def a={
         def li=orderService.countProduct()
         render(JSONObject.toJSONString(li))

@@ -91,6 +91,7 @@ class CashController extends BaseController{
         list.each {
             li.add(dataService.mongoDb.findOneCash([_id: it._id]))
         }
+        println(li)
         render(JSONObject.toJSONString([list:li]))
     }
 }

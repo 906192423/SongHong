@@ -113,7 +113,7 @@
             </el-table-column>
             <el-table-column prop="code" label="商品码" width="180">
             </el-table-column>
-            <el-table-column prop="price" width="180" label="价格">
+            <el-table-column prop="price" width="180" label="单价">
             </el-table-column>
             <el-table-column prop="num" width="180" label="数量">
             </el-table-column>
@@ -208,7 +208,6 @@
         methods: {
             lookCash(list){
                 this.dialog=true
-                this.csahLoading=true
                 this.VgetJSON('cash/getInfoList',{list:JSON.stringify(list)}).then(data=>{
                     this.cashList=data.list
                 })
@@ -231,7 +230,7 @@
                 if(this.state4==""){
                     this.clear()
                 }
-                this.VgetJSON("order/cheOrder",{code:queryString}).then(data=>{
+                this.VgetJSON("order/printOrder",{code:queryString}).then(data=>{
                     cb(data.list)
                 })
             },
@@ -250,7 +249,9 @@
                 }else {
                     this.info="当前交款方式：额外交款"
                 }
-                this.lookCash(item.cashList)
+                console.log("11111111111111")
+                console.log(item)
+                this.lookCash(item.item.cashList)
                 console.log(this.cashList)
             },
             countCash(list){
