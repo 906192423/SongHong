@@ -110,7 +110,7 @@
                     </el-table-column>
                 </el-table>
                 <el-col :span="24" class="toolbar">
-                    <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">进入生产队列</el-button>
+                    <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">完成定单</el-button>
                     <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="10" :total="total" style="float:right;">
                     </el-pagination>
                 </el-col>
@@ -374,12 +374,12 @@
             batchRemove: function () {
                 var ids=[]
                 ids = this.sels.map(item => item._id);
-                this.$confirm('确认转移选中记录到生产队列？', '提示', {
+                this.$confirm('确认完成选中记录？', '提示', {
                     type: 'warning'
                 }).then(() => {
                     this.listLoading = true;
                     let para = { ids:ids };
-                    this.VgetJSON('order/toProduct',para).then(data=>{
+                    this.VgetJSON('order/toComplete',para).then(data=>{
                         this.listLoading = false;
                         if(data.flag){
                             this.$message({
