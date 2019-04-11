@@ -234,6 +234,7 @@
 								}
 								this.loading=false
 								this.addFormVisible=false
+								this.getUsers();
 							}else {
 								this.$message({
 									message: data.remark,
