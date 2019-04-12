@@ -116,7 +116,6 @@
                 <el-form-item >
                     <el-radio-group v-model="addForm.classification">
                         <el-radio class="radio" :label="2">标准商品</el-radio>
-                        <el-radio class="radio" :label="3">称重商品</el-radio>
                         <el-radio class="radio" :label="4">组合商品</el-radio>
                         <template v-if="addForm.classification==4">
                             <el-form-item>
@@ -129,7 +128,7 @@
                             <el-button type="primary" v-on:click="getGoods">搜索</el-button>
                            <el-form-item >
                            </el-form-item>
-                    <el-table :data="goodsTable" border :summary-method="getSummaries" show-summary style="width: 100%">
+                    <el-table :data="goodsTable" stripe style="width: 100%">
                         <el-table-column prop="code" label="商品编号" width="80">
                         </el-table-column>
                         <el-table-column prop="name" label="产品名称">
@@ -138,7 +137,7 @@
                         </el-table-column>
                         <el-table-column label="数量" >
                             <template slot-scope="scope">
-                                <el-input placeholder="请输入内容" v-model="scope.row.num" @change="addCli(scope.row)" clearable>
+                                <el-input placeholder="请输入内容" v-model="scope.row.num" clearable>
                                 </el-input>
                             </template>
                         </el-table-column>
@@ -196,6 +195,8 @@
     export default {
         data() {
             return {
+                gloading:false,
+                goodsTable:[],
                 options5: [],
                 value10: [],
                 activeIndex: '1',
@@ -246,6 +247,18 @@
             }
         },
         methods: {
+            isNumber( s ) {
+                let regu = "^[0-9]+\.?[0-9]*$";
+                let re = new RegExp(regu);
+                if (re.test(s))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            },
             getGoods(){
                 this.gloading=true
                 this.VgetJSON('product/getGoods',{name:this.name}).then(data=>{
@@ -294,6 +307,7 @@
             },
             editSubmit(){
                 this.$refs.editForm.validate((valid) => {
+
                     if (valid) {
                         this.$confirm('确认提交吗？', '提示', {}).then(() => {
                             this.editLoading=true
@@ -361,10 +375,62 @@
             },
             addSubmit(){
                 this.$refs.addForm.validate((valid) => {
-                    if (valid) {
+                    console.log(12345)
+                    console.log(this.addForm)
+                    if(this.addForm.classification==4){
+                        for(let j=0,len=this.goodsTable.length;j<len;j++){
+                            if(!this.isNumber(this.goodsTable[j].num)){
+                                this.$message({
+                                    message:'数量处应输入数字！',
+                                    type: 'error'
+                                });
+                                return false;
+                            }
+                            if(this.goodsTable[j].num<=0){
+                                this.$message({
+                                    message:'数量至少为1！',
+                                    type: 'error'
+                                });
+                                return false;
+                            }
+                        }
                         this.$confirm('确认提交吗？', '提示', {}).then(() => {
+                            this.loading=true
+                            let form=JSON.parse(JSON.stringify(this.addForm))
+                            let detail=[]
+                            this.goodsTable.forEach(it=>{
+                                let a={
+                                    _id:it._id,
+                                    num:it.num,
+                                }
+                                detail.push(a)
+                            })
+                            form.detail=JSON.stringify(detail)
+                            this.VgetJSON('product/creat',form).then(data=>{
+                                if(data.flag){
+                                    this.$notify({
+                                        title: '成功',
+                                        message: data.remark,
+                                        type: 'success'
+                                    });
+                                    this.$refs['addForm'].resetFields();
+                                }else {
+                                    this.$message({
+                                        message: data.remark,
+                                        type: 'error'
+                                    });
+                                }
+                                this.loading=false
+                            })
+                        })
+                    }
+                   else if (valid) {
+                        this.$confirm('确认提交吗？', '提示', {}).then(() => {
+                            let form=JSON.parse(JSON.stringify(this.addForm))
+                            let detail=[]
+                            form.detail=JSON.stringify(detail)
                             this.addLoading=true
-                            this.VgetJSON('product/creat',this.addForm).then(data=>{
+                            this.VgetJSON('product/creat',form).then(data=>{
                                 if(data.flag){
                                     this.$notify({
                                         title: '成功',
