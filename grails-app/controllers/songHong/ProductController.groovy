@@ -6,12 +6,18 @@ class ProductController extends BaseController{
     def creat={
         println("创建商品")
         println(params)
+        try{
+        def detail=JSONObject.parse(params.detail)
+        for (int i=0;i<detail.size();i++){
+            detail[i].num=Double.valueOf(detail[i].num)
+        }
         def p=Product.newOne([
                 name:params.name,//商品名
                 remark:params.remark,//备注
                 unit: params.unit,//单位
+                count:detail,
         ])
-        try{
+            if(detail.size()>0) p.group=true
             p.code=Integer.valueOf(params.code)//商品编号
             p.number=Double.valueOf(params.number)
             p.state=Integer.valueOf(params.state)
