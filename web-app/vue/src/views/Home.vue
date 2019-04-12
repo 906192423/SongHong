@@ -148,10 +148,7 @@
 			}
 		},
 		mounted() {
-		    console.log("0000000000")
 			this.VgetJSON('user/info',{}).then(data=>{
-				console.log("--------------------------")
-				console.log(data)
                 this.sysUserName=data.name
                 this.sysUserAvatar=this.img
             })

@@ -32,7 +32,8 @@ class OrderService extends BaseService{
                 list.contentlist.each{
                     it.detail.each{
                         if(!needList.get(it._id)){
-                            needList.put(it._id,it)
+                            def item=getProduct(it)
+                            needList.put(it._id,item)
                         }else {
                             needList.get(it._id).num+=it.num
                         }
@@ -41,6 +42,15 @@ class OrderService extends BaseService{
             }
         }
         nowNeedProduct=needList
+    }
+    private def getProduct(item){
+        def p=dataService.mongoDb.findOneProduct([_id:item._id])
+        if(p){
+            p.num=item.num
+            return p
+        }else {
+            return item
+        }
     }
     def income(detail){
         try {
@@ -61,6 +71,13 @@ class OrderService extends BaseService{
             for(int i=0;i<detail.size();i++){
                 def a=dataService.mongoDb.findOneProduct([_id:detail[i]._id],[include:["number"]])
                 if(a) {
+                    if(a.group){
+                        a.count.each{
+                            def p=dataService.mongoDb.findOneProduct([_id:it._id],[include:["number"]])
+                            p.number-=Double.valueOf(detail[i].num*it.number)
+                            dataService.mongoDb.updateProduct([_id:p._id], [number:p.number])
+                        }
+                    }
                     a.number -= Double.valueOf(detail[i].num)
                     dataService.mongoDb.updateProduct([_id: detail[i]._id], [number:a.number])
                 }

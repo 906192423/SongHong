@@ -1,6 +1,6 @@
 <template>
     <section>
-        <el-tabs tab-position="top" style="background-color: rgba(231,202,64,0.78)">
+        <el-tabs tab-position="top" style="background-color: rgba(231,202,64,0.78)" @tab-click="getInfo">
             <el-tab-pane label="生产订单查看">
                 <!--工具条-->
                 <el-col :span="24" class="toolbar" style="padding-bottom:0px;">
@@ -115,7 +115,21 @@
                     </el-pagination>
                 </el-col>
             </el-tab-pane>
-            <el-tab-pane label="配置管理">
+            <el-tab-pane label="生产统计" @tab-click="getInfo">
+                <el-row>
+                    <el-col :span="8" v-for="(o, index) in needProduct" :key="o" v-loading="carLoading">
+                        <el-card :body-style="{ padding: '0px' }" class="card">
+                            <img :src=img class="image">
+                            <div style="padding: 14px;">
+                                <span>好吃的汉堡</span>
+                                <div class="bottom clearfix">
+                                    <time class="time">{{ currentDate }}</time>
+                                    <el-button type="text" class="button">操作按钮</el-button>
+                                </div>
+                            </div>
+                        </el-card>
+                    </el-col>
+                </el-row>
             </el-tab-pane>
         </el-tabs>
 
@@ -208,15 +222,18 @@
     export default {
         data() {
             return {
+                currentDate: new Date(),
                 filters: {
                     name: ''
                 },
+                img:require('../../assets/images/page4/1.jpg'),
                 dialog:false,
                 cashList:[],
                 csahLoading:false,
                 users: [],
                 total: 0,
                 page: 1,
+                needProduct:[],
                 listLoading: false,
                 sels: [],//列表选中列
                 editFormVisible: false,//编辑界面是否显示
@@ -397,6 +414,14 @@
                 }).catch(() => {
 
                 });
+            },
+            getInfo(tab, event){
+                console.log(tab.index)
+                if(tab.index==1){
+                    this.VgetJSON('order/a',{}).then(d=>{
+                        this.needProduct=d.list
+                    })
+                }
             }
         },
         mounted() {
@@ -405,12 +430,40 @@
     }
 
 </script>
-
-<style>
-    .el-table .warning-row {
-        background: #f4bba6;
+<style scoped>
+    .card{
+        margin: 20px 20px 20px 20px;
+        width:404px;
+        height:154px;
     }
-    .el-table .success-row{
-        background: #ffffff;
+    .time {
+        font-size: 13px;
+        color: #999;
+    }
+
+    .bottom {
+        margin-top: 13px;
+        line-height: 12px;
+    }
+
+    .button {
+        padding: 0;
+        float: right;
+    }
+
+    .image {
+        width: 100px;
+        height: 50px;
+        display: block;
+    }
+
+    .clearfix:before,
+    .clearfix:after {
+        display: table;
+        content: "";
+    }
+
+    .clearfix:after {
+        clear: both
     }
 </style>
