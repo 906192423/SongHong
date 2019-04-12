@@ -18,7 +18,7 @@ class Product {
                 count:[
 //                        [
 //                               _id:"",//商品_id 标识
-//                               number:"",//需要数量
+//                               num:"",//需要数量
 //                                ]
                 ],
                 ct  : new Date().format("yyyy-MM-dd HH:mm:ss.SSS"),//创建时间
