@@ -20,7 +20,7 @@ class CashService extends BaseService{
     }
     def count(start,end){
         println(start+"--------"+end)
-        def query=[ct:[$gte:start],ct:[$lte:end]]
+        def query=[ct:[$lte:end,$gte:start]]
         def page=1
         def allPages=2
         def allList=[]
