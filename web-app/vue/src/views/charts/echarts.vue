@@ -1,35 +1,36 @@
 <template>
     <section class="chart-container">
+        <el-header>
+                <span class="demonstration">选择日期：</span>
+                <el-date-picker
+                        @change="getCash()"
+                        v-model="value4"
+                        type="datetimerange"
+                        :picker-options="pickerOptions2"
+                        range-separator="至"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期"
+                        align="right">
+                </el-date-picker>
+        </el-header>
+        <hr>
         <el-row>
             <el-col :span="12">
                 <div id="chartColumn" style="width:100%; height:400px;"></div>
             </el-col>
             <el-col :span="12">
-                <div id="chartBar" style="width:100%; height:400px;"></div>
+                <div id="chartPie" style="width:100%; height:400px;"></div>
             </el-col>
-            <el-col :span="12">
-                <div id="chartLine" style="width:100%; height:400px;"></div>
-            </el-col>
-            <el-col :span="12">
-                <div class="block"  style="width:100%; height:400px;">
-                    <span class="demonstration">选择日期</span>
-                    <el-date-picker
-                            @change="getCash()"
-                            v-model="value4"
-                            type="datetimerange"
-                            :picker-options="pickerOptions2"
-                            range-separator="至"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期"
-                            align="right">
-                    </el-date-picker>
-                <div id="chartPie"  style="width:100%; height:400px;"></div></div>
-            </el-col>
-            <el-col :span="24">
-                <a href="http://echarts.baidu.com/examples.html" target="_blank" style="float: right;">more>></a>
-            </el-col>
+            <!--<el-col :span="12">-->
+                <!--<div id="chartLine" style="width:100%; height:400px;"></div>-->
+            <!--</el-col>-->
+            <!--<el-col :span="12">-->
+                <!--<div id="chartBar"  style="width:100%; height:400px;"></div>-->
+            <!--</el-col>-->
+            <!--<el-col :span="24">-->
+            <!--</el-col>-->
         </el-row>
-        <el-button @click="a">1111111111111</el-button>
+
     </section>
 
 </template>
@@ -73,8 +74,15 @@
                         }
                     }]
                 },
-                cashList:{},
-                value4:[],
+                cashList:{
+                    w:0,
+                    z:0,
+                    x:0,
+                    k:0,
+                    all:0,
+                },
+                value4:[ this.b(new Date()),
+                    this.b(new Date(new Date().getTime()+(24 * 60 * 60 * 1000)))],
                 chartColumn: null,
                 chartBar: null,
                 chartLine: null,
@@ -83,20 +91,22 @@
         },
 
         methods: {
-            a(){
-                console.log("00000000000000000")
-                console.log(this.value4)
+            b(d){
+                d.setHours(0,0,0,0)
+                return d
             },
             getCash() {
                 let para = {
-                    start:(!this.value4[0] || this.value4[0]== '') ? '' : util.formatDate.format(this.value4[0], 'yyyy-MM-dd hh:mm:ss'),
-                    end:(!this.value4[1] || this.value4[1] == '') ? '' : util.formatDate.format(this.value4[1], 'yyyy-MM-dd hh:mm:ss')
+                    start:(!this.value4[0] || this.value4[0]== '') ? '' : util.formatDate.format(this.value4[0], 'yyyy-MM-dd hh:mm:ss:sss'),
+                    end:(!this.value4[1] || this.value4[1] == '') ? '' : util.formatDate.format(this.value4[1], 'yyyy-MM-dd hh:mm:ss:sss')
                     // end: this.filters.name
                 };
                 this.VgetJSON('echart/getCash',para).then(d=>{
                     console.log("取到数据")
                     console.log(d)
                     this.cashList=d
+                    this.drawPieChart()
+                    this. drawColumnChart()
                 })
             },
             drawColumnChart() {
@@ -105,13 +115,13 @@
                   title: { text: 'Column Chart' },
                   tooltip: {},
                   xAxis: {
-                      data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
+                      data: ["现金", "支付宝", "微信", "银联刷卡"]
                   },
                   yAxis: {},
                   series: [{
                       name: '销量',
                       type: 'bar',
-                      data: [500, 20, 36, 10, 10, 150]
+                      data: [this.cashList.x, this.cashList.z, this.cashList.w,this.cashList.k]
                     }]
                 });
             },
@@ -232,7 +242,7 @@
                             center: ['50%', '60%'],
                             data: [
                                 { value: this.cashList.x, name: '现金支付' },
-                                { value: this.cashList.v, name: '微信收款' },
+                                { value: this.cashList.w, name: '微信收款' },
                                 { value: this.cashList.z, name: '支付宝收款' },
                                 { value: this.cashList.k, name: '银联刷卡' },
                             ],
@@ -249,23 +259,15 @@
             },
             drawCharts() {
                 this.drawColumnChart()
-                this.drawBarChart()
-                this.drawLineChart()
+
                 this.drawPieChart()
             },
         },
 
         mounted: function () {
-            let end = new Date();
-            let start = new Date();
-            start.setHours(0,0,0,0)
-            end.setHours(0,0,0,0)
-            end.setTime(start.getTime() + 3600 * 1000 * 24 * 1);
-            this.value4[0]=start
-            this.value4[1]=end
-            this.getCash()
-            console.log(this.value4)
             this.drawCharts()
+            this.getCash()
+
         },
         updated: function () {
             this.drawCharts()
