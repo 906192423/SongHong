@@ -62,7 +62,7 @@
             </el-table-column>
             <el-table-column prop="amount" label="总金额" width="120" sortable>
             </el-table-column>
-            <el-table-column prop="leadTime" label="交货时间" width="220" sortable>
+            <el-table-column prop="leadTime" label="交货时间" width="200" sortable>
             </el-table-column>
             <el-table-column label="交货地址" min-width="100">
                 <template slot-scope="scope">
@@ -74,7 +74,7 @@
                     </el-popover>
                 </template>
             </el-table-column>
-            <el-table-column prop="phone" label="联系电话" width="100">
+            <el-table-column prop="phone" label="联系电话" width="120">
             </el-table-column>
             <el-table-column label="交款方式" width="100">
                 <template slot-scope="scope">

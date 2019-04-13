@@ -9,6 +9,7 @@ import Page5 from './views/nav2/Page5.vue'
 import end from './views/nav2/end.vue'
 import Page6 from './views/nav3/Page6.vue'
 import echarts from './views/charts/echarts.vue'
+import sales from './views/charts/sales.vue'
 import comein from './views/nav5/comein.vue'
 import HRM from './views/nav6/HRM.vue'
 import stamp from './views/nav6/stamp.vue'
@@ -102,7 +103,8 @@ let routes = [
         name: '经营报表',
         iconCls: 'fa fa-bar-chart',
         children: [
-            { path: '/echarts', component: echarts, name: 'echarts' }
+            { path: '/echarts', component: echarts, name: '解款报表' },
+            { path: '/sales', component: sales, name: '销售统计' }
         ]
     },
     {

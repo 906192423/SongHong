@@ -1,6 +1,6 @@
 <template>
     <section class="chart-container">
-        <el-header>
+        <div>
                 <span class="demonstration">选择日期：</span>
                 <el-date-picker
                         @change="getCash()"
@@ -12,8 +12,25 @@
                         end-placeholder="结束日期"
                         align="right">
                 </el-date-picker>
-        </el-header>
-        <hr>
+            <el-table :data="[cashList]" style="width: 100%">
+                <el-table-column prop="all" label="统计收款单数量" width="180">
+                </el-table-column>
+                <el-table-column  label="总收款" width="180">
+                    <template slot-scope="scope">
+                        {{scope.row.w+scope.row.x+scope.row.z+scope.row.k}}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="x" label="现金收款" width="180">
+                </el-table-column>
+                <el-table-column prop="w" label="微信收款"width="180">
+                </el-table-column>
+                <el-table-column prop="z" label="支付宝收款"width="180">
+                </el-table-column>
+                <el-table-column prop="k" label="刷卡收款"width="180">
+                </el-table-column>
+            </el-table>
+        </div>
+<br>
         <el-row>
             <el-col :span="12">
                 <div id="chartColumn" style="width:100%; height:400px;"></div>
@@ -112,7 +129,9 @@
             drawColumnChart() {
                 this.chartColumn = echarts.init(document.getElementById('chartColumn'));
                 this.chartColumn.setOption({
-                  title: { text: 'Column Chart' },
+                  title: {
+                      text: '解款报表柱状图',
+                      subtext: '各种支付方式收款统计',},
                   tooltip: {},
                   xAxis: {
                       data: ["现金", "支付宝", "微信", "银联刷卡"]
@@ -221,8 +240,8 @@
                 this.chartPie = echarts.init(document.getElementById('chartPie'));
                 this.chartPie.setOption({
                     title: {
-                        text: '解款报款',
-                        subtext: '当日收款',
+                        text: '解款报表饼图',
+                        subtext: '各种支付方式收款统计',
                         x: 'center'
                     },
                     tooltip: {

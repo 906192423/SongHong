@@ -23,7 +23,7 @@
 
     <el-table v-loading="listLoading" :data="tableData">
 
-        <el-table-column label="商品编号" >
+        <el-table-column label="商品编号" sortable>
             <template slot-scope="scope">
                 <el-tag type="success">{{scope.row.code}}</el-tag>
             </template>
@@ -45,19 +45,19 @@
             </template>
         </el-table-column>
 
-        <el-table-column label="库存数量" width="80">
+        <el-table-column label="库存数量" width="100"sortable>
             <template slot-scope="scope">
                 <el-tag type="success">{{scope.row.number}}</el-tag>
             </template>
         </el-table-column>
 
-        <el-table-column label="商品进价" width="80">
+        <el-table-column label="商品进价" width="100"sortable>
             <template slot-scope="scope">
                 <el-tag type="success">{{scope.row.costPrice}}</el-tag>
             </template>
         </el-table-column>
 
-        <el-table-column label="商品售价" width="80">
+        <el-table-column label="商品售价" width="100"sortable>
             <template slot-scope="scope">
                 <el-tag type="success">{{scope.row.price}}</el-tag>
             </template>
@@ -69,7 +69,7 @@
                 <el-tag v-if="scope.row.state==-1" type="danger">无法生产</el-tag>
             </template>
         </el-table-column>
-        <el-table-column label="分类" width="120">
+        <el-table-column label="分类" width="120"sortable>
             <template slot-scope="scope">
                 <el-tag v-if="scope.row.classification==2" type="success">标准商品</el-tag>
                 <el-tag v-if="scope.row.classification==3" type="danger">称重商品</el-tag>
