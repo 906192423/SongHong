@@ -68,8 +68,6 @@ class OrderController extends BaseController{
         if(cu._creatId==session.user._id||session.user.superUser){
             if(cu.state==0){
                 orderService.income(cu.detail)
-            }
-            if(cu.state==0||cu.state==2){
                 dataService.mongoDb.delOrder([_id:_id])
                 render(js(true,"删除成功！"))
                 return
@@ -126,10 +124,10 @@ class OrderController extends BaseController{
             render(js(true,"全部成功"))
         }else {
             if(b!=0){
-                render(js(true,"部分成功，注意只有是你创建的订单才能被你或超级管理员操作！"))
+                render(js(true,"部分成功！"))
                 return
             }
-            render(js(false,"全部失败,注意只有是你创建的订单才能被你或超级管理员操作！"))
+            render(js(false,"全部失败！"))
         }
     }
     def toComplete={
@@ -145,7 +143,7 @@ class OrderController extends BaseController{
         def b=0
         for(def _id:id){
             def cu=dataService.mongoDb.findOneOrder([_id:_id])
-            if(cu._creatId==session.user._id||session.user.superUser){
+            if(cu.allPay){
                 dataService.mongoDb.updateOrder([_id:_id],[state:2])
                 b++
             }else {
@@ -156,10 +154,10 @@ class OrderController extends BaseController{
             render(js(true,"全部成功"))
         }else {
             if(b!=0){
-                render(js(true,"部分成功，注意只有是你创建的订单才能被你或超级管理员操作！"))
+                render(js(true,"部分成功，注意只有订单结清全部款才能进入到完成队列！成功${b}条"))
                 return
             }
-            render(js(false,"全部失败,注意只有是你创建的订单才能被你或超级管理员操作！"))
+            render(js(false,"全部失败,注意只有订单结清全部款才能进入到完成队列！"))
         }
     }
     def cheOrder={

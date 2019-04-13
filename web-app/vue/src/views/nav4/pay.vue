@@ -228,6 +228,11 @@
                 }
             },
             countCash(list){
+                if(!list[0]){
+                    list[0]={
+                        amount:0
+                    }
+                }
                 this.needCash=this.order[0].amount-list[0].amount
             },
             submitForm(formName) {

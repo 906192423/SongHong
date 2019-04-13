@@ -67,6 +67,37 @@ class CashController extends BaseController{
             render(js(false,"失败"))
         }
     }
+    def delete={
+        def _id=params._id
+        println(params)
+        def cu=dataService.mongoDb.findOneCash([_id:_id],[include:['_creatId','_orderId']])
+        if(!cu){
+            render(js(false,"此交易单不存在！"))
+            return
+        }
+        def or=dataService.mongoDb.findOneOrder([_id:cu._orderId],[include:['cashList','state']])
+        if(or.state==2&&!session.user.superUser){
+            render(js(false,"已交付的订单的交款记录不能被删除或联系超级管理员删除！"))
+            return
+        }
+        if(cu._creatId==session.user._id||session.user.superUser){
+            if(or){
+                for(int i=0;i<or.cashList.size();i++){
+                    if(or.cashList[i]._id==cu._id){
+                        or.cashList.remove(i)
+                        break
+                    }
+                }
+                or.payState=2
+                or.allPay=false
+                dataService.mongoDb.updateOrder([_id:or._id],[cashList:or.cashList,payState:or.payState,allPay:false])
+                dataService.mongoDb.delCash([_id:cu._id])
+                render(js(true,"删除成功"))
+                return
+            }
+        }
+        render(js(false,"只有创建者或超级管理员能删除！"))
+    }
     def getList= {
         println("查找交易数据" + params)
         def form = [sort: [_id: -1]]
