@@ -18,4 +18,40 @@ class CashService extends BaseService{
             return "C"+a+"0001"
         }
     }
+    def count(start,end){
+        println(start+"--------"+end)
+        def query=[ct:[$gte:start],ct:[$lte:end]]
+        def page=1
+        def allPages=2
+        def allList=[]
+        def cashList=[
+                z:0,
+                w:0,
+                x:0,
+                k:0,
+                all:"",
+        ]
+        for(;page<allPages;page++){
+            def list=dataService.mongoDb.searchCash(query,[include:["payForm"]],page,100)
+            if(list){
+                allPages=list.allPages
+                allList.addAll(list.contentlist)
+            }
+        }
+        cashList.all=allList.size()
+        allList.each {
+            it.payForm.each{
+                if(it.name==1){
+                    cashList.z+=it.amount
+                }else if(it.name==2){
+                    cashList.w+=it.amount
+                }else if(it.name==3){
+                    cashList.x+=it.amount
+                }else{
+                    cashList.k+=it.amount
+                }
+            }
+        }
+        return cashList
+    }
 }
