@@ -114,7 +114,7 @@ let routes = [
         iconCls: 'el-icon-message',//图标样式class
         children: [
             { path: '/HRM', component: HRM, name: '人员列表' },
-            { path: '/stamp', component: stamp, name: '打印测试',hidden:true },
+            { path: '/stamp', component: stamp, name: '打印测试'},
         ]
     },
     {
