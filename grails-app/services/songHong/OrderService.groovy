@@ -55,10 +55,18 @@ class OrderService extends BaseService{
     def income(detail){
         try {
             for(int i=0;i<detail.size();i++){
-                def a=dataService.mongoDb.findOneProduct([_id:detail[i]._id],[include:["number"]])
+                def a=dataService.mongoDb.findOneProduct([_id:detail[i]._id],[include:["number","group","count"]])
                 if(a) {
-                    a.number += Double.valueOf(detail[i].num)
-                    dataService.mongoDb.updateProduct([_id: detail[i]._id], [number:a.number])
+                    if(a.group){
+                        a.count.each{
+                            def p=dataService.mongoDb.findOneProduct([_id:it._id],[include:["number"]])
+                            p.number+=Double.valueOf(detail[i].num*it.num)
+                            dataService.mongoDb.updateProduct([_id:p._id], [number:p.number])
+                        }
+                    }else {
+                        a.number += Double.valueOf(detail[i].num)
+                        dataService.mongoDb.updateProduct([_id: detail[i]._id], [number:a.number])
+                    }
                 }
             }
             return true

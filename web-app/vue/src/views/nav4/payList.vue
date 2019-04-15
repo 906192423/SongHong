@@ -206,7 +206,7 @@
                     this.listLoading = true;
                     //NProgress.start();
                     let para = { _id: row._id };
-                    this.VgetJSON('customer/delete',para).then(data=>{
+                    this.VgetJSON('cash/delete',para).then(data=>{
                         if(data.flag){
                             this.$message({
                                 message:data.remark,
