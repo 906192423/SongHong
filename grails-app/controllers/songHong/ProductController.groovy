@@ -7,18 +7,29 @@ class ProductController extends BaseController{
         println("创建商品")
         println(params)
         try{
-        def detail=JSONObject.parse(params.detail)
-        for (int i=0;i<detail.size();i++){
-            detail[i].num=Double.valueOf(detail[i].num)
-        }
-        def p=Product.newOne([
-                name:params.name,//商品名
-                remark:params.remark,//备注
-                unit: params.unit,//单位
-                count:detail,
-        ])
+            def code=Integer.valueOf(params.code)
+            def c=dataService.mongoDb.findOneProduct([code:code],[include:["_id"]])
+            if(c){
+                render(js(false,"此商品码已存在！"))
+                return
+            }
+            c=dataService.mongoDb.findOneProduct([name:params.name],[include:["_id"]])
+            if(c){
+                render(js(false,"此商品名已存在！"))
+                return
+            }
+            def detail=JSONObject.parse(params.detail)
+            for (int i=0;i<detail.size();i++){
+                detail[i].num=Double.valueOf(detail[i].num)
+            }
+            def p=Product.newOne([
+                    name:params.name,//商品名
+                    remark:params.remark,//备注
+                    unit: params.unit,//单位
+                    count:detail,
+            ])
             if(detail.size()>0) p.group=true
-            p.code=Integer.valueOf(params.code)//商品编号
+            p.code=code//商品编号
             p.number=Double.valueOf(params.number)
             p.state=Integer.valueOf(params.state)
             p.classification=Integer.valueOf(params.classification)
@@ -67,11 +78,11 @@ class ProductController extends BaseController{
             def nu=params.name
             try{
                 nu=Integer.parseInt(params.name)
-                form+=[code: [$regex:/^${nu.toString()}/]]
-                println("商品码查找")
+                form+=[code:nu]
+                println("商品码查找"+nu)
             }catch(Exception e){
                 println("商品名查找："+nu)
-                form+=[name: [$regex:/^${nu}/]]
+                form+=[name:[$regex:/${nu}/]]
             }
         }
         def page=1
@@ -79,7 +90,7 @@ class ProductController extends BaseController{
             page=Integer.valueOf(params.page)
         }catch(Exception e){
         }
-        def d=dataService.mongoDb.searchProduct(form,page,10)
+        def d=dataService.mongoDb.searchProduct(form,page,15)
         def goods=d.contentlist
         render(JSONObject.toJSONString([list:goods,flag:true,num:d.allNum]))
     }

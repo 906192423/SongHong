@@ -23,12 +23,8 @@
 
     <el-table v-loading="listLoading" :data="tableData">
 
-        <el-table-column label="商品编号" sortable>
-            <template slot-scope="scope">
-                <el-tag type="success">{{scope.row.code}}</el-tag>
-            </template>
+        <el-table-column label="商品编号" prop="code" sortable>
         </el-table-column>
-
         <el-table-column label="商品名">
             <template slot-scope="scope">
                 <el-popover trigger="hover" placement="top">
@@ -38,31 +34,17 @@
                 </el-popover>
             </template>
         </el-table-column>
-
         <el-table-column label="单位" width="80">
             <template slot-scope="scope">
                 <el-tag type="success">{{scope.row.unit}}</el-tag>
             </template>
         </el-table-column>
-
-        <el-table-column label="库存数量" width="100"sortable>
-            <template slot-scope="scope">
-                <el-tag type="success">{{scope.row.number}}</el-tag>
-            </template>
+        <el-table-column label="库存数量" width="100" prop="number" sortable>
         </el-table-column>
-
-        <el-table-column label="商品进价" width="100"sortable>
-            <template slot-scope="scope">
-                <el-tag type="success">{{scope.row.costPrice}}</el-tag>
-            </template>
+        <el-table-column label="商品进价" width="100" prop="costPrice" sortable>
         </el-table-column>
-
-        <el-table-column label="商品售价" width="100"sortable>
-            <template slot-scope="scope">
-                <el-tag type="success">{{scope.row.price}}</el-tag>
-            </template>
+        <el-table-column label="商品售价" width="100" prop="price" sortable>
         </el-table-column>
-
         <el-table-column label="状态" width="100">
             <template slot-scope="scope">
                 <el-tag v-if="scope.row.state==0" type="success">可生产</el-tag>
@@ -84,7 +66,7 @@
             </template>
         </el-table-column>
     </el-table>
-        <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="10":total="total" style="float:right;">
+        <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="15":total="total" style="float:right;">
         </el-pagination>
         <!--添加商品界面-->
         <el-dialog title="添加商品" :visible.sync="addFormVisible" :close-on-click-modal="false">

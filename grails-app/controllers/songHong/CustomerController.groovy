@@ -25,7 +25,7 @@ class CustomerController extends BaseController{
             def nu=params.name
             try{
                 nu=Integer.parseInt(params.name)
-                form+=[phone: [$regex:/^${nu.toString()}/]]
+                form+=[phone:[$regex:/^${nu.toString()}/]]
                 println("电话查找")
             }catch(Exception e){
                 println("名字查找："+nu)

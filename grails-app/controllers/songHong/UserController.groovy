@@ -78,7 +78,7 @@ class UserController extends BaseController{
         render(js(false,"你不具有此权限，只有创建者或超级管理员可以删除"))
     }
     def delete={
-        println("scvsdvssv用户数据"+params)
+        println("用户数据"+params)
         def _id=params._id
         def cu=dataService.mongoDb.findOneUser([_id:_id])
         if(!cu){
