@@ -1,5 +1,5 @@
 <template>
-    <el-form :model="dynamicValidateForm" :rules="rules" ref="dynamicValidateForm" style="width: 100%"  :v-loading="loading" label-width="100px">
+    <el-form>
         <el-form-item label="请选择订单：">
             <el-autocomplete
                     v-model="state4"
@@ -13,7 +13,7 @@
     <div class="page" id="printMe" style="background:#fff;">
         <center><h3><b> 辽宁洪锋工贸有限责任公司--销售单</b></h3></center>
         <p>基本信息-----------------------------------------------------------------------------------------------------</p>
-        <el-table :data="order" style="width: 100%">
+        <el-table :data="order" style="width: 100%" size="small"height="80px"cellpadding="0">
             <el-table-column prop="sellCode" label="订单号" width="180">
             </el-table-column>
             <el-table-column prop="userName" label="消费者" width="180">
@@ -23,15 +23,15 @@
             <el-table-column prop="leadTime" label="交货时间" >
             </el-table-column>
         </el-table>
-        <el-table :data="order" style="width: 100%">
+        <el-table :data="order" style="width: 100%" size="small"height="100%" cellpadding="0">
             <el-table-column label="交货地址"prop="addr" width="180">
             </el-table-column>
             <el-table-column prop="phone" label="联系电话" width="180">
             </el-table-column>
             <el-table-column label="交款方式" width="180">
                 <template slot-scope="scope">
-                    <el-tag v-if="scope.row.earnest==0" type="warning">定金</el-tag>
-                    <el-tag v-if="scope.row.earnest==1" type="success">全款</el-tag>
+                    <el-tag v-if="scope.row.earnest==0">定金</el-tag>
+                    <el-tag v-if="scope.row.earnest==1" >全款</el-tag>
                     <el-tag v-if="scope.row.earnest==-1">欠款</el-tag>
                 </template>
             </el-table-column>
@@ -39,7 +39,7 @@
             </el-table-column>
         </el-table>
         <p>商品清单-----------------------------------------------------------------------------------------------------</p>
-        <el-table v-if="order[0]" :data="order[0].detail" style="width: 100%">
+        <el-table v-if="order[0]" :data="order[0].detail" style="width: 100%"size="small"height="100%">
             <el-table-column prop="name" label="商品名" width="180">
             </el-table-column>
             <el-table-column prop="code" label="商品码" width="180">
@@ -52,7 +52,7 @@
         <h4 v-if="order[0]">备注：{{order[0].remark}}</h4>
         <p>付款信息-----------------------------------------------------------------------------------------------------</p>
         <template v-for="(item,index) in this.cashList">
-        <el-table :data="[item]" style="width: 100%">
+        <el-table :data="[item]"  style="width: 100%"size="small"height="80px">
             <el-table-column prop="code" label="付款单号" width="180">
             </el-table-column>
             <el-table-column prop="cutAmount" label="优惠金额" width="180">
