@@ -20,9 +20,9 @@ class OrderController extends BaseController{
             }
             def detail=JSONObject.parse(params.detail)
             for (int i=0;i<detail.size();i++){
-                detail[i].total=Double.valueOf(detail[i].total)
-                detail[i].price=Double.valueOf(detail[i].price)
+                detail[i].price=norTwo(detail[i].price)
                 detail[i].num=Double.valueOf(detail[i].num)
+                detail[i].total=norTwo(detail[i].price*detail[i].num)
             }
             def order=Order.newOne([
                     _creatId:session.user._id,
@@ -37,7 +37,7 @@ class OrderController extends BaseController{
                     _Uid:cu._id,//客户id
                     leadTime:params.leadTime,//交货时间
                     remark :params.remark,//备注
-                    amount :Double.valueOf(params.amount),//合计金额
+                    amount :norTwo(params.amount),//合计金额
                     addr:params.addr,//交货地址
             ])
             dataService.mongoDb.saveOrder(order)
@@ -189,7 +189,7 @@ class OrderController extends BaseController{
         render JSONObject.toJSONString([list:orders])
     }
     def a={
-        def li=orderService.countProduct()
-        render(JSONObject.toJSONString(li))
+        println("生产统计")
+        render(norTwo(params.a).doubleValue())
     }
 }

@@ -16,6 +16,10 @@ class BaseService {
         println(taskPool.toString())
         println("----------------------")
     }
+    def norTwo(d) {
+        BigDecimal bg = new BigDecimal(Double.valueOf(d))
+        return bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()
+    }
     boolean getBoolean(Closure clo){
         boolean succ=true
         try{

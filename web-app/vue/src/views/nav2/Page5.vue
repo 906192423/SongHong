@@ -116,20 +116,32 @@
                 </el-col>
             </el-tab-pane>
             <el-tab-pane label="生产统计" @tab-click="getInfo">
-                <el-row>
-                    <el-col :span="8" v-for="(o, index) in needProduct" :key="o" v-loading="carLoading">
-                        <el-card :body-style="{ padding: '0px' }" class="card">
-                            <img :src=img class="image">
-                            <div style="padding: 14px;">
-                                <span>好吃的汉堡</span>
-                                <div class="bottom clearfix">
-                                    <time class="time">{{ currentDate }}</time>
-                                    <el-button type="text" class="button">操作按钮</el-button>
-                                </div>
-                            </div>
-                        </el-card>
-                    </el-col>
-                </el-row>
+                <!--<el-row>-->
+                    <!--<el-col :span="8" v-for="(o, index) in needProduct" :key="o" v-loading="carLoading">-->
+                        <!--<el-card :body-style="{ padding: '0px' }" class="card">-->
+                            <!--<img :src=img class="image">-->
+                            <!--<div style="padding: 14px;">-->
+                                <!--<span>好吃的汉堡</span>-->
+                                <!--<div class="bottom clearfix">-->
+                                    <!--<time class="time">{{ currentDate }}</time>-->
+                                    <!--<el-button type="text" class="button">操作按钮</el-button>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</el-card>-->
+                    <!--</el-col>-->
+                <!--</el-row>-->
+                <el-table :data="needProduct" highlight-current-row v-loading="aLoading" style="width:100%;">
+                    <el-table-column  type="index" width="40">
+                    </el-table-column>
+                    <el-table-column label="商品编号" prop="code" width="100">
+                    </el-table-column>
+                    <el-table-column label="商品名" prop="name" width="400">
+                    </el-table-column>
+                    <el-table-column label="单位" prop="unit" width="80">
+                    </el-table-column>
+                    <el-table-column label="统计数量" prop="num">
+                    </el-table-column>
+                </el-table>
             </el-tab-pane>
         </el-tabs>
 
@@ -228,6 +240,7 @@
                 },
                 img:require('../../assets/images/page4/1.jpg'),
                 dialog:false,
+                aLoading:false,
                 cashList:[],
                 csahLoading:false,
                 users: [],
@@ -416,10 +429,11 @@
                 });
             },
             getInfo(tab, event){
-                console.log(tab.index)
                 if(tab.index==1){
+                    this.aLoading=true
                     this.VgetJSON('order/a',{}).then(d=>{
                         this.needProduct=d.list
+                        this.aLoading=false
                     })
                 }
             }

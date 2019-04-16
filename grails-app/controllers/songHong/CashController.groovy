@@ -20,7 +20,7 @@ class CashController extends BaseController{
             def pay=[]
             double total=0
             payForm.each {
-                def amount=Double.valueOf(it.amount)
+                def amount=norTwo(it.amount)
                 total+=amount
                 pay.add([
                         name:Integer.valueOf(it.name),

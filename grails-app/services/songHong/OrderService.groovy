@@ -4,7 +4,7 @@ import grails.transaction.Transactional
 
 @Transactional
 class OrderService extends BaseService{
-    static nowNeedProduct
+    static def nowNeedProduct=[]
     def getCode(){//生成订单号
         def time=new Date().format("yyyy-MM-dd")
         //def num=dataService.mongoDb.findCountOrder(ct:[$gt:time])
@@ -41,7 +41,11 @@ class OrderService extends BaseService{
                 }
             }
         }
-        nowNeedProduct=needList
+        nowNeedProduct=[]
+        needList.each{
+            nowNeedProduct.add(it.value)
+        }
+        nowNeedProduct
     }
     private def getProduct(item){
         def p=dataService.mongoDb.findOneProduct([_id:item._id])

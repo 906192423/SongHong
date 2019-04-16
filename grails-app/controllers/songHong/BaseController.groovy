@@ -15,4 +15,8 @@ class BaseController {
         }
         JSONObject.toJSONString(item)
     }
+    protected def norTwo(d) {
+        BigDecimal bg = new BigDecimal(Double.valueOf(d))
+        return bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()
+    }
 }
