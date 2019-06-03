@@ -37,6 +37,7 @@ let routes = [
         path: '/',
         component: Home,
         name: '客户管理',
+        lev:1,
         iconCls: 'el-icon-message',//图标样式class
         children: [
             { path: '/main', component: Main, name: '主页', hidden: true },
@@ -47,6 +48,7 @@ let routes = [
         path: '/',
         component: Home,
         name: '订单管理',
+        lev:2,
         iconCls: 'fa fa-id-card-o',
         children: [
             { path: '/form', component: Form, name: '创建订单' },
@@ -58,6 +60,7 @@ let routes = [
     {
         path: '/',
         component: Home,
+        lev:2,
         name: '退货管理',
         iconCls: 'fa fa-id-card-o',
         children: [
@@ -70,6 +73,7 @@ let routes = [
         path: '/',
         component: Home,
         name: '商品管理',
+        lev:3,
         iconCls: 'fa fa-address-card',
         // leaf: true,//只有一个节点
         children: [
@@ -80,6 +84,7 @@ let routes = [
         path: '/',
         component: Home,
         name: '财务管理',
+        lev:4,
         iconCls: 'fa fa-id-card-o',
         children: [
             { path: '/pay', component: pay, name: '收银缴款' },
@@ -90,6 +95,7 @@ let routes = [
         path: '/',
         component: Home,
         name: '库存管理',
+        lev:3,
         iconCls: 'fa fa-id-card-o',
         children: [
             { path: '/comein', component: comein, name: '创建进货单' },
@@ -101,6 +107,7 @@ let routes = [
         path: '/',
         component: Home,
         name: '经营报表',
+        lev:4,
         iconCls: 'fa fa-bar-chart',
         children: [
             { path: '/echarts', component: echarts, name: '解款报表' },
@@ -111,6 +118,7 @@ let routes = [
         path: '/',
         component: Home,
         name: '店员管理',
+        lev:5,
         iconCls: 'el-icon-message',//图标样式class
         children: [
             { path: '/HRM', component: HRM, name: '人员列表' },

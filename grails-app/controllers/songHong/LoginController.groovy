@@ -1,7 +1,11 @@
 package songHong
 
 import com.alibaba.fastjson.JSONObject
+
+import javax.servlet.http.Cookie
+
 class LoginController extends BaseController{
+    def userService
     def index() {
         def a=dataService.mongoDb.findUser([sort:[ct:-1],limit:50])
         render(JSONObject.toJSONString(a))
@@ -16,9 +20,22 @@ class LoginController extends BaseController{
         def u=dataService.mongoDb.findOneUser([name:params.name.trim()])
         if(u){
             if(u.pwd==params.password){
-                session.user=u
-                render(JSONObject.toJSONString([flag:true,remark:"登陆成功"]))
-                return
+                if(u.superUser||u.canLogin){
+                    session.user=u
+                    userService.doLogin(u)
+                    def code=UUID.randomUUID().toString()
+                    println(code)
+                    baseService.userList.put(u._id,code)
+                    def cook= new Cookie("code",code)
+                    cook.setMaxAge(200000)
+                    cook.setPath("/")
+                    response.addCookie(cook)
+                    render(JSONObject.toJSONString([flag:true,remark:"登陆成功"]))
+                    return
+                }else {
+                    render(JSONObject.toJSONString([flag:false,remark:"登陆失败,你已被禁止登录！"]))
+                    return
+                }
             }
         }
         render(JSONObject.toJSONString([flag:false,remark:"登陆失败"]))

@@ -54,6 +54,17 @@ class OrderController extends BaseController{
         if(params.state){
             form.state=Integer.valueOf(params.state)
         }
+        if(params.name){
+            def nu=params.name
+            try{
+                nu=Integer.parseInt(params.name)
+                form+=[sellCode:[$regex:/^${nu.toString()}/]]
+                println("订单号查找")
+            }catch(Exception e){
+                println("名字查找："+nu)
+                form+=[userName: [$regex:/^${nu}/]]
+            }
+        }
         def u=dataService.mongoDb.searchOrder(form,page,10)
         println("查看订单数据"+u)
         render(js(true,"查询成功",[list:u.contentlist,num:u.allNum]))
@@ -190,6 +201,8 @@ class OrderController extends BaseController{
     }
     def a={
         println("生产统计")
-        render(norTwo(params.a).doubleValue())
+        orderService.countProduct()
+        println(orderService.nowNeedProduct)
+        render(JSONObject.toJSONString([list:orderService.nowNeedProduct]))
     }
 }

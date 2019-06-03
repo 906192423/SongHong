@@ -9,8 +9,8 @@ class UrlMappings {
                 // apply constraints here
             }
         }
-        "/dist/api/$apicon/$apiAction"(controller:"base",action:"api")
-        "/api/$apicon/$apiAction"(controller:"base",action:"api")
+        "/dist/api/$controller/$action?/$id?(.$format)?"{}
+        "/api/$controller/$action?/$id?(.$format)?"{}
         "/"(controller:"login",action:"login")
         "500"(view:'/error')
         "404"(view:'/notFound')

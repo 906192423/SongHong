@@ -9,4 +9,9 @@ class EchartController extends BaseController{
         def c=cashService.count(params.start,params.end)
         render(JSONObject.toJSONString(c))
     }
+    def getCc={//取到周收款统计
+        println(params)
+        def c=cashService.countWeek(params.start)
+        render(JSONObject.toJSONString([list:c]))
+    }
 }

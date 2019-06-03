@@ -21,15 +21,31 @@
             </el-table-column>
             <el-table-column type="index" width="60">
             </el-table-column>
-            <el-table-column prop="name" label="姓名" width="220" sortable>
+            <el-table-column prop="name" label="账户" width="220" sortable>
             </el-table-column>
-            <el-table-column prop="phone" label="电话" width="140" sortable>
+            <el-table-column prop="phone" label="电话" width="140">
             </el-table-column>
-            <el-table-column prop="idCardNumber" label="身份证号码" min-width="180" sortable>
+            <el-table-column prop="qq" label="QQ" min-width="180">
             </el-table-column>
-            <el-table-column prop="email" label="邮箱" min-width="180" sortable>
+            <el-table-column prop="email" label="邮箱" min-width="180">
             </el-table-column>
-            <el-table-column prop="remark" label="简介"  sortable>
+            <el-table-column prop="level" label="管理等级" min-width="80" sortable>
+            </el-table-column>
+            <el-table-column prop="lastLoginTime" label="上次登陆时间" min-width="180" sortable>
+            </el-table-column>
+            <el-table-column label="登陆" width="150">
+                <template slot-scope="scope">
+                    <el-tooltip :content="'是否允许登陆' + scope.row.canLogin" placement="top">
+                        <el-switch
+                                v-model="scope.row.canLogin"
+                                active-color="#13ce66"
+                                inactive-color="#ff4949"
+                                :v-loading="scc"
+                                @change="sch(scope.row)"
+                        >
+                        </el-switch>
+                    </el-tooltip>
+                </template>
             </el-table-column>
             <el-table-column label="操作" width="150">
                 <template slot-scope="scope">
@@ -47,20 +63,34 @@
         <!--编辑界面-->
         <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
             <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-                <el-form-item label="姓名" prop="name">
-                    <el-input v-model="editForm.name" auto-complete="off"></el-input>
+                <h1>用户：{{editForm.name}}</h1>
+                <el-form-item label="密码" prop="phone">
+                    <el-input v-model="editForm.pwd" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="电话" prop="phone">
                     <el-input v-model="editForm.phone" auto-complete="off"></el-input>
                 </el-form-item>
+                <el-form-item label="QQ">
+                    <el-input v-model="editForm.qq" auto-complete="off"></el-input>
+                </el-form-item>
                 <el-form-item label="邮箱" prop="email">
                     <el-input v-model="editForm.email" ></el-input>
                 </el-form-item>
-                <el-form-item label="身份证号码">
-                    <el-input type="textarea" v-model="editForm.idCardNumber"></el-input>
+                <el-form-item label="身份证">
+                    <el-input v-model="editForm.idCardNumber"></el-input>
                 </el-form-item>
                 <el-form-item label="备注">
                     <el-input type="textarea" v-model="editForm.remark"></el-input>
+                </el-form-item>
+                <el-form-item label="管理等级">
+                <el-select v-model="editForm.level" placeholder="请选择">
+                    <el-option
+                            v-for="item in options"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -71,11 +101,20 @@
 
         <el-dialog title="新增" :visible.sync="newFormVisible" :close-on-click-modal="false" v-loading="addLoading">
             <el-form :model="newForm" label-width="80px" :rules="rules" ref="newForm">
-                <el-form-item label="姓名" prop="name">
+                <el-form-item label="用户名" prop="name">
                     <el-input v-model="newForm.name" auto-complete="off"></el-input>
                 </el-form-item>
+                <el-form-item label="密码">
+                    <el-input v-model="newForm.pwd" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="姓名">
+                    <el-input v-model="newForm.trueName" auto-complete="off"></el-input>
+                </el-form-item>
                 <el-form-item label="电话" prop="phone">
-                    <el-input v-model="newForm.elephone" auto-complete="off"></el-input>
+                    <el-input v-model="newForm.phone" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="QQ">
+                    <el-input v-model="newForm.qq" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="邮箱" prop="email">
                     <el-input v-model="newForm.email" ></el-input>
@@ -103,6 +142,7 @@
                 filters: {
                     name:''
                 },
+                scc:false,
                 users: [],
                 total: 0,
                 page: 1,
@@ -124,8 +164,11 @@
                 //编辑界面数据
                 editForm: {
                     _id : "",
-                    name:"",//供货商名
-                    elephone:"",//供货电话
+                    name:"",
+                    pwd:"",
+                    qq:"",
+                    phone:"",
+                    level:"",
                     idCardNumber:"",//sfz
                     email : "",//郵箱
                     remark : "",//简介开户信息
@@ -133,8 +176,10 @@
                 newForm: {
                     _id : "",
                     name:"",//名
-                    elephone:"",//电话
-                    idCardNumber:"",//sfz
+                    pwd:"",
+                    trueName:"",
+                    phone:"",//电话
+                    idCardNumber:"",//
                     email : "",//郵箱
                     remark : "",//简介
                 },
@@ -147,13 +192,29 @@
                 },
                 //新增界面数据
                 addForm: {
-                    name: '',
-                    sex: -1,
-                    age: 0,
-                    birth: '',
-                    addr: ''
+                    name:"",//名
+                    pwd:"",
+                    trueName:"",
+                    phone:"",//电话
+                    qq:"",
+                    idCardNumber:"",//
+                    email : "",//郵箱
+                    remark : "",//简介
+                },
+                options: [{
+                    value: 1,
+                    label: '等级1'
+                }, {
+                    value:2,
+                    label: '等级2'
+                }, {
+                    value:3,
+                    label: '等级3'
+                }, {
+                    value:4,
+                    label: '等级4'
                 }
-
+                ],
             }
         },
         created: function () {
@@ -177,12 +238,35 @@
                 };
                 this.listLoading = true;
                this.VgetJSON('user/getUsers',para).then(d=>{
-                   console.log("取到用户数据")
-                   console.log(d)
                    this.users=d.users
                    this.total=d.num
                    this.listLoading = false;
+                   console.log(d)
                })
+            },
+            sch(row){
+                this.$confirm('确认修改状态吗?', '提示', {
+                    type: 'warning'
+                }).then(() => {
+                    let para={_id:row._id,canLogin:row.canLogin}
+                    this.scc=true
+                    this.VgetJSON('user/sch',para).then(data=>{
+                        if(data.flag){
+                            this.$message({
+                                message:data.remark,
+                                type: 'success'
+                            });
+                        }else {
+                            this.$message({
+                                message: data.remark,
+                                type: 'error'
+                            });
+                        }
+                        this.scc=false
+                    })
+                }).catch(()=>{
+                    row.canLogin=!row.canLogin
+                })
             },
             //删除
             handleDel: function (index, row) {
@@ -222,7 +306,7 @@
             //显示编辑界面
             handleEdit: function (index, row) {
                 this.editFormVisible = true;
-                this.editForm = Object.assign({}, row);
+                this.editForm = Object.assign({},row);
             },
             //显示新增界面
             handleAdd: function (newForm) {
@@ -246,8 +330,10 @@
                                 }
                                 this.newForm={
                                     _id : "",
+                                    pwd:"",
+                                    trueName:"",
                                     name:"",//供货商名
-                                    elephone:"",//供货电话
+                                    phone:"",//供货电话
                                     address:"",//地址
                                     email : "",//郵箱
                                     remark : "",//简介开户信息

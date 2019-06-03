@@ -8,7 +8,7 @@ import service.DbService
 //mongo 链接服务
 class DataService {
     static private def map = [
-    ip:"localhost",
+    ip:"47.102.209.19",
     port:"27017",
     dbName:"songHong",//数据库名
     mongoUser:"",//登录名

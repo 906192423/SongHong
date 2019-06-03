@@ -25,7 +25,7 @@
 				<!--导航菜单-->
 				<el-menu :default-active="$route.path" id="lastclass" class="el-menu-vertical-demo" @open="handleopen" @close="handleclose" @select="handleselect"
 						 unique-opened router v-show="!collapsed">
-					<template v-for="(item,index) in $router.options.routes" v-if="!item.hidden">
+					<template v-for="(item,index) in $router.options.routes" v-if="!item.hidden&&(user.superUser||item.lev<=user.level)">
 						<el-submenu :index="index+''" v-if="!item.leaf">
 							<template slot="title"><i :class="item.iconCls"></i>{{item.name}}</template>
 							<el-menu-item v-for="child in item.children" :index="child.path" :key="child.path" v-if="!child.hidden">{{child.name}}</el-menu-item>
@@ -77,6 +77,7 @@
 			return {
 				img:require('../assets/images/home/1.jpg'),
 				sysName:'ERP系统',
+				user:{},
 				collapsed:false,
 				sysUserName: '',
 				sysUserAvatar: '',
@@ -149,6 +150,7 @@
 		},
 		mounted() {
 			this.VgetJSON('user/info',{}).then(data=>{
+				this.user=data
                 this.sysUserName=data.name
                 this.sysUserAvatar=this.img
             })

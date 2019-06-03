@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit
 @Transactional
 class BaseService {
     def dataService
+    static def userList=[:]
     static ThreadPoolExecutor taskPool = new ThreadPoolExecutor(10, 30, 3000, TimeUnit.MILLISECONDS,
             new LinkedBlockingDeque<Runnable>(), new ThreadPoolExecutor.CallerRunsPolicy())
     static {
@@ -17,6 +18,7 @@ class BaseService {
         println("----------------------")
     }
     def norTwo(d) {
+        if(!d){d=0}
         BigDecimal bg = new BigDecimal(Double.valueOf(d))
         return bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()
     }
