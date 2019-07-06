@@ -13,7 +13,9 @@
     <div class="page" id="printMe" style="background:#fff;">
         <center><h3><b> 辽宁洪锋工贸有限责任公司--销售单</b></h3></center>
         <p>基本信息-----------------------------------------------------------------------------------------------------</p>
-        <el-table :data="order" style="width: 100%" size="small"height="80px"cellpadding="0">
+        <strong>
+        <el-table :data="order" style="width: 100%" height="100%" cellpadding="0"  cell-style="font-weight: 700;"show-header="false">
+
             <el-table-column prop="sellCode" label="订单号" width="180">
             </el-table-column>
             <el-table-column prop="userName" label="消费者" width="180">
@@ -23,7 +25,7 @@
             <el-table-column prop="leadTime" label="交货时间" >
             </el-table-column>
         </el-table>
-        <el-table :data="order" style="width: 100%" size="small"height="100%" cellpadding="0">
+        <el-table :data="order" style="width: 100%" height="100%" cellpadding="0"  cell-style="font-weight: 700;"show-header="false">
             <el-table-column label="交货地址"prop="addr" width="180">
             </el-table-column>
             <el-table-column prop="phone" label="联系电话" width="180">
@@ -38,8 +40,10 @@
             <el-table-column prop="creatName" label="销售员" >
             </el-table-column>
         </el-table>
+        </strong>
         <p>商品清单-----------------------------------------------------------------------------------------------------</p>
-        <el-table v-if="order[0]" :data="order[0].detail" style="width: 100%"size="small"height="100%">
+        <strong>
+        <el-table v-if="order[0]" :data="order[0].detail" style="width: 100%"height="100%"  cell-style="font-weight: 700;"show-header="false">
             <el-table-column prop="name" label="商品名" width="180">
             </el-table-column>
             <el-table-column prop="code" label="商品码" width="180">
@@ -49,20 +53,28 @@
             <el-table-column prop="num" width="180" label="数量">
             </el-table-column>
         </el-table>
+        </strong>
         <h4 v-if="order[0]">备注：{{order[0].remark}}</h4>
         <p>付款信息-----------------------------------------------------------------------------------------------------</p>
         <template v-for="(item,index) in this.cashList">
-        <el-table :data="[item]"  style="width: 100%"size="small"height="80px">
+            <strong>
+        <el-table :data="[item]"  style="width: 100%" height="100%" cellpadding="0"  cell-style="font-weight: 700;"show-header="false">
             <el-table-column prop="code" label="付款单号" width="180">
             </el-table-column>
             <el-table-column prop="cutAmount" label="优惠金额" width="180">
             </el-table-column>
             <el-table-column prop="amount" label="总金额" width="180" >
             </el-table-column>
-            <el-table-column label="备注" prop="remark" width="180">
+            <el-table-column label="备注" prop="payForm" width="180">
+                <template slot-scope="scope">
+                <el-tag v-if="scope.row.name==1" type="success">支付宝</el-tag>
+                <el-tag v-if="scope.row.name==2" type="success">微信</el-tag>
+                <el-tag v-if="scope.row.name==3" type="success">现金</el-tag>
+                <el-tag v-if="scope.row.name==4" type="success">刷卡</el-tag>
+        </template>
             </el-table-column>
         </el-table>
-        <el-table :data="item.payForm" style="width: 100%">
+        <el-table :data="item.payForm"style="width: 100%" height="100%" cellpadding="0"  cell-style="font-weight: 700;"show-header="false">
             <el-table-column label="支付方式" width="180">
                 <template slot-scope="scope">
                     <el-tag v-if="scope.row.name==1" type="success">支付宝</el-tag>
@@ -74,6 +86,7 @@
             <el-table-column prop="amount" label="支付金额">
             </el-table-column>
         </el-table>
+            </strong>
         </template>
         <p>-------------------------------------------------------------------------------------------------------------</p>
         <p >地址：辽宁省铁岭市调兵山市施荒地村东 </p>
