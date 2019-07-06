@@ -111,7 +111,8 @@ let routes = [
         iconCls: 'fa fa-bar-chart',
         children: [
             { path: '/echarts', component: echarts, name: '解款报表' },
-            { path: '/sales', component: sales, name: '销售统计' }
+            { path: '/sales', component: sales, name: '销售统计' },
+            { path: '/stamp', component: stamp, name: '打印订单'}
         ]
     },
     {
@@ -122,7 +123,7 @@ let routes = [
         iconCls: 'el-icon-message',//图标样式class
         children: [
             { path: '/HRM', component: HRM, name: '人员列表' },
-            { path: '/stamp', component: stamp, name: '打印测试'},
+
         ]
     },
     {
