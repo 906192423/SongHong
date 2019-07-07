@@ -66,10 +66,9 @@
             </el-table-column>
             <el-table-column label="支付方式" width="180">
                 <template slot-scope="scope">
-                    <el-tag v-if="scope.row.earnest==1" type="success">支付宝</el-tag>
-                    <el-tag v-if="scope.row.earnest==2" type="success">微信</el-tag>
-                    <el-tag v-if="scope.row.earnest==3" type="success">现金</el-tag>
-                    <el-tag v-if="scope.row.earnest==4" type="success">刷卡</el-tag>
+                    <el-tag v-if="scope.row.earnest==0" type="success">全款一次结清</el-tag>
+                    <el-tag v-if="scope.row.earnest==1" type="success">付定金</el-tag>
+                    <el-tag v-if="scope.row.earnest==2" type="success">支付剩余金额</el-tag>
                 </template>
             </el-table-column>
         </el-table>
