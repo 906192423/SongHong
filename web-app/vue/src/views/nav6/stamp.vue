@@ -14,7 +14,7 @@
         <center><h3><b> 辽宁洪锋工贸有限责任公司--销售单</b></h3></center>
         <p>基本信息-----------------------------------------------------------------------------------------------------</p>
 
-        <el-table :data="order"   cell-style="font-weight: 700;"show-header="false"style="color:#000000">
+        <el-table :data="order" :header-cell-style="{color:'#000000' }" cell-style="font-weight: 700;"show-header="false"style="color:#000000">
             <el-table-column prop="sellCode" label="订单号" width="180">
             </el-table-column>
             <el-table-column prop="userName" label="客户姓名" width="180">
@@ -24,7 +24,7 @@
             <el-table-column prop="leadTime" label="交货时间" >
             </el-table-column>
         </el-table>
-        <el-table :data="order"   cell-style="font-weight: 700;"show-header="false"style="color:#000000">
+        <el-table :data="order" :header-cell-style="{color:'#000000' }" cell-style="font-weight: 700;"show-header="false"style="color:#000000">
             <el-table-column label="交货地址"prop="addr" width="180">
             </el-table-column>
             <el-table-column prop="phone" label="联系电话" width="180">
@@ -42,7 +42,7 @@
 
         <p>商品清单-----------------------------------------------------------------------------------------------------</p>
         <strong >
-        <el-table v-if="order[0]" :data="order[0].detail" cell-style="font-weight: 700;"show-header="false" style="color:#000000">
+        <el-table v-if="order[0]" :data="order[0].detail" cell-style="font-weight: 700;" :header-cell-style="{color:'#000000' }" show-header="false" style="color:#000000">
             <el-table-column prop="name" label="商品名" width="300"font-color="black">
             </el-table-column>
             <el-table-column prop="code" label="商品码" width="140">
@@ -57,7 +57,7 @@
         <p>付款信息-----------------------------------------------------------------------------------------------------</p>
         <template v-for="(item,index) in this.cashList">
             <strong>
-        <el-table :data="[item]" style="color:#000000" cell-style="font-weight: 700;"show-header="false">
+        <el-table :data="[item]" style="color:#000000" cell-style="font-weight: 700;" :header-cell-style="{color:'#000000' }" show-header="false">
             <el-table-column prop="code" label="付款单号" width="180">
             </el-table-column>
             <el-table-column prop="cutAmount" label="优惠金额" width="180">
