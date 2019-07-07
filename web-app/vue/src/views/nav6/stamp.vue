@@ -31,9 +31,9 @@
             </el-table-column>
             <el-table-column label="交款方式" width="180">
                 <template slot-scope="scope">
-                    <el-tag v-if="scope.row.earnest==0">定金</el-tag>
-                    <el-tag v-if="scope.row.earnest==1" >全款</el-tag>
-                    <el-tag v-if="scope.row.earnest==-1">欠款</el-tag>
+                    <span v-if="scope.row.earnest==0">定金</span>
+                    <span v-if="scope.row.earnest==1" >全款</span>
+                    <span v-if="scope.row.earnest==-1">欠款</span>
                 </template>
             </el-table-column>
             <el-table-column prop="creatName" label="销售员" >
@@ -66,9 +66,9 @@
             </el-table-column>
             <el-table-column label="支付方式" width="180">
                 <template slot-scope="scope">
-                    <el-tag v-if="scope.row.earnest==0" type="success">全款一次结清</el-tag>
-                    <el-tag v-if="scope.row.earnest==1" type="success">付定金</el-tag>
-                    <el-tag v-if="scope.row.earnest==2" type="success">支付剩余金额</el-tag>
+                    <span v-if="scope.row.earnest==0">全款一次结清</span>
+                    <span v-if="scope.row.earnest==1">付定金</span>
+                    <span v-if="scope.row.earnest==2">支付剩余金额</span>
                 </template>
             </el-table-column>
         </el-table>

@@ -10,6 +10,8 @@ function resolve(dir) {
 }
 
 module.exports = {
+  externals: {
+  },
   entry: {
     app: './src/main.js'
   },
