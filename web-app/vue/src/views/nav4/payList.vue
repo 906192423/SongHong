@@ -72,12 +72,12 @@
             </el-table-column>
             <el-table-column prop="creatName" label="创建人" width="120" sortable>
             </el-table-column>
-            <el-table-column label="操作" width="200">
-                <template slot-scope="scope">
-                    <el-button size="small" @click="handleEdit(scope.row)">查看详细</el-button>
-                    <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
-                </template>
-            </el-table-column>
+            <!--<el-table-column label="操作" width="200">-->
+                <!--<template slot-scope="scope">-->
+                    <!--<el-button size="small" @click="handleEdit(scope.row)">查看详细</el-button>-->
+                    <!--<el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>-->
+                <!--</template>-->
+            <!--</el-table-column>-->
         </el-table>
 
         <!--工具条-->
