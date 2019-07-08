@@ -45,7 +45,7 @@
         <el-table v-if="order[0]" :data="order[0].detail" cell-style="font-weight: 700;" :header-cell-style="{color:'#000000' }" show-header="false" style="color:#000000">
             <el-table-column prop="code" label="商品码" width="120">
             </el-table-column>
-            <el-table-column prop="name" label="商品名" width="300"font-color="black">
+            <el-table-column prop="name" label="商品名" width="240"font-color="black">
             </el-table-column>
 
             <el-table-column prop="price" width="120" label="单价">
@@ -53,13 +53,8 @@
             <el-table-column prop="num" width="120" label="数量">
             </el-table-column>
             <el-table-column prop="total" width="80" label="小计">
+            </el-table-column>
 
-            </el-table-column>
-            <el-table-column width="140" label="小计">
-                <template slot-scope="scope">
-                    <span >{{scope.row.num*scope.row.price}}</span>
-                </template>
-            </el-table-column>
         </el-table>
         </strong>
         <h4 v-if="order[0]">备注：{{order[0].remark}}</h4>
