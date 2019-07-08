@@ -22,7 +22,7 @@ import payList from "./views/nav4/payList";
 let routes = [
     {
         path: '/login',
-        component: Login,
+        component: (resolve)=> require(['./views/Login.vue'],resolve),
         name: '',
         hidden: true
     },
@@ -51,10 +51,10 @@ let routes = [
         lev:2,
         iconCls: 'fa fa-id-card-o',
         children: [
-            { path: '/form', component: Form, name: '创建订单' },
-            { path: '/page4', component: Page4, name: '浏览订单' },
-            { path: '/page5', component: Page5, name: '生产中' },
-            { path: '/end', component: end, name: '已完成' }
+            { path: '/form', component: (resolve)=> require(['./views/nav2/Form.vue'],resolve), name: '创建订单' },
+            { path: '/page4', component: (resolve)=> require(['./views/nav2/Page4.vue'],resolve), name: '浏览订单' },
+            { path: '/page5', component:(resolve)=> require(['./views/nav2/Page5.vue'],resolve), name: '生产中' },
+            { path: '/end', component: (resolve)=> require(['./views/nav2/end.vue'],resolve), name: '已完成' }
         ]
     },
     {

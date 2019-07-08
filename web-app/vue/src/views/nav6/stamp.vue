@@ -31,9 +31,9 @@
             </el-table-column>
             <el-table-column label="交款方式" width="180">
                 <template slot-scope="scope">
-                    <el-tag v-if="scope.row.earnest==0">定金</el-tag>
-                    <el-tag v-if="scope.row.earnest==1" >全款</el-tag>
-                    <el-tag v-if="scope.row.earnest==-1">欠款</el-tag>
+                    <span v-if="scope.row.earnest==0">定金</span>
+                    <span v-if="scope.row.earnest==1" >全款</span>
+                    <span v-if="scope.row.earnest==-1">欠款</span>
                 </template>
             </el-table-column>
             <el-table-column prop="creatName" label="销售员" >
@@ -55,6 +55,11 @@
             <el-table-column prop="total" width="80" label="小计">
 
             </el-table-column>
+            <el-table-column width="140" label="小计">
+                <template slot-scope="scope">
+                    <span >{{scope.row.num*scope.row.price}}</span>
+                </template>
+            </el-table-column>
         </el-table>
         </strong>
         <h4 v-if="order[0]">备注：{{order[0].remark}}</h4>
@@ -70,10 +75,9 @@
             </el-table-column>
             <el-table-column label="支付方式" width="180">
                 <template slot-scope="scope">
-                    <el-tag v-if="scope.row.earnest==1" type="success">支付宝</el-tag>
-                    <el-tag v-if="scope.row.earnest==2" type="success">微信</el-tag>
-                    <el-tag v-if="scope.row.earnest==3" type="success">现金</el-tag>
-                    <el-tag v-if="scope.row.earnest==4" type="success">刷卡</el-tag>
+                    <span v-if="scope.row.earnest==0">全款一次结清</span>
+                    <span v-if="scope.row.earnest==1">付定金</span>
+                    <span v-if="scope.row.earnest==2">支付剩余金额</span>
                 </template>
             </el-table-column>
         </el-table>
