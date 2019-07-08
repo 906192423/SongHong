@@ -51,6 +51,11 @@
             </el-table-column>
             <el-table-column prop="num" width="140" label="数量">
             </el-table-column>
+            <el-table-column width="140" label="小计">
+                <template slot-scope="scope">
+                    <span >{{scope.row.num*scope.row.price}}</span>
+                </template>
+            </el-table-column>
         </el-table>
         </strong>
         <h4 v-if="order[0]">备注：{{order[0].remark}}</h4>
