@@ -76,7 +76,7 @@
 		data() {
 			return {
 				img:require('../assets/images/home/1.jpg'),
-				sysName:'ERP系统',
+				sysName:'鑫洪锋ERP系统',
 				user:{},
 				collapsed:false,
 				sysUserName: '',
