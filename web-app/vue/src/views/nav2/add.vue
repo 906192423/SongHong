@@ -20,12 +20,35 @@
             </el-select>
             <el-button type="primary" :disabled="disabled"  :loading="uloading"  @click="creatUU()">直接创建客户:{{uuuName}}</el-button>
         </el-form-item>
-        <el-form-item label="合计金额" prop="remark" style="width:500px">
-            <el-input type="textarea" v-model="ruleForm.amount"></el-input>
+        <el-form-item label="联系电话" style="width:500px" prop="phone">
+            <el-input v-model="ruleForm.phone"></el-input>
         </el-form-item>
+        <el-form-item label="合计金额" style="width:500px" prop="phone">
+            <el-input v-model="ruleForm.amount"></el-input>
+        </el-form-item>
+        <el-form-item label="交款方式" style="width:500px" prop="earnest">
+            <el-radio v-model="ruleForm.earnest" label="1">全款结清</el-radio>
+            <el-radio v-model="ruleForm.earnest" label="0">定金付款</el-radio>
+            <el-radio v-model="ruleForm.earnest" label="-1">赊账欠款</el-radio>
+        </el-form-item>
+        <!--<el-form-item label="支付方式" prop="payWay">-->
+        <!--<el-select v-model="ruleForm.payWay" placeholder="请选择支付方式" multiple>-->
+        <!--<el-option label="微信支付" value="微信支付"></el-option>-->
+        <!--<el-option label="支付宝支付" value="支付宝支付"></el-option>-->
+        <!--<el-option label="刷卡支付" value="刷卡支付"></el-option>-->
+        <!--<el-option label="现金支付" value="现金支付"></el-option>-->
+        <!--</el-select>-->
+        <!--</el-form-item>-->
+
         <el-form-item label="交货时间" style="width:500px" prop="leadTime">
             <el-date-picker v-model="ruleForm.leadTime" type="datetime" placeholder="选择日期时间">
             </el-date-picker>
+        </el-form-item>
+        <el-form-item label="运输方式" style="width:500px" prop="modeTransport">
+            <el-input v-model="ruleForm.modeTransport"></el-input>
+        </el-form-item>
+        <el-form-item label="交货地址" prop="addr" style="width:500px">
+            <el-input type="textarea" v-model="ruleForm.addr"></el-input>
         </el-form-item>
         <el-form-item label="备注" prop="remark" style="width:500px">
             <el-input type="textarea" v-model="ruleForm.remark"></el-input>
@@ -50,19 +73,35 @@
                 selUser:"",
                 user:"",
                 ruleForm: {
+                    modeTransport : "",//运输方式
+                    phone:"",
                     _Uid: "",//客户id
                     leadTime:"",//交货时间
                     remark : "",//备注
                     amount :0,//合计金额
+                    addr:"",//交货地址
                     num9:"",//数量
+                    earnest:"",
                 },
                 formLoading:false,
                 rules: {
                     _Uid: [
                         { required: true, message: '请输入用户', trigger: 'blur' },
                     ],
+                    modeTransport: [
+                        { required: true, message: '请输入运输方式', trigger: 'blur' }
+                    ],
                     leadTime: [
                         { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+                    ],
+                    addr: [
+                        { required: true, message: '请输入送货地址', trigger: 'blur' }
+                    ],
+                    earnest: [
+                        { required: true, message: '请选择交款方式', trigger: 'change' }
+                    ],
+                    phone: [
+                        { required: true, message: '请选输入联系电话', trigger: 'change' }
                     ],
                 },
                 users: [],
@@ -79,7 +118,7 @@
                 const sums = [];
                 columns.forEach((column, index) => {
                     if (index === 0) {
-                        sums[index] = '退货总金额';
+                        sums[index] = '合计金额';
                         return;
                     }
                     if (index === 1||index === 2||index === 3) {
@@ -161,6 +200,7 @@
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
 
+
                         this.$confirm('确认提交吗？', '提示', {}).then(() => {
                             this.loading=true
                             let form=JSON.parse(JSON.stringify(this.ruleForm))
@@ -178,7 +218,7 @@
                             })
                             form.detail=JSON.stringify(detail)
                             form.leadTime = (!this.ruleForm.leadTime || this.ruleForm.leadTime == '') ? '' : util.formatDate.format(new Date(this.ruleForm.leadTime), 'yyyy-MM-dd hh:mm:ss');
-                            this.VgetJSON('exchange/creat',form).then(data=>{
+                            this.VgetJSON('order/creat',form).then(data=>{
                                 if(data.flag){
                                     this.$notify({
                                         title: '成功',

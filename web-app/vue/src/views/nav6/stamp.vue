@@ -40,23 +40,7 @@
             </el-table-column>
         </el-table>
 
-        <p>商品清单-----------------------------------------------------------------------------------------------------</p>
-        <strong >
-        <el-table v-if="order[0]" :data="order[0].detail" cell-style="font-weight: 700;" :header-cell-style="{color:'#000000' }" show-header="false" style="color:#000000">
-            <el-table-column prop="code" label="商品码" width="120">
-            </el-table-column>
-            <el-table-column prop="name" label="商品名" width="240"font-color="black">
-            </el-table-column>
 
-            <el-table-column prop="price" width="120" label="单价">
-            </el-table-column>
-            <el-table-column prop="num" width="120" label="数量">
-            </el-table-column>
-            <el-table-column prop="total" width="80" label="小计">
-            </el-table-column>
-
-        </el-table>
-        </strong>
         <h4 v-if="order[0]">备注：{{order[0].remark}}</h4>
         <p>付款信息-----------------------------------------------------------------------------------------------------</p>
         <template v-for="(item,index) in this.cashList">

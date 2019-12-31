@@ -13,86 +13,14 @@
             <el-radio v-model="ruleForm.earnest" label="1">结清</el-radio>
             <el-radio v-model="ruleForm.earnest" label="0">未结清</el-radio>
         </el-form-item>
+        <el-form-item label="总金额" style="width:500px" prop="phone">
+            <el-input v-model="goodsTable.amount"></el-input>
+        </el-form-item>
         <el-form-item label="进货日期" style="width:500px" prop="inTime">
-            <el-date-picker v-model="ruleForm.inTime" type="datetime" placeholder="选择日期时间">
-            </el-date-picker>
+        <el-date-picker v-model="ruleForm.inTime" type="datetime" placeholder="选择日期时间">
+        </el-date-picker>
         </el-form-item>
-        <el-form-item label="请选择商品">
-            <el-select
-                    v-model="value10"
-                    multiple
-                    filterable
-                    :loading="gloading"
-                    @change="change()"
-                    placeholder="请选择商品">
-                <el-option
-                        v-for="item in options5"
-                        :key="item.label"
-                        :label="item.label"
-                        :value="item.value"
-                        :disabled="item.disabled">
-                </el-option>
-            </el-select>
-            <el-input
-                    style="width: 150px"
-                    placeholder="输入内容查找商品"
-                    v-model="name"
-                    clearable>
-            </el-input>
-            <el-button type="primary" v-on:click="getGoods">搜索</el-button>
-        </el-form-item>
-        <el-form-item label="商品列表">
-            <el-table
-                    :data="goodsTable"
-                    border
-                    :summary-method="getSummaries"
-                    show-summary
-                    style="width: 100%">
-                <el-table-column
-                        prop="code"
-                        label="商品编号"
-                        width="180">
-                </el-table-column>
-                <el-table-column
-                        prop="name"
-                        label="产品名称">
-                </el-table-column>
-                <el-table-column
-                        width="120"
-                        prop="price"
-                        label="商品单价">
-                </el-table-column>
-                <el-table-column
-                        width="100"
-                        prop="unit"
-                        label="产品单位">
-                </el-table-column>
-                <el-table-column
-                        width="120"
-                        label="商品进价">
-                    <template slot-scope="scope">
-                        <el-input
-                                placeholder="请输入进价"
-                                v-model="scope.row.inPrice"
-                                @change="addCli(scope.row)"
-                                clearable>
-                        </el-input>
-                    </template>
-                </el-table-column>
-                <el-table-column label="数量" width="250">
-                    <template slot-scope="scope">
-                        <el-input
-                                placeholder="请输入内容"
-                                v-model="scope.row.num"
-                                @change="addCli(scope.row)"
-                                clearable>
-                        </el-input>
-                    </template>
-                </el-table-column>
-                <el-table-column fixed="right"   prop="amount" label="小计">
-                </el-table-column>
-            </el-table>
-        </el-form-item>
+
         <el-form-item>
             <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
             <el-button @click="resetForm('ruleForm')">重置</el-button>
@@ -210,47 +138,12 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        if(this.goodsTable.length==0){
-                            this.$message({
-                                message:'请至少选择一个商品！',
-                                type: 'error'
-                            });
-                            return false;
-                        }
-                        for(let j=0,len=this.goodsTable.length;j<len;j++){
-                            if(!this.isNumber(this.goodsTable[j].num)){
-                                this.$message({
-                                    message:'数量处应输入数字！',
-                                    type: 'error'
-                                });
-                                return false;
-                            }
-                            if(!this.isNumber(this.goodsTable[j].inPrice)){
-                                this.$message({
-                                    message:'进价处应输入数字！',
-                                    type: 'error'
-                                });
-                                return false;
-                            }
-                            if(this.goodsTable[j].num<=0){
-                                this.$message({
-                                    message:'数量至少为1！',
-                                    type: 'error'
-                                });
-                                return false;
-                            }
-                        }
                         this.$confirm('确认提交吗？', '提示', {}).then(() => {
                             this.loading=true
                             let form=JSON.parse(JSON.stringify(this.ruleForm))
                             let detail=[]
                             this.goodsTable.forEach(it=>{
                                 let a={
-                                    _id:it._id,
-                                    name:it.name,
-                                    code:it.code,
-                                    num:it.num,
-                                    inPrice:it.inPrice,
                                     total:it.amount,
                                 }
                                 detail.push(a)

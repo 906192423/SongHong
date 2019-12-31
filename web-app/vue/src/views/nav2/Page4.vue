@@ -21,41 +21,41 @@
             </el-table-column>
             <el-table-column type="index" width="40">
             </el-table-column>
-            <el-table-column type="expand" >
-                <template slot-scope="scope">
-                    <div>
-                        <el-table
-                                :data="scope.row.detail"
-                                style="width: 100%">
-                            <el-table-column
-                                    prop="name"
-                                    label="商品名"
-                                    width="180">
-                            </el-table-column>
-                            <el-table-column
-                                    prop="code"
-                                    label="商品码"
-                                    width="180">
-                            </el-table-column>
-                            <el-table-column
-                                    prop="price"
-                                    width="120"
-                                    label="价格">
-                            </el-table-column>
-                            <el-table-column
-                                    prop="num"
-                                    width="120"
-                                    label="数量">
-                            </el-table-column>
-                            <el-table-column
-                                    prop="total"
-                                    label="总价">
-                            </el-table-column>
-                        </el-table>
-                        <h1>备注：{{scope.row.remark}}</h1>
-                    </div>
-                </template>
-            </el-table-column>
+            <!--<el-table-column type="expand" >-->
+                <!--<template slot-scope="scope">-->
+                    <!--<div>-->
+                        <!--<el-table-->
+                                <!--:data="scope.row.detail"-->
+                                <!--style="width: 100%">-->
+                            <!--<el-table-column-->
+                                    <!--prop="name"-->
+                                    <!--label="商品名"-->
+                                    <!--width="180">-->
+                            <!--</el-table-column>-->
+                            <!--<el-table-column-->
+                                    <!--prop="code"-->
+                                    <!--label="商品码"-->
+                                    <!--width="180">-->
+                            <!--</el-table-column>-->
+                            <!--<el-table-column-->
+                                    <!--prop="price"-->
+                                    <!--width="120"-->
+                                    <!--label="价格">-->
+                            <!--</el-table-column>-->
+                            <!--<el-table-column-->
+                                    <!--prop="num"-->
+                                    <!--width="120"-->
+                                    <!--label="数量">-->
+                            <!--</el-table-column>-->
+                            <!--<el-table-column-->
+                                    <!--prop="total"-->
+                                    <!--label="总价">-->
+                            <!--</el-table-column>-->
+                        <!--</el-table>-->
+                        <!--<h1>备注：{{scope.row.remark}}</h1>-->
+                    <!--</div>-->
+                <!--</template>-->
+            <!--</el-table-column>-->
             <el-table-column prop="sellCode" label="订单号" width="120" sortable>
             </el-table-column>
             <el-table-column prop="userName" label="消费者" width="120" sortable>

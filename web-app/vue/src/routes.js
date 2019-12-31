@@ -4,6 +4,7 @@ import Home from './views/Home.vue'
 import Main from './views/Main.vue'
 import Table from './views/nav1/Table.vue'
 import Form from './views/nav2/Form.vue'
+import add from './views/nav2/add.vue'
 import Page4 from './views/nav2/Page4.vue'
 import Page5 from './views/nav2/Page5.vue'
 import end from './views/nav2/end.vue'
@@ -51,7 +52,7 @@ let routes = [
         lev:2,
         iconCls: 'fa fa-id-card-o',
         children: [
-            { path: '/form', component: (resolve)=> require(['./views/nav2/Form.vue'],resolve), name: '创建订单' },
+            { path: '/add', component: (resolve)=> require(['./views/nav2/add.vue'],resolve), name: '订单' },
             { path: '/page4', component: (resolve)=> require(['./views/nav2/Page4.vue'],resolve), name: '浏览订单' },
             { path: '/page5', component:(resolve)=> require(['./views/nav2/Page5.vue'],resolve), name: '生产中' },
             { path: '/end', component: (resolve)=> require(['./views/nav2/end.vue'],resolve), name: '已完成' }
@@ -72,12 +73,12 @@ let routes = [
     {
         path: '/',
         component: Home,
-        name: '商品管理',
+        name: '打印单据',
         lev:3,
         iconCls: 'fa fa-address-card',
         // leaf: true,//只有一个节点
         children: [
-            { path: '/page6', component: Page6, name: '浏览商品' },
+            { path: '/stamp', component: stamp, name: '打印订单'}
         ]
     },
     {
@@ -112,7 +113,6 @@ let routes = [
         children: [
             { path: '/echarts', component: echarts, name: '解款报表' },
             { path: '/sales', component: sales, name: '销售统计' },
-            { path: '/stamp', component: stamp, name: '打印订单'}
         ]
     },
     {
