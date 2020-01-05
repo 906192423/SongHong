@@ -11,25 +11,26 @@
         </el-form-item>
     <div v-if="order[0]">
     <div class="page" id="printMe" style="background:#fff;">
-        <center><h3><b> 辽宁洪锋工贸有限责任公司--销售单</b></h3></center>
-        <p>基本信息-----------------------------------------------------------------------------------------------------</p>
+        <center><h1><b> 辽宁洪锋工贸有限责任公司--销售单</b></h1></center>
+        <h3>
+        <b><p>基本信息----------------------------------------------------------------------------------------------------------------------------------</p>
 
-        <el-table :data="order" :header-cell-style="{color:'#000000' }" cell-style="font-weight: 700;"show-header="false"style="color:#000000">
-            <el-table-column prop="sellCode" label="订单号" width="180">
+        <el-table :data="order" :header-cell-style="{color:'#000000' }" cell-style="font-weight: 700;"show-header="false"style="color:#000000":cell-style="{padding:'1px'}">
+            <el-table-column prop="sellCode" label="订单号" width="180":cell-style="{padding:'1px'}">
             </el-table-column>
-            <el-table-column prop="userName" label="客户姓名" width="180">
+            <el-table-column prop="userName" label="客户姓名" width="180":cell-style="{padding:'1px'}">
             </el-table-column>
-            <el-table-column prop="amount" label="总金额" width="180">
+            <el-table-column prop="amount" label="总金额" width="180" :cell-style="{padding:'1px'}">
             </el-table-column>
-            <el-table-column prop="leadTime" label="交货时间" >
+            <el-table-column prop="leadTime" label="交货时间":cell-style="{padding:'1px'}" >
             </el-table-column>
         </el-table>
-        <el-table :data="order" :header-cell-style="{color:'#000000' }" cell-style="font-weight: 700;"show-header="false"style="color:#000000">
-            <el-table-column label="交货地址"prop="addr" width="180">
+        <el-table :data="order" :header-cell-style="{color:'#000000' }" cell-style="font-weight: 700;"show-header="false"style="color:#000000":cell-style="{padding:'1px'}">
+            <el-table-column label="交货地址"prop="addr" width="180":cell-style="{padding:'1px'}">
             </el-table-column>
-            <el-table-column prop="phone" label="联系电话" width="180">
+            <el-table-column prop="phone" label="联系电话" width="180":cell-style="{padding:'1px'}">
             </el-table-column>
-            <el-table-column label="交款方式" width="180">
+            <el-table-column label="交款方式" width="180":cell-style="{padding:'1px'}">
                 <template slot-scope="scope">
                     <span v-if="scope.row.earnest==0">定金</span>
                     <span v-if="scope.row.earnest==1" >全款</span>
@@ -38,14 +39,13 @@
             </el-table-column>
             <el-table-column prop="creatName" label="销售员" >
             </el-table-column>
-        </el-table>
-
-
+        </el-table></b>
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        <br><br><br><br><br><br><br><br><br><br><br>
         <h4 v-if="order[0]">备注：{{order[0].remark}}</h4>
-        <p>付款信息-----------------------------------------------------------------------------------------------------</p>
         <template v-for="(item,index) in this.cashList">
             <strong>
-        <el-table :data="[item]" style="color:#000000" cell-style="font-weight: 700;" :header-cell-style="{color:'#000000' }" show-header="false">
+        <el-table :data="[item]" style="color:#000000" cell-style="font-weight: 700;" :header-cell-style="{color:'#000000' }" show-header="false":cell-style="{padding:'1px'}">
             <el-table-column prop="code" label="付款单号" width="180">
             </el-table-column>
             <el-table-column prop="cutAmount" label="优惠金额" width="180">
@@ -62,10 +62,8 @@
         </el-table>
             </strong>
         </template>
-        <p>-------------------------------------------------------------------------------------------------------------</p>
         <p >公司地址：辽宁省铁岭市调兵山市红房一条街北金山新城北门 </p>
-        <p >订购电话/钢结构，彩钢板，白钢板销售部： 13804103658 </p>
-        <p >订购电话/五金，电缆，钢材批发部： 15941038386 </p>
+        <p >订购电话/钢结构，彩钢板，白钢板销售部： 13804103658 /五金，电缆，钢材批发部： 15941038386 </p></h4></b></h3>
     </div>
     <el-button v-print="'#printMe'">打印页面</el-button>
     </div>
@@ -305,7 +303,7 @@
     .page {
         width: 21cm;
         min-height: 29.7cm;
-        padding: 2cm;
+        padding: 0cm;
         margin: 1cm auto;
         border: 1px #D3D3D3 solid;
         border-radius: 5px;
@@ -339,5 +337,15 @@
     }
     table tr:nth-child(1) td{
         width: 25%;
+    }
+    .el-table th {
+         padding: 0px;
+        min-width: 0;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        text-overflow: ellipsis;
+        vertical-align: middle;
+        position: relative;
+        text-align: left;
     }
 </style>

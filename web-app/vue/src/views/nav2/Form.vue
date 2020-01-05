@@ -20,9 +20,7 @@
 			</el-select>
 			<el-button type="primary" :disabled="disabled"  :loading="uloading"  @click="creatUU()">直接创建客户:{{uuuName}}</el-button>
 		</el-form-item>
-		<el-form-item label="联系电话" style="width:500px" prop="phone">
-			<el-input v-model="ruleForm.phone"></el-input>
-		</el-form-item>
+
 		<el-form-item label="请选择商品">
 			<el-select v-model="value10" multiple filterable :loading="gloading" @change="change()" placeholder="请选择商品">
 				<el-option v-for="item in options5" :key="item.label" :label="item.label" :value="item.value" :disabled="item.disabled">
