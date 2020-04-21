@@ -344,7 +344,7 @@
                 if (index !== -1) {
                     this.dynamicValidateForm.domains.splice(index, 1)
                 }
-                this.chan()
+                this.cha()
             },
             addDomain() {
                 this.dynamicValidateForm.domains.push({

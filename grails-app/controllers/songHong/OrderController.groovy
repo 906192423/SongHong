@@ -3,8 +3,8 @@ import com.alibaba.fastjson.JSONObject
 
 class OrderController extends BaseController{
     def orderService
+    def cashService
     def creat={
-        println(params)
         def cu=dataService.mongoDb.findOneCustomer([_id:params._Uid])
         if(!cu){
             render(js(false,"此客户不存在，请输入正确的客户！"))
@@ -42,6 +42,97 @@ class OrderController extends BaseController{
             ])
             dataService.mongoDb.saveOrder(order)
             orderService.out(detail)
+            render(js(true,"创建成功"))
+        }catch(Exception e){
+            render(js(false,"创建失败"))
+        }
+    }
+    def creatAll={
+        def order=JSONObject.parse(params.order)
+        def cu=dataService.mongoDb.findOneCustomer([_id:order._Uid])
+        if(!cu){
+            render(js(false,"此客户不存在，请输入正确的客户！"))
+            return
+        }
+        try {
+            int payState
+            def earnest=1
+            if(earnest==0){
+                payState=1
+            }else {
+                payState=0
+            }
+            def detail=JSONObject.parse(order.detail)
+            for (int i=0;i<detail.size();i++){
+                detail[i].price=norTwo(detail[i].price)
+                detail[i].num=Double.valueOf(detail[i].num)
+                detail[i].total=norTwo(detail[i].price*detail[i].num)
+            }
+            def nOrder=Order.newOne([
+                    _creatId:session.user._id,
+                    creatName:session.user.name,
+                    sellCode:orderService.getCode(),
+                    payState:payState,
+                    phone:order.phone,
+                    detail:detail,
+                    earnest:earnest,
+                    modeTransport : order.modeTransport,//运输方式
+                    userName :cu.name,//客户姓名
+                    _Uid:cu._id,//客户id
+                    leadTime:order.leadTime,//交货时间
+                    remark :order.remark,//备注
+                    amount :norTwo(order.amount),//合计金额
+                    addr:order.addr,//交货地址
+            ])
+            def o=dataService.mongoDb.saveOrder(nOrder)
+            orderService.out(detail)
+            def payForm= JSONObject.parse(params.domains)
+            def cutAmount=Double.valueOf(params.cutAmount)
+            def pay=[]
+            double total=0
+            payForm.each {
+                def amount=norTwo(it.amount)
+                total+=amount
+                pay.add([
+                        name:Integer.valueOf(it.name),
+                        amount:amount
+                ])
+            }
+            def cas=Cash.newOne([
+                    code:cashService.getCode(),//流水号
+                    _orderId:o._id,//订单号
+                    _creatId:session.user._id,//创建人id
+                    creatName:session.user.name,
+                    ordCode:o.sellCode,
+                    cutAmount:cutAmount,
+                    earnest:earnest,
+                    name:"",//支付人姓名
+                    amount:total,//金额
+                    payForm:pay,
+                    remark : params.remark,//备注支付信息
+            ])
+            def c=dataService.mongoDb.saveCash(cas)
+            if(o.cashList){
+                o.cashList.add([
+                        code:c.code,
+                        _id:c._id,
+                ]
+                )}else {
+                o.cashList=[
+                        [
+                                code:c.code,
+                                _id:c._id,
+                                amount:c.amount
+                        ]
+                ]
+            }
+            if(o.payState==1){//下次交款状态的转移
+                o.payState=2
+            }else {
+                o.payState=-1
+                o.allPay=true
+            }
+            dataService.mongoDb.updateOrder([_id:o._id],[cashList:o.cashList,payState:o.payState,allPay:o.allPay])
             render(js(true,"创建成功"))
         }catch(Exception e){
             render(js(false,"创建失败"))

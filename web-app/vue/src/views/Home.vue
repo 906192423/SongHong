@@ -75,6 +75,7 @@
 	export default {
 		data() {
 			return {
+				timer:null,
 				img:require('../assets/images/home/1.jpg'),
 				sysName:'鑫洪锋ERP系统',
 				user:{},
@@ -94,6 +95,14 @@
 			}
 		},
 		methods: {
+			ref(){
+				this.VgetJSON('user/info',{}).then(data=>{
+					this.user=data
+					this.sysUserName=data.name
+					this.sysUserAvatar=this.img
+				})
+				console.log("刷新用户数据")
+			},
 			my() {
 				var _this = this;
 				_this.$router.push('/stamp');
@@ -115,6 +124,7 @@
 				this.$confirm('确认退出吗?', '提示', {
 					//type: 'warning'
 				}).then(() => {
+					clearInterval(this.timer);
 					this.VgetJSON("login/logout",{}).then(data=>{
 						if(data.flag){
 							this.$message({
@@ -154,6 +164,7 @@
                 this.sysUserName=data.name
                 this.sysUserAvatar=this.img
             })
+			this.timer = setInterval(this.ref,60000000);
 			// var user = sessionStorage.getItem('user');
 			// if (user) {
 			// 	user = JSON.parse(user);

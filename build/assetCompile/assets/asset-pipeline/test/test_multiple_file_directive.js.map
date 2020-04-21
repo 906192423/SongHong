@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"asset-pipeline/test/test_multiple_file_directive.js",
+"lineCount":2,
+"mappings":"A;AAEAA,OAAAC,IAAA,CAAY,iDAAZ;",
+"sources":["asset-pipeline/test/test_multiple_file_directive.unminified.js"],
+"names":["console","log"]
+}

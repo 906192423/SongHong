@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"asset-pipeline/test/test_full_tree.js",
+"lineCount":2,
+"mappings":"A;AAGAA,OAAAC,IAAA,CAAY,iDAAZ;",
+"sources":["asset-pipeline/test/test_full_tree.unminified.js"],
+"names":["console","log"]
+}

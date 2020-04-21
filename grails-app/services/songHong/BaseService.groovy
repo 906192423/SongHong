@@ -18,7 +18,9 @@ class BaseService {
         println("----------------------")
     }
     def norTwo(d) {
-        if(!d){d=0}
+        if(!d){
+            d=0
+        }
         BigDecimal bg = new BigDecimal(Double.valueOf(d))
         return bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()
     }
