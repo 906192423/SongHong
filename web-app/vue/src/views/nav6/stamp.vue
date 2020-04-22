@@ -15,7 +15,7 @@
         <h3>
         <b><p>基本信息----------------------------------------------------------------------------------------------------------------------------------</p>
 
-        <el-table :data="order" :header-cell-style="{color:'#000000' }" cell-style="font-weight: 700;"show-header="false"style="color:#000000":cell-style="{padding:'1px'}">
+        <el-table :data="order" :header-cell-style="{color:'#000000' }" cell-style="font-weight: 700;" style="color:#000000":cell-style="{padding:'1px'}">
             <el-table-column prop="sellCode" label="订单号" width="180":cell-style="{padding:'1px'}">
             </el-table-column>
             <el-table-column prop="userName" label="客户姓名" width="180":cell-style="{padding:'1px'}">
@@ -25,7 +25,7 @@
             <el-table-column prop="leadTime" label="交货时间":cell-style="{padding:'1px'}" >
             </el-table-column>
         </el-table>
-        <el-table :data="order" :header-cell-style="{color:'#000000' }" cell-style="font-weight: 700;"show-header="false"style="color:#000000":cell-style="{padding:'1px'}">
+        <el-table :data="order" :header-cell-style="{color:'#000000' }" cell-style="font-weight: 700;" style="color:#000000":cell-style="{padding:'1px'}">
             <el-table-column label="交货地址"prop="addr" width="180":cell-style="{padding:'1px'}">
             </el-table-column>
             <el-table-column prop="phone" label="联系电话" width="180":cell-style="{padding:'1px'}">
@@ -45,7 +45,7 @@
         <h4 v-if="order[0]">备注：{{order[0].remark}}</h4>
         <template v-for="(item,index) in this.cashList">
             <strong>
-        <el-table :data="[item]" style="color:#000000" cell-style="font-weight: 700;" :header-cell-style="{color:'#000000' }" show-header="false":cell-style="{padding:'1px'}">
+        <el-table :data="[item]" style="color:#000000" cell-style="font-weight: 700;" :header-cell-style="{color:'#000000' }" :cell-style="{padding:'1px'}">
             <el-table-column prop="code" label="付款单号" width="180">
             </el-table-column>
             <el-table-column prop="cutAmount" label="优惠金额" width="180">
@@ -63,9 +63,9 @@
             </strong>
         </template>
         <p >公司地址：辽宁省铁岭市调兵山市红房一条街北金山新城北门 </p>
-        <p >订购电话/钢结构，彩钢板，白钢板销售部： 13804103658 /五金，电缆，钢材批发部： 15941038386 </p></h4></b></h3>
+        <p >订购电话/钢结构，彩钢板，白钢板销售部： 13804103658 /五金，电缆，钢材批发部： 15941038386 </p></h3>
     </div>
-    <el-button v-print="'#printMe'">打印页面</el-button>
+    <el-button v-print="'#printMe'" @click="prin()">打印页面</el-button>
     </div>
 
     </el-form>
@@ -101,18 +101,6 @@
                     label: '刷卡支付',
                     disabled: false
                 }],
-                rules:{
-                    order: [
-                        { required: true, message: '请选择订单号', trigger: 'blur' },
-                    ],
-                    type:[
-                        { required: true, message: '请选择支付方式', trigger: 'change' }
-                    ],
-                    amount:[
-                        { required: true, message: '金额不能为空'},
-                        { type: 'number', message: '金额必须为数字值'}
-                    ]
-                },
                 dynamicValidateForm: {
                     _orderId:"",
                     earnest:"",
@@ -126,6 +114,26 @@
             };
         },
         methods: {
+            prin(){
+                this.VgetJSON('Order/print',{id:this.order[0]._id}).then(data=>{
+                    this.order=[
+                        {detail:[],
+                        },
+                    ]
+                    this.clear()
+                    this.dynamicValidateForm={
+                        _orderId:"",
+                            earnest:"",
+                            cutAmount:0,
+                            domains: [{
+                            name:'',
+                            amount:'',
+                        }],
+                            remark:''
+                    }
+                    this.cashList=[]
+                })
+            },
             lookCash(list){
                 this.dialog=true
                 this.VgetJSON('cash/getInfoList',{list:JSON.stringify(list)}).then(data=>{
@@ -169,10 +177,7 @@
                 }else {
                     this.info="当前交款方式：额外交款"
                 }
-                console.log("11111111111111")
-                console.log(item)
                 this.lookCash(item.item.cashList)
-                console.log(this.cashList)
             },
             countCash(list){
                 this.needCash=this.order[0].amount-list[0].amount

@@ -40,6 +40,7 @@ class Order {
                 state: 0,//0为新创建的订单，1为生产中，2生产完成，-1未完成的
                 allPay:false,//false未付完全部，true全部付清
                 addr:"",//交货地址
+                isPrint:0,
         ]
         if (initObj) item.putAll(initObj)
         return item

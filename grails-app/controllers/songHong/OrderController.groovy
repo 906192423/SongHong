@@ -11,7 +11,6 @@ class OrderController extends BaseController{
             return
         }
         try {
-            println("--------------"+params)
             int payState
             def earnest=Integer.valueOf(params.earnest)
             if(earnest==0){
@@ -19,9 +18,7 @@ class OrderController extends BaseController{
             }else {
                 payState=0
             }
-            println(1)
             def detail=JSONObject.parse(params.detail)
-            println(2)
             for (int i=0;i<detail.size();i++){
                 detail[i].price=norTwo(detail[i].price)
                 detail[i].num=Double.valueOf(detail[i].num)
@@ -44,9 +41,7 @@ class OrderController extends BaseController{
                     addr:params.addr,//交货地址
             ])
             dataService.mongoDb.saveOrder(order)
-            println(4)
             orderService.out(detail)
-            println(5)
             render(js(true,"创建成功"))
         }catch(Exception e){
             render(js(false,"创建失败"))
@@ -284,6 +279,9 @@ class OrderController extends BaseController{
     def printOrder={
         println(params)
         def form=[sort:[_id:-1]]
+        if(!session.user.superUser){
+            form.isPrint=0
+        }
         form+=[sellCode:[$regex:/^${params.code}/]]
         def list=dataService.mongoDb.searchOrder(form,1,10)
         def orders=[]
@@ -295,8 +293,11 @@ class OrderController extends BaseController{
         }
         render JSONObject.toJSONString([list:orders])
     }
+    def print={
+        dataService.mongoDb.updateOrder([_id:params.id],[isPrint:1])
+        render(js(true,"15151"))
+    }
     def a={
-        println("生产统计")
         orderService.countProduct()
         println(orderService.nowNeedProduct)
         render(JSONObject.toJSONString([list:orderService.nowNeedProduct]))
