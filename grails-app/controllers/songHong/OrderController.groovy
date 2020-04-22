@@ -11,6 +11,7 @@ class OrderController extends BaseController{
             return
         }
         try {
+            println("--------------"+params)
             int payState
             def earnest=Integer.valueOf(params.earnest)
             if(earnest==0){
@@ -18,7 +19,9 @@ class OrderController extends BaseController{
             }else {
                 payState=0
             }
+            println(1)
             def detail=JSONObject.parse(params.detail)
+            println(2)
             for (int i=0;i<detail.size();i++){
                 detail[i].price=norTwo(detail[i].price)
                 detail[i].num=Double.valueOf(detail[i].num)
@@ -41,7 +44,9 @@ class OrderController extends BaseController{
                     addr:params.addr,//交货地址
             ])
             dataService.mongoDb.saveOrder(order)
+            println(4)
             orderService.out(detail)
+            println(5)
             render(js(true,"创建成功"))
         }catch(Exception e){
             render(js(false,"创建失败"))

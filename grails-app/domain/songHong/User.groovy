@@ -17,7 +17,7 @@ class User {
                 qq : " ",//qq
                 remark : "",//简介
                 superUser : false,//是否是超級管理員
-                trueName : "",//真实姓名
+                trueName : "默认",//真实姓名
                 canLogin:true,
                 level:1,//管理等级
                 ct  : new Date().format("yyyy-MM-dd HH:mm:ss.SSS"),//创建时间

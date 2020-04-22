@@ -15,6 +15,7 @@ class UserController extends BaseController{
                     idCardNumber:params.idCardNumber,
                     email :params.email,
                     remark :params.remark,
+                    trueName:params.trueName
             ])
             dataService.mongoDb.saveUser(cuss)
             render(js(true,"添加成功"))
@@ -62,6 +63,18 @@ class UserController extends BaseController{
             render(js(false,"你不具备此权限"))
         }
     }
+    def getSmallUsers={
+        def page=0
+        println("请求销售员")
+        if(session.user.superUser){
+            def form=[sort:[_id:1]]
+            def users=dataService.mongoDb.searchUser(form,[include:["_id","trueName"]],page,50)
+            println(users)
+            render(JSONObject.toJSONString([users:users.contentlist, num:users.allNum]))
+        }else{
+            render(js(false,"你不具备此权限"))
+        }
+    }
     def edit={
         println("修改用户数据" +params)
         def cu=dataService.mongoDb.findOneUser([_id:params._id])
@@ -74,6 +87,7 @@ class UserController extends BaseController{
                     pwd:params.pwd,
                     level:Integer.valueOf(params.level),
                     qq:params.qq,
+                    trueName:params.trueName,
                     phone:params.phone,
                     email:params.email,
                     idCardNumber:params.idCardNumber,

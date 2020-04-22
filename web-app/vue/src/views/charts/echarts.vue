@@ -12,6 +12,15 @@
                         end-placeholder="结束日期"
                         align="right">
                 </el-date-picker>
+            <span class="demonstration">选择销售员：</span>
+            <el-select v-model="value" placeholder="请选择" @change="getCash()">
+                <el-option
+                        v-for="item in options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                </el-option>
+            </el-select>
             <el-table :data="[cashList]" style="width: 100%">
                 <el-table-column prop="all" label="统计收款单数量" width="180">
                 </el-table-column>
@@ -58,6 +67,13 @@
     export default {
         data() {
             return {
+                value: '0',
+                options: [
+                    {
+                        value: '0',
+                        label: '全部'
+                    }
+                    ],
                 pickerOptions2: {
                     shortcuts: [{
                         text: '当天',
@@ -118,12 +134,31 @@
                     end:(!this.value4[1] || this.value4[1] == '') ? '' : util.formatDate.format(this.value4[1], 'yyyy-MM-dd hh:mm:ss:sss')
                     // end: this.filters.name
                 };
+                para.uid=this.value
                 this.VgetJSON('echart/getCash',para).then(d=>{
-                    console.log("取到数据")
-                    console.log(d)
                     this.cashList=d
                     this.drawPieChart()
                     this. drawColumnChart()
+                })
+            },
+            getUsers() {
+                this.VgetJSON('User/getSmallUsers',"").then(d=>{
+                    console.log("取到数据")
+                    console.log(d)
+                    let us=[
+                        {
+                            value: '0',
+                            label: '全部'
+                        }
+                    ]
+                    d.users.forEach((it)=>{
+                        let u={
+                            value:it._id,
+                            label:it.trueName
+                        }
+                        us.push(u)
+                    })
+                    this.options=us
                 })
             },
             drawColumnChart() {
@@ -278,7 +313,6 @@
             },
             drawCharts() {
                 this.drawColumnChart()
-
                 this.drawPieChart()
             },
         },
@@ -286,6 +320,7 @@
         mounted: function () {
             this.drawCharts()
             this.getCash()
+            this.getUsers()
 
         },
         updated: function () {

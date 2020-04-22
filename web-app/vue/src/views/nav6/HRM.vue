@@ -25,7 +25,7 @@
             </el-table-column>
             <el-table-column prop="phone" label="电话" width="140">
             </el-table-column>
-            <el-table-column prop="qq" label="QQ" min-width="180">
+            <el-table-column prop="trueName" label="姓名" min-width="180">
             </el-table-column>
             <el-table-column prop="email" label="邮箱" min-width="180">
             </el-table-column>
@@ -64,6 +64,9 @@
         <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
             <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
                 <h1>用户：{{editForm.name}}</h1>
+                <el-form-item label="姓名" prop="trueName">
+                    <el-input v-model="editForm.trueName" auto-complete="off"></el-input>
+                </el-form-item>
                 <el-form-item label="密码" prop="phone">
                     <el-input v-model="editForm.pwd" auto-complete="off"></el-input>
                 </el-form-item>
@@ -135,7 +138,6 @@
 </template>
 
 <script>
-    import util from '../../common/js/util'
     export default {
         data() {
             return {
@@ -164,6 +166,7 @@
                 //编辑界面数据
                 editForm: {
                     _id : "",
+                    trueName:"",
                     name:"",
                     pwd:"",
                     qq:"",

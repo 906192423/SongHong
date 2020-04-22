@@ -24,7 +24,7 @@
             <el-input v-model="ruleForm.phone"></el-input>
         </el-form-item>
         <el-form-item label="合计金额" style="width:500px" prop="amount">
-            <el-input v-model="ruleForm.amount"></el-input>
+            <el-input v-model.number="ruleForm.amount"></el-input>
         </el-form-item>
         <el-form-item label="交款方式" style="width:500px" prop="earnest">
             <el-radio v-model="ruleForm.earnest" label="1">全款结清</el-radio>
@@ -153,10 +153,11 @@
                         { required: true, message: '请选择交款方式', trigger: 'change' }
                     ],
                     phone: [
-                        { required: true, message: '请选输入联系电话', trigger: 'change' }
+                        { required: true, message: '请选输入联系电话', trigger: 'change'}
                     ],
                     amount: [
-                        { required: true, message: '请选输入金额', trigger: 'change' }
+                        { required: true, message: '请选输入金额'},
+                        { type: 'number', message: '金额必须为数字值'}
                     ],
                 },
                 options2: [{
@@ -320,6 +321,7 @@
                                         });
                                     }
                                     this.loading=false
+                                    this.selUser=""
                                 })
                                 })
                             }
@@ -496,6 +498,7 @@
                                     });
                                 }
                                 this.loading=false
+                                this.selUser=""
                             })
                         })
             },

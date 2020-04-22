@@ -50,9 +50,12 @@ class CashService extends BaseService{
         println(to)
         return to
     }
-    def count(start,end){
-        println(start+"--------"+end)
+    def count(start,end,uid){
+        println(start+"--------"+end+"-------------uid"+uid)
         def query=[ct:[$lte:end,$gte:start]]
+        if(!"0".equals(uid)){
+            query._creatId=uid
+        }
         def page=1
         def allPages=2
         def allList=[]
