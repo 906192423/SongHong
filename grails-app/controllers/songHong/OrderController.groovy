@@ -105,7 +105,7 @@ class OrderController extends BaseController{
                     creatName:session.user.name,
                     ordCode:o.sellCode,
                     cutAmount:cutAmount,
-                    earnest:earnest,
+                    earnest:0,
                     name:"",//支付人姓名
                     amount:total,//金额
                     payForm:pay,
@@ -291,7 +291,7 @@ class OrderController extends BaseController{
                     item:it
             ])
         }
-        render JSONObject.toJSONString([list:orders])
+        render JSONObject.toJSONString(list:orders,ph:session.user.phone)
     }
     def print={
         dataService.mongoDb.updateOrder([_id:params.id],[isPrint:1])

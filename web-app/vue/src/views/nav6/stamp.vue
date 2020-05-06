@@ -13,8 +13,7 @@
     <div class="page" id="printMe" style="background:#fff;">
         <center><h1><b> 辽宁洪锋工贸有限责任公司--销售单</b></h1></center>
         <h3>
-        <b><p>基本信息----------------------------------------------------------------------------------------------------------------------------------</p>
-
+        <b><p>  销售员电话：{{ph}}</p>
         <el-table :data="order" :header-cell-style="{color:'#000000' }" cell-style="font-weight: 700;" style="color:#000000":cell-style="{padding:'1px'}">
             <el-table-column prop="sellCode" label="订单号" width="180":cell-style="{padding:'1px'}">
             </el-table-column>
@@ -62,7 +61,7 @@
         </el-table>
             </strong>
         </template>
-        <p >公司地址：辽宁省铁岭市调兵山市红房一条街北金山新城北门 </p>
+        <p >公司地址：辽宁省铁岭市调兵山市红房一条街北金山新城南门 </p>
         <p >订购电话/钢结构，彩钢板，白钢板销售部： 13804103658 /五金，电缆，钢材批发部： 15941038386 </p></h3>
     </div>
     <el-button v-print="'#printMe'" @click="prin()">打印页面</el-button>
@@ -78,6 +77,7 @@
                 loading:false,
                 state4:'',
                 info:"",
+                ph:"",
                 cashList:[],
                 order:[
                     {detail:[],
@@ -159,6 +159,7 @@
                     this.clear()
                 }
                 this.VgetJSON("order/printOrder",{code:queryString}).then(data=>{
+                    this.ph=data.ph
                     cb(data.list)
                 })
             },

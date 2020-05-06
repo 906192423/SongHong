@@ -125,13 +125,13 @@
                 selUser:"",
                 user:"",
                 ruleForm: {
-                    modeTransport : "",//运输方式
+                    modeTransport : "自提",//运输方式
                     phone:"",
                     _Uid: "",//客户id
                     leadTime:"",//交货时间
                     remark : "",//备注
                     amount :0,//合计金额
-                    addr:"",//交货地址
+                    addr:"场内",//交货地址
                     num9:"",//数量
                     earnest:"2",
                 },

@@ -21,7 +21,7 @@ class ExchangeController extends BaseController{
                     userName :cu.name,//客户姓名
                     _Uid:cu._id,//客户id
                     remark :params.remark,//备注
-                    amount :Double.valueOf(params.amount),//合计金额
+                    amount :Integer.valueOf(params.amount),//合计金额
             ])
             def e=dataService.mongoDb.saveExchange(exchange)
             if(e){

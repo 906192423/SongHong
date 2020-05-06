@@ -29,7 +29,7 @@ class Exchange {
                 userName : "",//客户姓名
                 _Uid: "",//客户id
                 remark : "",//备注
-                amount :"0",//合计金额
+                amount :0,//合计金额
                 ct  : new Date().format("yyyy-MM-dd HH:mm:ss.SSS"),//创建时间
                 allPay:false,//false未付，true全部付清
         ]

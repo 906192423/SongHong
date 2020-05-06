@@ -10,11 +10,14 @@ class EchartController extends BaseController{
             uid=session.user._id
         }
         def c=cashService.count(params.start,params.end,uid)
-        render(JSONObject.toJSONString(c))
+        def b=cashService.Exchange(params.start,params.end,uid)
+        render(JSONObject.toJSONString(c:c,b:b))
     }
     def getCc={//取到周收款统计
         println(params)
         def c=cashService.countWeek(params.start)
         render(JSONObject.toJSONString([list:c]))
+    }
+    def getExchange={
     }
 }

@@ -103,12 +103,12 @@
             <el-table-column label="操作" width="100">
                 <template slot-scope="scope">
                     <!--<el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>-->
-                    <el-button :disabled="scope.row.cashList.length>0? true:false" type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+                    <el-button :disabled="true" type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
         <el-col :span="24" class="toolbar">
-            <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">进入生产队列</el-button>
+            <el-button v-if="false" type="danger" @click="batchRemove" :disabled="this.sels.length===0">进入生产队列</el-button>
             <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="10" :total="total" style="float:right;">
             </el-pagination>
         </el-col>

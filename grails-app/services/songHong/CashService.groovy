@@ -89,4 +89,27 @@ class CashService extends BaseService{
         }
         return cashList
     }
+    def Exchange(start,end,uid){
+        println(start+"--------"+end+"-------------uid"+uid)
+        def query=[ct:[$lte:end,$gte:start]]
+        if(!"0".equals(uid)){
+            query._creatId=uid
+        }
+        def page=1
+        def allPages=2
+        def allList=[]
+        for(;page<allPages;page++){
+            def list=dataService.mongoDb.searchExchange(query,[include:["amount"]],page,100)
+            if(list){
+                allPages=list.allPages
+                allList.addAll(list.contentlist)
+            }
+        }
+        def all=0
+        println("000000000000000   "+allList)
+        allList.each {
+            all+=Integer.valueOf(it.amount)
+        }
+        return all
+    }
 }

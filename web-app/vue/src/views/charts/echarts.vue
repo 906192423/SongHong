@@ -38,6 +38,7 @@
                 <el-table-column prop="k" label="刷卡收款"width="180">
                 </el-table-column>
             </el-table>
+            <p>支出：{{am}}</p>
         </div>
 <br>
         <el-row>
@@ -68,6 +69,7 @@
         data() {
             return {
                 value: '0',
+                am:'0',
                 options: [
                     {
                         value: '0',
@@ -136,7 +138,8 @@
                 };
                 para.uid=this.value
                 this.VgetJSON('echart/getCash',para).then(d=>{
-                    this.cashList=d
+                    this.cashList=d.c
+                    this.am=d.b
                     this.drawPieChart()
                     this. drawColumnChart()
                 })
