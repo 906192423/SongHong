@@ -1,7 +1,8 @@
 package songHong
 
 import grails.transaction.Transactional
-
+import org.codehaus.groovy.runtime.metaclass.ConcurrentReaderHashMap
+import java.util.concurrent.TimeUnit
 import java.text.SimpleDateFormat
 
 @Transactional
@@ -58,34 +59,48 @@ class CashService extends BaseService{
         }
         def page=1
         def allPages=2
-        def allList=[]
-        def cashList=[
+        ConcurrentReaderHashMap cashList=[     /*线程安全*/
                 z:0,
                 w:0,
                 x:0,
                 k:0,
                 all:"",
         ]
-        for(;page<allPages;page++){
-            def list=dataService.mongoDb.searchCash(query,[include:["payForm"]],page,100)
-            if(list){
-                allPages=list.allPages
-                allList.addAll(list.contentlist)
+        def st=dataService.mongoDb.searchCash(query,[include:["_id"]],page,100)
+        if(st){
+            allPages=st.allPages
+            cashList.all=st.allNum
+        }
+        ConcurrentReaderHashMap loop=[
+            a:0,
+            b:0,
+        ]
+        for(;page<=allPages;page++){
+            println("查第${page}次--------${st}")
+            int i=page
+            loop.a++
+            taskPoolExecute{
+                println "统计第${i}次结果======"
+                def list=dataService.mongoDb.searchCash(query,[include:["payForm"]],i,100)
+                println "查询完成第${i}次======${list}"
+                list.contentlist.each {
+                    it.payForm.each{
+                        if(it.name==1){
+                            cashList.z+=it.amount
+                        }else if(it.name==2){
+                            cashList.w+=it.amount
+                        }else if(it.name==3){
+                            cashList.x+=it.amount
+                        }else{
+                            cashList.k+=it.amount
+                        }
+                    }
+                }
+                loop.b++
             }
         }
-        cashList.all=allList.size()
-        allList.each {
-            it.payForm.each{
-                if(it.name==1){
-                    cashList.z+=it.amount
-                }else if(it.name==2){
-                    cashList.w+=it.amount
-                }else if(it.name==3){
-                    cashList.x+=it.amount
-                }else{
-                    cashList.k+=it.amount
-                }
-            }
+        for(int i=0;loop.b<loop.a&&i<=100;i++){//最多等待20s
+            Thread.sleep(200)
         }
         return cashList
     }
@@ -105,10 +120,9 @@ class CashService extends BaseService{
                 allList.addAll(list.contentlist)
             }
         }
-        def all=0
-        println("000000000000000   "+allList)
+        long all=0
         allList.each {
-            all+=Integer.valueOf(it.amount)
+            all+=it.amount
         }
         return all
     }
