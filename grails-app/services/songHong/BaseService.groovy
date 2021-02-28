@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
 class BaseService {
     synchronized static def dataService
     static def userList=[:]
-    static ThreadPoolExecutor taskPool = new ThreadPoolExecutor(10, 30, 3000, TimeUnit.MILLISECONDS,
+    static ThreadPoolExecutor taskPool = new ThreadPoolExecutor(10, 500, 5000, TimeUnit.MILLISECONDS,
             new LinkedBlockingDeque<Runnable>(), new ThreadPoolExecutor.CallerRunsPolicy())
     static {
         println("线程池创建成功-----")

@@ -65,7 +65,7 @@ class CashService extends BaseService{
                 k:0,
                 all:"",
         ]
-        def st=dataService.mongoDb.searchCash(query,[include:["_id"]],page,100)
+        def st=dataService.mongoDb.searchCash(query,[include:["_id"]],page,200)
         if(st){
             allPages=st.allPages
             cashList.all=st.allNum
@@ -80,7 +80,7 @@ class CashService extends BaseService{
             loop.a++
             taskPoolExecute{
                 println "统计第${i}次结果======"
-                def list=dataService.mongoDb.searchCash(query,[include:["payForm"]],i,100)
+                def list=dataService.mongoDb.searchCash(query,[include:["payForm"]],i,200)
                 println "查询完成第${i}次======${list}"
                 list.contentlist.each {
                     it.payForm.each{
@@ -96,9 +96,10 @@ class CashService extends BaseService{
                     }
                 }
                 loop.b++
+                println("loop.a=${loop.a}--------loop.b=${loop.b}")
             }
         }
-        for(int i=0;loop.b<loop.a&&i<=100;i++){//最多等待20s
+        for(int i=0;loop.b<loop.a&&i<=200;i++){//最多等待40s
             Thread.sleep(200)
         }
         return cashList

@@ -188,7 +188,7 @@ class OrderController extends BaseController{
             def page=1
             def allPages=2
             def all
-            def Or=dataService.mongoDb.searchOrder(query,[include:["_id"]],page,100)
+            def Or=dataService.mongoDb.searchOrder(query,[include:["_id"]],page,200)
             if(Or){
                 allPages=Or.allPages
                 all=Or.allNum
@@ -198,7 +198,7 @@ class OrderController extends BaseController{
                     b:0,
             ]
             for(;page<=allPages;page++){
-                def ord=dataService.mongoDb.searchOrder(query,[include:["_id"]],page,50)
+                def ord=dataService.mongoDb.searchOrder(query,[include:["_id"]],page,200)
                 loop.a++
                 println("删除第${page}次--------${Or}")
                 baseService.taskPoolExecute{
@@ -209,7 +209,7 @@ class OrderController extends BaseController{
                     loop.b++
                 }
             }
-            for(int i=0;loop.b<loop.a&&i<=100;i++){//最多等待20s
+            for(int i=0;loop.b<loop.a&&i<=200;i++){//最多等待40s
                 Thread.sleep(200)
             }
             render(js(true,"删除成功！总删除${all}个订单"))
