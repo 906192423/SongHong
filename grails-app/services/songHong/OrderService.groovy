@@ -5,7 +5,7 @@ import grails.transaction.Transactional
 @Transactional
 class OrderService extends BaseService{
     static def nowNeedProduct=[]
-    def getCode(){//生成订单号
+    synchronized static def getCode(){//生成订单号
         def time=new Date().format("yyyy-MM-dd")
         //def num=dataService.mongoDb.findCountOrder(ct:[$gt:time])
         def n=dataService.mongoDb.findOneOrder([sort:[sellCode:-1],ct:[$gt:time]],[include:['sellCode']])

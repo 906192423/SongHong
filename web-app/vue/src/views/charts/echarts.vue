@@ -1,6 +1,6 @@
 <template>
     <section class="chart-container">
-        <div>
+        <div v-loading="Loading">
                 <span class="demonstration">选择日期：</span>
                 <el-date-picker
                         @change="getCash()"
@@ -68,6 +68,7 @@
     export default {
         data() {
             return {
+                Loading:false,
                 value: '0',
                 am:'0',
                 options: [
@@ -137,11 +138,13 @@
                     // end: this.filters.name
                 };
                 para.uid=this.value
+                this.Loading = true
                 this.VgetJSON('echart/getCash',para).then(d=>{
                     this.cashList=d.c
                     this.am=d.b
                     this.drawPieChart()
                     this. drawColumnChart()
+                    this.Loading = false
                 })
             },
             getUsers() {

@@ -2,12 +2,11 @@ package songHong
 
 import grails.transaction.Transactional
 import org.codehaus.groovy.runtime.metaclass.ConcurrentReaderHashMap
-import java.util.concurrent.TimeUnit
 import java.text.SimpleDateFormat
 
 @Transactional
 class CashService extends BaseService{
-    def getCode(){//生成订单号
+    synchronized static def getCode(){//生成订单号
         def time=new Date().format("yyyy-MM-dd")
         def n=dataService.mongoDb.findOneCash([sort:[code:-1],ct:[$gt:time]],[include:['code']])
         String a=time.replace("-","")

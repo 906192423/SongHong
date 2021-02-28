@@ -1,7 +1,8 @@
 <template>
     <section>
         <!--工具条-->
-        <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+        <el-row type="flex">
+        <el-col class="toolbar" style="padding-bottom: 0px;">
             <el-form :inline="true" :model="filters">
                 <el-form-item>
                     <el-input v-model="filters.name" placeholder="输入姓名或者电话来查找"></el-input>
@@ -9,12 +10,25 @@
                 <el-form-item>
                     <el-button type="primary" v-on:click="getUsers">查询</el-button>
                 </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="handleAdd">新增</el-button>
-                </el-form-item>
             </el-form>
         </el-col>
-
+        <el-col style="justify-content: right;text-align:right;margin-top: 25px" :inline="true">
+            <div>
+                <span class="demonstration">选择日期：</span>
+                <el-date-picker
+                        @change
+                        v-model="value2"
+                        type="datetimerange"
+                        :picker-options="pickerOptions3"
+                        range-separator="至"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期"
+                        align="right">
+                </el-date-picker>
+                <el-button type="danger" v-on:click="DeleteOders">批量删除</el-button>
+            </div>
+        </el-col>
+        </el-row>
         <!--列表-->
         <el-table :data="users" highlight-current-row v-loading="listLoading" :row-class-name="tableRowClassName" @selection-change="selsChange" style="width: 100%;"ref="multipleTable">
             <el-table-column type="selection" width="50" :selectable='checkboxInit'>
@@ -220,6 +234,41 @@
                         { required: true, message: '请输入姓名', trigger: 'blur' }
                     ]
                 },
+                pickerOptions3: {
+                    shortcuts: [{
+                        text: '当天',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setHours(0,0,0,0)
+                            end.setHours(0,0,0,0)
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 1);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }, {
+                        text: '最近一个月',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setHours(0,0,0,0)
+                            end.setHours(0,0,0,0)
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }, {
+                        text: '最近三个月',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setHours(0,0,0,0)
+                            end.setHours(0,0,0,0)
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }]
+                },
+                value2:[ this.b(new Date()),
+                    this.b(new Date(new Date().getTime()+(24 * 60 * 60 * 1000)))],
                 //编辑界面数据
                 // editForm: {
                 //
@@ -252,6 +301,44 @@
             // })
         },
         methods: {
+            DeleteOders(){
+                let para = {
+                    start:(!this.value2[0] || this.value2[0]== '') ? '' : util.formatDate.format(this.value2[0], 'yyyy-MM-dd hh:mm:ss:sss'),
+                    end:(!this.value2[1] || this.value2[1] == '') ? '' : util.formatDate.format(this.value2[1], 'yyyy-MM-dd hh:mm:ss:sss')
+                    // end: this.filters.name
+                };
+                this.$confirm('确认删除'+para.start+'到'+para.end+'之间的订单及其交易数据的记录吗?', '提示', {
+                    type: 'warning'
+                }).then(() => {
+                    this.listLoading = true;
+                    this.VgetJSON('order/deletes',para).then(data=>{
+                        if(data.flag){
+                            this.$message({
+                                message:data.remark,
+                                type: 'success'
+                            });
+                        }else {
+                            this.$message({
+                                message: data.remark,
+                                type: 'error'
+                            });
+                        }
+                        this.listLoading = false
+                        this.getUsers();
+                    }).catch(() => {
+                        this.$message({
+                            message: "请求超时",
+                            type: 'error'
+                        });
+                    });
+                }).catch(() => {
+
+                });
+            },
+            b(d){
+                d.setHours(0,0,0,0)
+                return d
+            },
             tableRowClassName({row, rowIndex}) {
                 if (row.earnest!=-1&&row.cashList.length==0) {
                     return 'warning-row'

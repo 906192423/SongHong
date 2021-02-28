@@ -1,5 +1,6 @@
 package songHong
 import com.alibaba.fastjson.JSONObject
+import org.codehaus.groovy.runtime.metaclass.ConcurrentReaderHashMap
 
 class OrderController extends BaseController{
     def orderService
@@ -178,6 +179,43 @@ class OrderController extends BaseController{
             }
         }
         render(js(false,"只有创建者或超级管理员能删除！"))
+    }
+    def deletes={
+        if(session.user.superUser){
+            def start=params.start
+            def end=params.end
+            def query=[ct:[$lte:end,$gte:start]]
+            def page=1
+            def allPages=2
+            def all
+            def Or=dataService.mongoDb.searchOrder(query,[include:["_id"]],page,100)
+            if(Or){
+                allPages=Or.allPages
+                all=Or.allNum
+            }
+            ConcurrentReaderHashMap loop=[
+                    a:0,
+                    b:0,
+            ]
+            for(;page<=allPages;page++){
+                def ord=dataService.mongoDb.searchOrder(query,[include:["_id"]],page,50)
+                loop.a++
+                println("删除第${page}次--------${Or}")
+                baseService.taskPoolExecute{
+                    ord.contentlist.each {
+                        dataService.mongoDb.delOrder([_id:it._id])
+                        dataService.mongoDb.delCash([_orderId:it._id])
+                    }
+                    loop.b++
+                }
+            }
+            for(int i=0;loop.b<loop.a&&i<=100;i++){//最多等待20s
+                Thread.sleep(200)
+            }
+            render(js(true,"删除成功！总删除${all}个订单"))
+            return
+        }
+        render(js(false,"只有超级管理员能删除！"))
     }
     def edit={
         println("修改订单数据")

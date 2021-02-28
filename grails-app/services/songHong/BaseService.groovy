@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 
 @Transactional
 class BaseService {
-    def dataService
+    synchronized static def dataService
     static def userList=[:]
     static ThreadPoolExecutor taskPool = new ThreadPoolExecutor(10, 30, 3000, TimeUnit.MILLISECONDS,
             new LinkedBlockingDeque<Runnable>(), new ThreadPoolExecutor.CallerRunsPolicy())
